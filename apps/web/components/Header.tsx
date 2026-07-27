@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function Header(){return <header className="nav"><div className="container navin"><Link href="/" className="brand"><img src="/brand/logo-reference.png" alt="Kalabsha Airlines"/><div><strong>Kalabsha Airlines</strong><div className="tag">Fly To Dreams</div></div></Link><nav className="links"><Link href="/fleet">Fleet</Link><Link href="/live-flights">Live Flights</Link><Link href="/pilots">Pilots</Link><Link href="/about">About</Link></nav><a className="button outline" href="#">Pilot Login</a></div></header>}

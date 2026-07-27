@@ -1,0 +1,1 @@
+export default function Page(){return <main className="section"><div className="container"><div className="eyebrow">About</div><h2>Kalabsha Airlines</h2><div className="card"><p className="muted">An independent virtual airline focused on realistic operations, pilot development and high-quality simulator integration.</p></div></div></main>}

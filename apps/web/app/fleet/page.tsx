@@ -1,0 +1,2 @@
+const fleet=[["Embraer E170",5],["Airbus A321neo",6],["Airbus A350-900",1],["Boeing 787-9",2],["Boeing 777-300ER",2],["Boeing 747-8",1]];
+export default function Page(){return <main className="section"><div className="container"><div className="eyebrow">Our aircraft</div><h2>Kalabsha Fleet</h2><div className="grid">{fleet.map(([n,c])=><article className="card" key={String(n)}><div style={{fontSize:64}}>✈</div><h3>{n}</h3><strong>{c} aircraft</strong></article>)}</div></div></main>}

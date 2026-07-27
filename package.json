@@ -1,0 +1,14 @@
+{
+  "name": "kalabsha-airlines",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @kalabsha/web dev",
+    "build": "pnpm --filter @kalabsha/web build",
+    "lint": "pnpm --filter @kalabsha/web lint",
+    "api": "pnpm --filter @kalabsha/api dev",
+    "db:generate": "pnpm --filter @kalabsha/database prisma:generate",
+    "db:migrate": "pnpm --filter @kalabsha/database prisma:migrate"
+  }
+}
