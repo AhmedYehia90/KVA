@@ -10,5 +10,9 @@
     "api": "pnpm --filter @kalabsha/api dev",
     "db:generate": "pnpm --filter @kalabsha/database prisma:generate",
     "db:migrate": "pnpm --filter @kalabsha/database prisma:migrate"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.9"
   }
 }

@@ -1,0 +1,50 @@
+.authPage {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  padding: 5rem 1.25rem;
+}
+
+.authCard {
+  width: min(100%, 480px);
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  background: rgba(9, 35, 70, 0.92);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.authCard h1 {
+  margin: 0.5rem 0;
+  font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.authForm {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.authForm label {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.authForm input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.8rem 1rem;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  background: rgba(2, 18, 39, 0.72);
+}
+
+.authError {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 110, 110, 0.45);
+  border-radius: 12px;
+  background: rgba(150, 25, 25, 0.2);
+}
