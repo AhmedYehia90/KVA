@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { FleetAircraft, FleetCategory } from "@/data/fleet";
 
@@ -7,9 +8,10 @@ type FilterValue = "All" | FleetCategory;
 
 const filters: FilterValue[] = [
   "All",
+  "Regional",
   "Narrow-body",
   "Wide-body",
-  "Regional",
+  "Jumbo",
 ];
 
 function number(value: number) {
@@ -61,11 +63,7 @@ export function FleetExplorer({ aircraft }: { aircraft: FleetAircraft[] }) {
                   {item.status}
                 </span>
               </div>
-
-              <div className="aircraftSilhouette" aria-hidden="true">
-                ✈
-              </div>
-
+              <div className="aircraftSilhouette" aria-hidden="true">✈</div>
               <span className="aircraftCode">{item.code}</span>
             </div>
 
@@ -75,28 +73,16 @@ export function FleetExplorer({ aircraft }: { aircraft: FleetAircraft[] }) {
               <p className="muted">{item.role}</p>
 
               <dl className="aircraftSpecs">
-                <div>
-                  <dt>Range</dt>
-                  <dd>{number(item.rangeKm)} km</dd>
-                </div>
-                <div>
-                  <dt>Cruise</dt>
-                  <dd>{item.cruiseKts} kt</dd>
-                </div>
-                <div>
-                  <dt>Capacity</dt>
-                  <dd>{item.capacity}</dd>
-                </div>
-                <div>
-                  <dt>In fleet</dt>
-                  <dd>{item.quantity}</dd>
-                </div>
+                <div><dt>Range</dt><dd>{number(item.rangeKm)} km</dd></div>
+                <div><dt>Cruise</dt><dd>{item.cruiseKts} kt</dd></div>
+                <div><dt>Capacity</dt><dd>{item.capacity}</dd></div>
+                <div><dt>In fleet</dt><dd>{item.quantity}</dd></div>
               </dl>
 
-              <button className="aircraftDetailsButton" type="button">
+              <Link className="aircraftDetailsButton" href={`/fleet/${item.id}`}>
                 Aircraft details
                 <span aria-hidden="true">→</span>
-              </button>
+              </Link>
             </div>
           </article>
         ))}

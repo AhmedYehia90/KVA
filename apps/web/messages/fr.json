@@ -1,0 +1,22 @@
+{
+  "Common": {
+    "homeAria": "Accueil de Kalabsha Airlines"
+  },
+  "Navigation": {
+    "mainNavigation": "Navigation principale",
+    "fleet": "Flotte",
+    "liveFlights": "Vols en direct",
+    "pilots": "Pilotes",
+    "about": "À propos",
+    "pilotLogin": "Connexion pilote"
+  },
+  "Footer": {
+    "description": "Une compagnie aérienne virtuelle axée sur des opérations réalistes, la communauté et la passion de l’aviation.",
+    "navigationAria": "Navigation du pied de page",
+    "fleet": "Flotte",
+    "liveFlights": "Vols en direct",
+    "pilots": "Pilotes",
+    "about": "À propos",
+    "copyright": "© 2026 Kalabsha Airlines"
+  }
+}

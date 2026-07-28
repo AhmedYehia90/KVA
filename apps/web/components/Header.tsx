@@ -1,21 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
+import {LanguageSelector} from "./LanguageSelector";
 
 const navigation = [
-  { href: "/fleet", label: "Fleet" },
-  { href: "/live-flights", label: "Live Flights" },
-  { href: "/pilots", label: "Pilots" },
-  { href: "/about", label: "About" },
+  {href: "/fleet", key: "fleet"},
+  {href: "/live-flights", key: "liveFlights"},
+  {href: "/pilots", key: "pilots"},
+  {href: "/about", key: "about"}
 ] as const;
 
 export function Header() {
+  const t = useTranslations("Navigation");
+  const common = useTranslations("Common");
+
   return (
     <header className="nav">
       <div className="container navin">
         <Link
           href="/"
           className="brand"
-          aria-label="Kalabsha Airlines home"
+          aria-label={common("homeAria")}
         >
           <Image
             src="/brand/logo-reference.png"
@@ -31,17 +36,20 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="links" aria-label="Main navigation">
+        <nav className="links" aria-label={t("mainNavigation")}>
           {navigation.map((item) => (
             <Link key={item.href} href={item.href}>
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
 
-        <Link className="button outline" href="/pilots/login">
-          Pilot Login
-        </Link>
+        <div className="navActions">
+          <LanguageSelector />
+          <Link className="button outline" href="/pilots/login">
+            {t("pilotLogin")}
+          </Link>
+        </div>
       </div>
     </header>
   );
