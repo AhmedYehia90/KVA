@@ -1,10 +1,97 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql" url = env("DATABASE_URL") }
-enum UserRole { PILOT DISPATCHER INSTRUCTOR FLEET_MANAGER ADMIN }
-enum FlightStatus { SCHEDULED BOARDING AIRBORNE LANDED CANCELLED }
-model User { id String @id @default(cuid()) email String @unique displayName String role UserRole @default(PILOT) ivaoVid String? @unique createdAt DateTime @default(now()) pilot Pilot? }
-model Pilot { id String @id @default(cuid()) userId String @unique callsign String @unique rank String @default("Cadet") flightHours Float @default(0) points Int @default(0) user User @relation(fields:[userId],references:[id]) pireps Pirep[] }
-model Aircraft { id String @id @default(cuid()) registration String @unique type String status String @default("AVAILABLE") totalHours Float @default(0) flights Flight[] }
-model Route { id String @id @default(cuid()) flightNumber String @unique originIcao String destinationIcao String flights Flight[] }
-model Flight { id String @id @default(cuid()) routeId String aircraftId String? departureAt DateTime arrivalAt DateTime status FlightStatus @default(SCHEDULED) route Route @relation(fields:[routeId],references:[id]) aircraft Aircraft? @relation(fields:[aircraftId],references:[id]) pirep Pirep? }
-model Pirep { id String @id @default(cuid()) flightId String @unique pilotId String simulator String network String? blockTimeMin Int fuelUsedKg Float? landingRateFpm Int? accepted Boolean @default(false) submittedAt DateTime @default(now()) flight Flight @relation(fields:[flightId],references:[id]) pilot Pilot @relation(fields:[pilotId],references:[id]) }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PILOT
+  DISPATCHER
+  INSTRUCTOR
+  FLEET_MANAGER
+  ADMIN
+}
+
+enum FlightStatus {
+  SCHEDULED
+  BOARDING
+  AIRBORNE
+  LANDED
+  CANCELLED
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  displayName String
+  role        UserRole @default(PILOT)
+  ivaoVid     String?  @unique
+  createdAt   DateTime @default(now())
+
+  pilot Pilot?
+}
+
+model Pilot {
+  id          String @id @default(cuid())
+  userId      String @unique
+  callsign    String @unique
+  rank        String @default("Cadet")
+  flightHours Float  @default(0)
+  points      Int    @default(0)
+
+  user   User    @relation(fields: [userId], references: [id])
+  pireps Pirep[]
+}
+
+model Aircraft {
+  id              String    @id @default(cuid())
+  registration    String    @unique
+  type            String
+  status          String    @default("AVAILABLE")
+  totalHours      Float     @default(0)
+  nextMaintenance DateTime?
+
+  flights Flight[]
+}
+
+model Route {
+  id              String @id @default(cuid())
+  flightNumber    String @unique
+  originIcao      String
+  destinationIcao String
+  distanceNm      Int?
+
+  flights Flight[]
+}
+
+model Flight {
+  id          String       @id @default(cuid())
+  routeId     String
+  aircraftId  String?
+  departureAt DateTime
+  arrivalAt   DateTime
+  status      FlightStatus @default(SCHEDULED)
+
+  route    Route     @relation(fields: [routeId], references: [id])
+  aircraft Aircraft? @relation(fields: [aircraftId], references: [id])
+  pirep    Pirep?
+}
+
+model Pirep {
+  id             String   @id @default(cuid())
+  flightId       String   @unique
+  pilotId        String
+  simulator      String
+  network        String?
+  blockTimeMin   Int
+  fuelUsedKg     Float?
+  landingRateFpm Int?
+  accepted       Boolean  @default(false)
+  submittedAt    DateTime @default(now())
+
+  flight Flight @relation(fields: [flightId], references: [id])
+  pilot  Pilot  @relation(fields: [pilotId], references: [id])
+}
