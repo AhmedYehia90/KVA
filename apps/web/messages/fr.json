@@ -18,5 +18,155 @@
     "pilots": "Pilotes",
     "about": "À propos",
     "copyright": "© 2026 Kalabsha Airlines"
+  },
+  "PilotDashboard": {
+    "crewOperations": "Opérations équipage",
+    "welcome": "Bon retour, Commandant.",
+    "intro": "Suivez votre carrière virtuelle, consultez vos rapports récents et préparez votre prochaine mission Kalabsha Airlines.",
+    "totalFlightTime": "Temps de vol total",
+    "hoursValue": "{hours} h",
+    "verifiedHours": "Heures virtuelles vérifiées",
+    "completedFlights": "Vols effectués",
+    "acrossNetwork": "Sur le réseau KVA",
+    "approvedReports": "Rapports approuvés",
+    "latestActivity": "Selon votre activité récente",
+    "homeBase": "Base d’affectation",
+    "homeBaseName": "Aéroport international du Caire — HECA",
+    "careerProgression": "Progression de carrière",
+    "rankProgress": "Progression de grade",
+    "loggedHours": "{hours} heures enregistrées",
+    "hoursRemaining": "{hours} heures restantes",
+    "nextMilestone": "Prochaine étape",
+    "promotionRequirement": "Atteignez {hours} heures de vol totales pour être évalué et promu au grade de {rank}.",
+    "typeRatings": "Qualifications de type",
+    "aircraftQualifications": "Qualifications aéronefs",
+    "exploreFleet": "Explorer la flotte →",
+    "flightRecords": "Carnet de vols",
+    "recentPireps": "PIREP récents",
+    "fileNewPirep": "Déposer un nouveau PIREP",
+    "duration": "{hours} h {minutes} min",
+    "ranks": {
+      "seniorfirstofficer": "Premier officier principal",
+      "captain": "Commandant"
+    },
+    "statuses": {
+      "approved": "Approuvé",
+      "pending": "En attente",
+      "rejected": "Rejeté"
+    },
+    "table": {
+      "flight": "Vol",
+      "route": "Route",
+      "aircraft": "Aéronef",
+      "date": "Date",
+      "duration": "Durée",
+      "status": "Statut"
+    }
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "Compagnie virtuelle Kalabsha",
+      "titleLine1": "Volez vers",
+      "titleLine2": "vos rêves",
+      "description": "A modern virtual airline built for realistic operations, active pilots and a growing global network.",
+      "joinPilot": "Devenir pilote",
+      "exploreFleet": "Explorer la flotte",
+      "aircraftAria": "Aircraft image placeholder",
+      "artworkPlaceholder": "Official fleet artwork will be added here"
+    },
+    "search": {
+      "eyebrow": "Quick flight search",
+      "title": "Plan your next operation",
+      "from": "From",
+      "to": "To",
+      "aircraft": "Aircraft",
+      "findFlights": "Find Flights",
+      "departureAria": "Departure airport",
+      "arrivalAria": "Arrival airport",
+      "aircraftAria": "Aircraft type",
+      "airports": {
+        "cairo": "Cairo — HECA",
+        "hurghada": "Hurghada — HEGN",
+        "luxor": "Luxor — HELX",
+        "dubai": "Dubai — OMDB",
+        "kuwait": "Kuwait — OKKK",
+        "jeddah": "Jeddah — OEJN"
+      }
+    },
+    "stats": {
+      "aria": "Airline statistics",
+      "aircraft": "Aircraft",
+      "fleetTypes": "Fleet types",
+      "destinations": "Destinations",
+      "operations": "Operations"
+    },
+    "fleet": {
+      "eyebrow": "Our fleet",
+      "title": "Aircraft for every mission",
+      "viewAll": "View complete fleet →",
+      "roles": {
+        "regional": "Regional operations",
+        "mediumHaul": "Short and medium haul",
+        "longHaul": "Long-haul flagship"
+      }
+    },
+    "destinations": {
+      "eyebrow": "Popular destinations",
+      "title": "Connect Egypt to the region",
+      "cities": {
+        "dubai": "Dubai",
+        "kuwait": "Kuwait",
+        "jeddah": "Jeddah",
+        "istanbul": "Istanbul"
+      },
+      "regions": {
+        "uae": "United Arab Emirates",
+        "kuwait": "Kuwait",
+        "saudi": "Saudi Arabia",
+        "turkiye": "Türkiye"
+      }
+    },
+    "liveFlights": {
+      "eyebrow": "Operations center",
+      "title": "Live flights",
+      "networkActive": "Network active",
+      "aria": "Current flights",
+      "flight": "Flight",
+      "route": "Route",
+      "aircraft": "Aircraft",
+      "status": "Status",
+      "statuses": {
+        "boarding": "Boarding",
+        "enRoute": "En route",
+        "scheduled": "Scheduled"
+      }
+    },
+    "news": {
+      "eyebrow": "Latest updates",
+      "title": "From Kalabsha Airlines",
+      "articles": {
+        "roadmap": {
+          "category": "Operations",
+          "title": "Kalabsha Airlines development roadmap",
+          "text": "The platform is being prepared for pilot accounts, schedules, ACARS and live operational data."
+        },
+        "fleetStrategy": {
+          "category": "Fleet",
+          "title": "A flexible fleet strategy",
+          "text": "The planned fleet supports regional, medium-haul and long-haul virtual operations."
+        },
+        "community": {
+          "category": "Community",
+          "title": "Built around virtual pilots",
+          "text": "Training, events and realistic procedures will form the heart of the Kalabsha community."
+        }
+      }
+    },
+    "partners": {
+      "eyebrow": "Online aviation",
+      "title": "Ready for connected flying",
+      "description": "Kalabsha Airlines is being designed for structured operations, community events and compatibility with major online networks.",
+      "aria": "Planned online network support"
+    }
   }
 }

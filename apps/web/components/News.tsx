@@ -1,34 +1,22 @@
-const articles = [
-  {
-    date: "Operations",
-    title: "Kalabsha Airlines development roadmap",
-    text: "The platform is being prepared for pilot accounts, schedules, ACARS and live operational data.",
-  },
-  {
-    date: "Fleet",
-    title: "A flexible fleet strategy",
-    text: "The planned fleet supports regional, medium-haul and long-haul virtual operations.",
-  },
-  {
-    date: "Community",
-    title: "Built around virtual pilots",
-    text: "Training, events and realistic procedures will form the heart of the Kalabsha community.",
-  },
-] as const;
+import {useTranslations} from "next-intl";
+
+const articles = ["roadmap", "fleetStrategy", "community"] as const;
 
 export function News() {
+  const t = useTranslations("Home.news");
+
   return (
     <section className="section sectionAlt">
       <div className="container">
-        <div className="eyebrow">Latest updates</div>
-        <h2>From Kalabsha Airlines</h2>
+        <div className="eyebrow">{t("eyebrow")}</div>
+        <h2>{t("title")}</h2>
 
         <div className="newsGrid">
           {articles.map((article) => (
-            <article className="newsCard" key={article.title}>
-              <span>{article.date}</span>
-              <h3>{article.title}</h3>
-              <p className="muted">{article.text}</p>
+            <article className="newsCard" key={article}>
+              <span>{t(`articles.${article}.category`)}</span>
+              <h3>{t(`articles.${article}.title`)}</h3>
+              <p className="muted">{t(`articles.${article}.text`)}</p>
             </article>
           ))}
         </div>

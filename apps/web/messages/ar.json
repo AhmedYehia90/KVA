@@ -18,5 +18,155 @@
     "pilots": "الطيارون",
     "about": "عن الشركة",
     "copyright": "© 2026 طيران كلابشة"
+  },
+  "PilotDashboard": {
+    "crewOperations": "عمليات الطاقم",
+    "welcome": "مرحبًا بعودتك، أيها القائد.",
+    "intro": "تابع مسيرتك في الطيران الافتراضي، وراجع تقارير رحلاتك الأخيرة، واستعد لمهمتك القادمة مع طيران كلابشة.",
+    "totalFlightTime": "إجمالي وقت الطيران",
+    "hoursValue": "{hours} ساعة",
+    "verifiedHours": "ساعات طيران افتراضية موثقة",
+    "completedFlights": "الرحلات المكتملة",
+    "acrossNetwork": "عبر شبكة KVA",
+    "approvedReports": "التقارير المعتمدة",
+    "latestActivity": "من أحدث نشاطاتك",
+    "homeBase": "المطار الرئيسي",
+    "homeBaseName": "مطار القاهرة الدولي — HECA",
+    "careerProgression": "التقدم الوظيفي",
+    "rankProgress": "تقدم الرتبة",
+    "loggedHours": "الساعات المسجلة: {hours}",
+    "hoursRemaining": "الساعات المتبقية: {hours}",
+    "nextMilestone": "المحطة التالية",
+    "promotionRequirement": "أكمل {hours} ساعة طيران إجمالية للتأهل للمراجعة والترقية إلى رتبة {rank}.",
+    "typeRatings": "تأهيلات الطائرات",
+    "aircraftQualifications": "الطائرات المؤهل لقيادتها",
+    "exploreFleet": "استكشف الأسطول ←",
+    "flightRecords": "سجلات الرحلات",
+    "recentPireps": "أحدث تقارير الرحلات",
+    "fileNewPirep": "تقديم تقرير رحلة جديد",
+    "duration": "{hours} س {minutes} د",
+    "ranks": {
+      "seniorfirstofficer": "مساعد قائد أول",
+      "captain": "قائد طائرة"
+    },
+    "statuses": {
+      "approved": "معتمد",
+      "pending": "قيد المراجعة",
+      "rejected": "مرفوض"
+    },
+    "table": {
+      "flight": "الرحلة",
+      "route": "المسار",
+      "aircraft": "الطائرة",
+      "date": "التاريخ",
+      "duration": "المدة",
+      "status": "الحالة"
+    }
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "طيران كلابشة الافتراضي",
+      "titleLine1": "حلّق نحو",
+      "titleLine2": "الأحلام",
+      "description": "شركة طيران افتراضية حديثة تعتمد على واقعية التشغيل والطيارين النشطين وشبكة عالمية متنامية.",
+      "joinPilot": "انضم كطيار",
+      "exploreFleet": "استكشف الأسطول",
+      "aircraftAria": "موضع صورة الطائرة",
+      "artworkPlaceholder": "ستتم إضافة التصميم الرسمي للأسطول هنا"
+    },
+    "search": {
+      "eyebrow": "بحث سريع عن الرحلات",
+      "title": "خطط لعمليتك القادمة",
+      "from": "من",
+      "to": "إلى",
+      "aircraft": "الطائرة",
+      "findFlights": "البحث عن رحلات",
+      "departureAria": "مطار المغادرة",
+      "arrivalAria": "مطار الوصول",
+      "aircraftAria": "نوع الطائرة",
+      "airports": {
+        "cairo": "القاهرة — HECA",
+        "hurghada": "الغردقة — HEGN",
+        "luxor": "الأقصر — HELX",
+        "dubai": "دبي — OMDB",
+        "kuwait": "الكويت — OKKK",
+        "jeddah": "جدة — OEJN"
+      }
+    },
+    "stats": {
+      "aria": "إحصائيات شركة الطيران",
+      "aircraft": "طائرة",
+      "fleetTypes": "أنواع الطائرات",
+      "destinations": "وجهة",
+      "operations": "عمليات مستمرة"
+    },
+    "fleet": {
+      "eyebrow": "أسطولنا",
+      "title": "طائرات لكل مهمة",
+      "viewAll": "عرض الأسطول الكامل ←",
+      "roles": {
+        "regional": "العمليات الإقليمية",
+        "mediumHaul": "الرحلات القصيرة والمتوسطة",
+        "longHaul": "طائرة الرحلات الطويلة الرئيسية"
+      }
+    },
+    "destinations": {
+      "eyebrow": "الوجهات الشائعة",
+      "title": "نربط مصر بالمنطقة",
+      "cities": {
+        "dubai": "دبي",
+        "kuwait": "الكويت",
+        "jeddah": "جدة",
+        "istanbul": "إسطنبول"
+      },
+      "regions": {
+        "uae": "الإمارات العربية المتحدة",
+        "kuwait": "الكويت",
+        "saudi": "المملكة العربية السعودية",
+        "turkiye": "تركيا"
+      }
+    },
+    "liveFlights": {
+      "eyebrow": "مركز العمليات",
+      "title": "الرحلات المباشرة",
+      "networkActive": "الشبكة نشطة",
+      "aria": "الرحلات الحالية",
+      "flight": "الرحلة",
+      "route": "المسار",
+      "aircraft": "الطائرة",
+      "status": "الحالة",
+      "statuses": {
+        "boarding": "صعود الركاب",
+        "enRoute": "في الطريق",
+        "scheduled": "مجدولة"
+      }
+    },
+    "news": {
+      "eyebrow": "آخر التحديثات",
+      "title": "أخبار طيران كلابشة",
+      "articles": {
+        "roadmap": {
+          "category": "العمليات",
+          "title": "خريطة تطوير طيران كلابشة",
+          "text": "يجري تجهيز المنصة لحسابات الطيارين والجداول ونظام ACARS وبيانات العمليات المباشرة."
+        },
+        "fleetStrategy": {
+          "category": "الأسطول",
+          "title": "استراتيجية أسطول مرنة",
+          "text": "يدعم الأسطول المخطط العمليات الافتراضية الإقليمية والمتوسطة والطويلة المدى."
+        },
+        "community": {
+          "category": "المجتمع",
+          "title": "منصة مبنية حول الطيارين الافتراضيين",
+          "text": "سيكون التدريب والفعاليات والإجراءات الواقعية أساس مجتمع طيران كلابشة."
+        }
+      }
+    },
+    "partners": {
+      "eyebrow": "الطيران عبر الإنترنت",
+      "title": "جاهزون للطيران المتصل",
+      "description": "يجري تصميم طيران كلابشة للعمليات المنظمة والفعاليات المجتمعية والتوافق مع شبكات الطيران الرئيسية عبر الإنترنت.",
+      "aria": "دعم شبكات الطيران المخطط"
+    }
   }
 }

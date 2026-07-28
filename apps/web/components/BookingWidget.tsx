@@ -1,43 +1,45 @@
+import {useTranslations} from "next-intl";
+
 export function BookingWidget() {
+  const t = useTranslations("Home.search");
+
   return (
     <section className="bookingWrap">
       <div className="container">
         <form className="bookingCard">
           <div className="bookingHeading">
-            <span className="eyebrow">Quick flight search</span>
-            <h2>Plan your next operation</h2>
+            <span className="eyebrow">{t("eyebrow")}</span>
+            <h2>{t("title")}</h2>
           </div>
 
           <label>
-            From
-            <select defaultValue="HECA" aria-label="Departure airport">
-              <option value="HECA">Cairo — HECA</option>
-              <option value="HEGN">Hurghada — HEGN</option>
-              <option value="HELX">Luxor — HELX</option>
+            {t("from")}
+            <select defaultValue="HECA" aria-label={t("departureAria")}>
+              <option value="HECA">{t("airports.cairo")}</option>
+              <option value="HEGN">{t("airports.hurghada")}</option>
+              <option value="HELX">{t("airports.luxor")}</option>
             </select>
           </label>
 
           <label>
-            To
-            <select defaultValue="OMDB" aria-label="Arrival airport">
-              <option value="OMDB">Dubai — OMDB</option>
-              <option value="OKKK">Kuwait — OKKK</option>
-              <option value="OEJN">Jeddah — OEJN</option>
+            {t("to")}
+            <select defaultValue="OMDB" aria-label={t("arrivalAria")}>
+              <option value="OMDB">{t("airports.dubai")}</option>
+              <option value="OKKK">{t("airports.kuwait")}</option>
+              <option value="OEJN">{t("airports.jeddah")}</option>
             </select>
           </label>
 
           <label>
-            Aircraft
-            <select defaultValue="A320" aria-label="Aircraft type">
-              <option value="A320">Airbus A320</option>
-              <option value="B738">Boeing 737-800</option>
-              <option value="B77W">Boeing 777-300ER</option>
+            {t("aircraft")}
+            <select defaultValue="A21N" aria-label={t("aircraftAria")}>
+              <option value="A21N">Airbus A321neo</option>
+              <option value="E170">Embraer 170</option>
+              <option value="B788">Boeing 787-8</option>
             </select>
           </label>
 
-          <button className="button bookingButton" type="button">
-            Find Flights
-          </button>
+          <button className="button bookingButton" type="button">{t("findFlights")}</button>
         </form>
       </div>
     </section>

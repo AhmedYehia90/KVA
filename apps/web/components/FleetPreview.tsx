@@ -1,34 +1,33 @@
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 const fleet = [
-  { code: "A320", name: "Airbus A320", role: "Regional operations" },
-  { code: "B738", name: "Boeing 737-800", role: "Short and medium haul" },
-  { code: "B77W", name: "Boeing 777-300ER", role: "Long-haul flagship" },
+  {code: "E170", name: "Embraer 170", role: "regional"},
+  {code: "A21N", name: "Airbus A321neo", role: "mediumHaul"},
+  {code: "B77W", name: "Boeing 777-300ER", role: "longHaul"}
 ] as const;
 
 export function FleetPreview() {
+  const t = useTranslations("Home.fleet");
+
   return (
     <section className="section">
       <div className="container">
         <div className="sectionHeader">
           <div>
-            <div className="eyebrow">Our fleet</div>
-            <h2>Aircraft for every mission</h2>
+            <div className="eyebrow">{t("eyebrow")}</div>
+            <h2>{t("title")}</h2>
           </div>
-          <Link className="textLink" href="/fleet">
-            View complete fleet →
-          </Link>
+          <Link className="textLink" href="/fleet">{t("viewAll")}</Link>
         </div>
 
         <div className="fleetGrid">
           {fleet.map((aircraft) => (
             <article className="fleetCard" key={aircraft.code}>
-              <div className="fleetVisual" aria-hidden="true">
-                ✈
-              </div>
+              <div className="fleetVisual" aria-hidden="true">✈</div>
               <div className="fleetCode">{aircraft.code}</div>
               <h3>{aircraft.name}</h3>
-              <p className="muted">{aircraft.role}</p>
+              <p className="muted">{t(`roles.${aircraft.role}`)}</p>
             </article>
           ))}
         </div>
