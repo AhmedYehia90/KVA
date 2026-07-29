@@ -11,8 +11,11 @@ export const metadata: Metadata = {
 };
 
 type Rank = {
+  code: string;
   name: string;
   minimum_hours: number | string;
+  minimum_flights: number;
+  priority: number;
 };
 
 type Profile = {
@@ -38,6 +41,16 @@ type Pirep = {
   arrival: Airport | Airport[] | null;
 };
 
+const rankTranslationKeys: Record<string, string> = {
+  CADET: "cadet",
+  SO: "secondofficer",
+  FO: "firstofficer",
+  SFO: "seniorfirstofficer",
+  CPT: "captain",
+  SCPT: "seniorcaptain",
+  CP: "chiefpilot"
+};
+
 function first<T>(value: T | T[] | null | undefined): T | null {
   return Array.isArray(value) ? value[0] ?? null : value ?? null;
 }
@@ -45,10 +58,6 @@ function first<T>(value: T | T[] | null | undefined): T | null {
 function toNumber(value: number | string | null | undefined) {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function rankKey(value: string) {
-  return value.toLowerCase().replaceAll(" ", "");
 }
 
 export default async function PilotDashboardPage() {
@@ -67,7 +76,7 @@ export default async function PilotDashboardPage() {
   const {data: profileData, error: profileError} = await supabase
     .from("profiles")
     .select(
-      "id, callsign, full_name, total_hours, total_flights, ranks(name, minimum_hours)"
+      "id, callsign, full_name, total_hours, total_flights, ranks(code, name, minimum_hours, minimum_flights, priority)"
     )
     .eq("id", user.id)
     .single();
@@ -79,26 +88,54 @@ export default async function PilotDashboardPage() {
   }
 
   const profile = profileData as unknown as Profile;
-  const currentRankRow = first(profile.ranks);
+  const currentRank = first(profile.ranks);
   const totalHours = toNumber(profile.total_hours);
-  const currentMinimum = toNumber(currentRankRow?.minimum_hours);
+  const totalFlights = profile.total_flights ?? 0;
 
-  const {data: nextRankData} = await supabase
+  const currentPriority = currentRank?.priority ?? 0;
+  const currentMinimumHours = toNumber(currentRank?.minimum_hours);
+
+  const {data: nextRankData, error: nextRankError} = await supabase
     .from("ranks")
-    .select("name, minimum_hours")
-    .gt("minimum_hours", totalHours)
-    .order("minimum_hours", {ascending: true})
+    .select("code, name, minimum_hours, minimum_flights, priority")
+    .gt("priority", currentPriority)
+    .order("priority", {ascending: true})
     .limit(1)
     .maybeSingle();
 
+  if (nextRankError) {
+    throw new Error(`Unable to load next rank: ${nextRankError.message}`);
+  }
+
   const nextRank = nextRankData as Rank | null;
-  const nextMinimum = nextRank ? toNumber(nextRank.minimum_hours) : totalHours;
-  const range = Math.max(0, nextMinimum - currentMinimum);
-  const completed = Math.max(0, totalHours - currentMinimum);
+  const nextMinimumHours = nextRank
+    ? toNumber(nextRank.minimum_hours)
+    : totalHours;
+
+  const rankHourRange = Math.max(
+    0,
+    nextMinimumHours - currentMinimumHours
+  );
+  const hoursCompletedInRank = Math.max(
+    0,
+    totalHours - currentMinimumHours
+  );
+
   const progress = nextRank
-    ? Math.min(100, range > 0 ? Math.round((completed / range) * 100) : 100)
+    ? rankHourRange > 0
+      ? Math.min(
+          100,
+          Math.max(
+            0,
+            Math.round((hoursCompletedInRank / rankHourRange) * 100)
+          )
+        )
+      : 0
     : 100;
-  const remainingHours = Math.max(0, nextMinimum - totalHours);
+
+  const remainingHours = nextRank
+    ? Math.max(0, nextMinimumHours - totalHours)
+    : 0;
 
   const {data: pirepData, error: pirepError} = await supabase
     .from("pireps")
@@ -126,10 +163,15 @@ export default async function PilotDashboardPage() {
     (flight) => flight.status === "approved"
   ).length;
 
-  const currentRankName = currentRankRow?.name ?? "Cadet";
-  const nextRankName = nextRank?.name ?? currentRankName;
-  const currentRankLabel = t(`ranks.${rankKey(currentRankName)}`);
-  const nextRankLabel = t(`ranks.${rankKey(nextRankName)}`);
+  const currentRankCode = currentRank?.code ?? "CADET";
+  const nextRankCode = nextRank?.code ?? currentRankCode;
+
+  const currentRankLabel = t(
+    `ranks.${rankTranslationKeys[currentRankCode] ?? "cadet"}`
+  );
+  const nextRankLabel = t(
+    `ranks.${rankTranslationKeys[nextRankCode] ?? "cadet"}`
+  );
 
   const initials = profile.full_name
     .split(" ")
@@ -191,7 +233,7 @@ export default async function PilotDashboardPage() {
 
             <article>
               <span>{t("completedFlights")}</span>
-              <strong>{profile.total_flights}</strong>
+              <strong>{totalFlights}</strong>
               <small>{t("acrossNetwork")}</small>
             </article>
 
@@ -244,7 +286,7 @@ export default async function PilotDashboardPage() {
                     <strong>{t("nextMilestone")}</strong>
                     <p>
                       {t("promotionRequirement", {
-                        hours: nextMinimum,
+                        hours: nextMinimumHours,
                         rank: nextRankLabel
                       })}
                     </p>
