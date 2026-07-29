@@ -46,8 +46,13 @@
     "fileNewPirep": "تقديم تقرير رحلة جديد",
     "duration": "{hours} س {minutes} د",
     "ranks": {
-      "seniorfirstofficer": "مساعد قائد أول",
-      "captain": "قائد طائرة"
+    "cadet": "طيار متدرب",
+    "secondofficer": "ضابط ثانٍ",
+    "firstofficer": "مساعد طيار",
+    "seniorfirstofficer": "مساعد قائد أول",
+    "captain": "قائد طائرة",
+    "seniorcaptain": "قائد أول",
+    "chiefpilot": "كبير الطيارين"
     },
     "statuses": {
       "approved": "معتمد",
