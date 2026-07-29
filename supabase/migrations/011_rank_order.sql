@@ -1,0 +1,2 @@
+-- Migration retained to preserve Supabase migration history.
+-- Rank ordering uses the existing public.ranks.priority column.
