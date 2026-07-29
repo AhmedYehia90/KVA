@@ -1,41 +1,143 @@
 import type {Metadata} from "next";
 import Link from "next/link";
+import {redirect} from "next/navigation";
 import {getLocale, getTranslations} from "next-intl/server";
-import {currentPilot} from "@/data/pilot";
+import {createClient} from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Pilot Dashboard | Kalabsha Airlines",
-  description:
-    "Pilot hours, rank progress, aircraft qualifications and recent PIREPs."
+  description: "Live pilot profile, rank progress and recent PIREPs."
 };
 
-function rankKey(rank: string) {
-  return rank.toLowerCase().replaceAll(" ", "");
+type Rank = {
+  name: string;
+  minimum_hours: number | string;
+};
+
+type Profile = {
+  id: string;
+  callsign: string;
+  full_name: string;
+  total_hours: number | string;
+  total_flights: number;
+  ranks: Rank | Rank[] | null;
+};
+
+type Airport = {
+  icao_code: string;
+};
+
+type Pirep = {
+  id: string;
+  flight_number: string;
+  block_minutes: number;
+  status: string;
+  created_at: string;
+  departure: Airport | Airport[] | null;
+  arrival: Airport | Airport[] | null;
+};
+
+function first<T>(value: T | T[] | null | undefined): T | null {
+  return Array.isArray(value) ? value[0] ?? null : value ?? null;
 }
 
-function statusKey(status: string) {
-  return status.toLowerCase();
+function toNumber(value: number | string | null | undefined) {
+  const parsed = Number(value ?? 0);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function rankKey(value: string) {
+  return value.toLowerCase().replaceAll(" ", "");
 }
 
 export default async function PilotDashboardPage() {
   const t = await getTranslations("PilotDashboard");
   const locale = await getLocale();
-  const pilot = currentPilot;
+  const supabase = await createClient();
 
-  const requiredHours = pilot.nextRankHours - pilot.currentRankMinimumHours;
-  const achievedHours = pilot.totalHours - pilot.currentRankMinimumHours;
-  const progress = Math.min(
-    100,
-    Math.max(0, Math.round((achievedHours / requiredHours) * 100))
-  );
-  const remainingHours = Math.max(0, pilot.nextRankHours - pilot.totalHours);
-  const approvedFlights = pilot.recentFlights.filter(
-    (flight) => flight.status === "Approved"
+  const {
+    data: {user}
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/pilots/login");
+  }
+
+  const {data: profileData, error: profileError} = await supabase
+    .from("profiles")
+    .select(
+      "id, callsign, full_name, total_hours, total_flights, ranks(name, minimum_hours)"
+    )
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profileData) {
+    throw new Error(
+      `Unable to load pilot profile: ${profileError?.message ?? "Profile not found"}`
+    );
+  }
+
+  const profile = profileData as unknown as Profile;
+  const currentRankRow = first(profile.ranks);
+  const totalHours = toNumber(profile.total_hours);
+  const currentMinimum = toNumber(currentRankRow?.minimum_hours);
+
+  const {data: nextRankData} = await supabase
+    .from("ranks")
+    .select("name, minimum_hours")
+    .gt("minimum_hours", totalHours)
+    .order("minimum_hours", {ascending: true})
+    .limit(1)
+    .maybeSingle();
+
+  const nextRank = nextRankData as Rank | null;
+  const nextMinimum = nextRank ? toNumber(nextRank.minimum_hours) : totalHours;
+  const range = Math.max(0, nextMinimum - currentMinimum);
+  const completed = Math.max(0, totalHours - currentMinimum);
+  const progress = nextRank
+    ? Math.min(100, range > 0 ? Math.round((completed / range) * 100) : 100)
+    : 100;
+  const remainingHours = Math.max(0, nextMinimum - totalHours);
+
+  const {data: pirepData, error: pirepError} = await supabase
+    .from("pireps")
+    .select(
+      `
+        id,
+        flight_number,
+        block_minutes,
+        status,
+        created_at,
+        departure:airports!pireps_departure_airport_id_fkey(icao_code),
+        arrival:airports!pireps_arrival_airport_id_fkey(icao_code)
+      `
+    )
+    .eq("pilot_id", user.id)
+    .order("created_at", {ascending: false})
+    .limit(6);
+
+  if (pirepError) {
+    throw new Error(`Unable to load PIREPs: ${pirepError.message}`);
+  }
+
+  const recentFlights = (pirepData ?? []) as unknown as Pirep[];
+  const approvedReports = recentFlights.filter(
+    (flight) => flight.status === "approved"
   ).length;
 
-  const currentRank = t(`ranks.${rankKey(pilot.rank)}`);
-  const nextRank = t(`ranks.${rankKey(pilot.nextRank)}`);
+  const currentRankName = currentRankRow?.name ?? "Cadet";
+  const nextRankName = nextRank?.name ?? currentRankName;
+  const currentRankLabel = t(`ranks.${rankKey(currentRankName)}`);
+  const nextRankLabel = t(`ranks.${rankKey(nextRankName)}`);
+
+  const initials = profile.full_name
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   function formatDate(value: string) {
     return new Intl.DateTimeFormat(locale, {
@@ -67,16 +169,12 @@ export default async function PilotDashboardPage() {
 
           <aside className={styles.identityCard}>
             <span className={styles.avatar} aria-hidden="true">
-              {pilot.name
-                .split(" ")
-                .map((part) => part[0])
-                .slice(0, 2)
-                .join("")}
+              {initials}
             </span>
             <div>
-              <span className={styles.callsign}>{pilot.callsign}</span>
-              <h2>{pilot.name}</h2>
-              <p>{currentRank}</p>
+              <span className={styles.callsign}>{profile.callsign}</span>
+              <h2>{profile.full_name}</h2>
+              <p>{currentRankLabel}</p>
             </div>
           </aside>
         </div>
@@ -87,19 +185,22 @@ export default async function PilotDashboardPage() {
           <div className={styles.statGrid}>
             <article>
               <span>{t("totalFlightTime")}</span>
-              <strong>{t("hoursValue", {hours: pilot.totalHours})}</strong>
+              <strong>{t("hoursValue", {hours: totalHours})}</strong>
               <small>{t("verifiedHours")}</small>
             </article>
+
             <article>
               <span>{t("completedFlights")}</span>
-              <strong>{pilot.completedFlights}</strong>
+              <strong>{profile.total_flights}</strong>
               <small>{t("acrossNetwork")}</small>
             </article>
+
             <article>
               <span>{t("approvedReports")}</span>
-              <strong>{approvedFlights}</strong>
+              <strong>{approvedReports}</strong>
               <small>{t("latestActivity")}</small>
             </article>
+
             <article>
               <span>{t("homeBase")}</span>
               <strong className={styles.baseValue}>HECA</strong>
@@ -112,7 +213,10 @@ export default async function PilotDashboardPage() {
               <div className={styles.sectionHeading}>
                 <div>
                   <p className="eyebrow">{t("careerProgression")}</p>
-                  <h2>{currentRank} → {nextRank}</h2>
+                  <h2>
+                    {currentRankLabel}
+                    {nextRank ? ` → ${nextRankLabel}` : ""}
+                  </h2>
                 </div>
                 <strong>{progress}%</strong>
               </div>
@@ -129,34 +233,38 @@ export default async function PilotDashboardPage() {
               </div>
 
               <div className={styles.progressMeta}>
-                <span>{t("loggedHours", {hours: pilot.totalHours})}</span>
+                <span>{t("loggedHours", {hours: totalHours})}</span>
                 <span>{t("hoursRemaining", {hours: remainingHours})}</span>
               </div>
 
-              <div className={styles.rankRequirement}>
-                <span aria-hidden="true">★</span>
-                <div>
-                  <strong>{t("nextMilestone")}</strong>
-                  <p>
-                    {t("promotionRequirement", {
-                      hours: pilot.nextRankHours,
-                      rank: nextRank
-                    })}
-                  </p>
+              {nextRank ? (
+                <div className={styles.rankRequirement}>
+                  <span aria-hidden="true">★</span>
+                  <div>
+                    <strong>{t("nextMilestone")}</strong>
+                    <p>
+                      {t("promotionRequirement", {
+                        hours: nextMinimum,
+                        rank: nextRankLabel
+                      })}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </section>
 
             <aside className={styles.qualificationCard}>
               <p className="eyebrow">{t("typeRatings")}</p>
               <h2>{t("aircraftQualifications")}</h2>
               <div className={styles.qualificationList}>
-                {pilot.qualifications.map((aircraft) => (
-                  <span key={aircraft}>
-                    <i aria-hidden="true">✓</i>
-                    {aircraft}
-                  </span>
-                ))}
+                {["E170", "A21N", "A359", "B788", "B77W", "B748"].map(
+                  (aircraft) => (
+                    <span key={aircraft}>
+                      <i aria-hidden="true">✓</i>
+                      {aircraft}
+                    </span>
+                  )
+                )}
               </div>
               <Link href="/fleet">{t("exploreFleet")}</Link>
             </aside>
@@ -168,6 +276,7 @@ export default async function PilotDashboardPage() {
                 <p className="eyebrow">{t("flightRecords")}</p>
                 <h2>{t("recentPireps")}</h2>
               </div>
+
               <Link className="button outline" href="/pilot/pireps/new">
                 {t("fileNewPirep")}
               </Link>
@@ -183,22 +292,29 @@ export default async function PilotDashboardPage() {
                 <span>{t("table.status")}</span>
               </div>
 
-              {pilot.recentFlights.map((flight) => (
-                <article className={styles.row} key={flight.id}>
-                  <strong>{flight.flightNumber}</strong>
-                  <span>{flight.route}</span>
-                  <span>{flight.aircraft}</span>
-                  <span>{formatDate(flight.date)}</span>
-                  <span>{formatDuration(flight.durationMinutes)}</span>
-                  <span
-                    className={`${styles.status} ${
-                      styles[flight.status.toLowerCase()]
-                    }`}
-                  >
-                    {t(`statuses.${statusKey(flight.status)}`)}
-                  </span>
-                </article>
-              ))}
+              {recentFlights.map((flight) => {
+                const departure = first(flight.departure)?.icao_code ?? "—";
+                const arrival = first(flight.arrival)?.icao_code ?? "—";
+
+                return (
+                  <article className={styles.row} key={flight.id}>
+                    <strong>{flight.flight_number}</strong>
+                    <span>
+                      {departure} → {arrival}
+                    </span>
+                    <span>—</span>
+                    <span>{formatDate(flight.created_at)}</span>
+                    <span>{formatDuration(flight.block_minutes)}</span>
+                    <span
+                      className={`${styles.status} ${
+                        styles[flight.status.toLowerCase()]
+                      }`}
+                    >
+                      {t(`statuses.${flight.status.toLowerCase()}`)}
+                    </span>
+                  </article>
+                );
+              })}
             </div>
           </section>
         </div>
