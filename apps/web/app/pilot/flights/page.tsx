@@ -237,27 +237,36 @@ export default async function PilotFlightsPage({
                   <article className={styles.row} key={route.id}>
                     <strong>{route.flight_number}</strong>
 
-                    <span className={styles.route}>
-                      <b>{departure?.icao_code ?? "—"}</b>
-                      <i aria-hidden="true">→</i>
-                      <b>{arrival?.icao_code ?? "—"}</b>
-                    </span>
+               <span className={styles.route}>
+                <div>
+                 <strong>{departure?.icao_code}</strong>
+                 <span className={styles.city}> ({departure?.city})</span>
+                </div>
 
-                    <span>
-                      <b>{fleet?.icao_code ?? "—"}</b>
-                      <small>
-                        {fleet
-                          ? `${fleet.manufacturer} ${fleet.model}`
-                          : "Not assigned"}
-                      </small>
-                    </span>
+                <i>↓</i>
+
+                <div>
+                 <strong>{arrival?.icao_code}</strong>
+                 <span className={styles.city}> ({arrival?.city})</span>
+                </div>
+               </span>
+
+               <span className={styles.aircraft}>
+                 <strong>{fleet?.icao_code ?? "—"}</strong>
+
+                 <small>
+                      {fleet
+                         ? `${fleet.manufacturer} ${fleet.model}`
+                         : "Not assigned"}
+                 </small>
+               </span>
 
                     <span>{formatDuration(route.scheduled_minutes)}</span>
 
                     <span>
                       {route.distance_nm
-                        ? `${route.distance_nm.toLocaleString()} NM`
-                        : "—"}
+                         ? `${route.distance_nm.toLocaleString("en-US")} NM`
+                         : "—"}
                     </span>
 
                     <span className={styles.available}>Available</span>
