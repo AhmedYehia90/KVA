@@ -14,7 +14,7 @@ type Airport = {
   icao_code: string;
   name: string;
   city: string | null;
-  country_code: string | null;
+  country: string | null;
 };
 
 type FleetType = {
@@ -87,13 +87,13 @@ export default async function FlightDetailsPage({
               icao_code,
               name,
               city,
-              country_code
+              country
             ),
             arrival:airports!routes_arrival_airport_id_fkey(
               icao_code,
               name,
               city,
-              country_code
+              country
             ),
             fleet_type:fleet_types!routes_fleet_type_id_fkey(
               icao_code,
@@ -167,7 +167,7 @@ export default async function FlightDetailsPage({
                 <strong>{departure?.icao_code ?? "—"}</strong>
                 <h2>{departure?.name ?? "Airport not available"}</h2>
                 <span>
-                  {[departure?.city, departure?.country_code]
+                  {[departure?.city, departure?.country]
                     .filter(Boolean)
                     .join(", ") || "—"}
                 </span>
@@ -184,7 +184,7 @@ export default async function FlightDetailsPage({
                 <strong>{arrival?.icao_code ?? "—"}</strong>
                 <h2>{arrival?.name ?? "Airport not available"}</h2>
                 <span>
-                  {[arrival?.city, arrival?.country_code]
+                  {[arrival?.city, arrival?.country]
                     .filter(Boolean)
                     .join(", ") || "—"}
                 </span>
@@ -212,7 +212,7 @@ export default async function FlightDetailsPage({
                 <span>Distance</span>
                 <strong>
                   {route.distance_nm
-                    ? `${route.distance_nm.toLocaleString()} NM`
+                    ? `${route.distance_nm.toLocaleString("en-US")} NM`
                     : "—"}
                 </strong>
                 <small>Published route distance</small>
