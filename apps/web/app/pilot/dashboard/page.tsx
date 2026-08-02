@@ -112,14 +112,8 @@ export default async function PilotDashboardPage() {
     ? toNumber(nextRank.minimum_hours)
     : totalHours;
 
-  const rankHourRange = Math.max(
-    0,
-    nextMinimumHours - currentMinimumHours
-  );
-  const hoursCompletedInRank = Math.max(
-    0,
-    totalHours - currentMinimumHours
-  );
+  const rankHourRange = Math.max(0, nextMinimumHours - currentMinimumHours);
+  const hoursCompletedInRank = Math.max(0, totalHours - currentMinimumHours);
 
   const progress = nextRank
     ? rankHourRange > 0
@@ -224,6 +218,37 @@ export default async function PilotDashboardPage() {
 
       <section className={styles.dashboard}>
         <div className="container">
+          <section className={styles.quickActions}>
+            <div className={styles.sectionHeading}>
+              <div>
+                <p className="eyebrow">Pilot Operations</p>
+                <h2>Quick Actions</h2>
+              </div>
+            </div>
+
+            <div className={styles.quickActionsGrid}>
+              <Link className={styles.quickAction} href="/pilot/flights">
+                <span>Flight Planning</span>
+                <strong>Browse Flights →</strong>
+              </Link>
+
+              <Link className={styles.quickAction} href="/pilot/pireps/new">
+                <span>Flight Records</span>
+                <strong>File PIREP →</strong>
+              </Link>
+
+              <Link className={styles.quickAction} href="/fleet">
+                <span>Operations</span>
+                <strong>Explore Fleet →</strong>
+              </Link>
+
+              <Link className={styles.quickAction} href="/live-flights">
+                <span>Network</span>
+                <strong>Live Flights →</strong>
+              </Link>
+            </div>
+          </section>
+
           <div className={styles.statGrid}>
             <article>
               <span>{t("totalFlightTime")}</span>
@@ -299,7 +324,7 @@ export default async function PilotDashboardPage() {
               <p className="eyebrow">{t("typeRatings")}</p>
               <h2>{t("aircraftQualifications")}</h2>
               <div className={styles.qualificationList}>
-                {["E170", "A21N", "A359", "B788", "B77W", "B748"].map(
+                {["E170", "A21N", "A333", "A359", "B788", "B77W", "B748"].map(
                   (aircraft) => (
                     <span key={aircraft}>
                       <i aria-hidden="true">✓</i>

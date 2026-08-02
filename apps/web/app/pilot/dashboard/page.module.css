@@ -8,13 +8,19 @@
 .identityCard h2{margin:6px 0 4px;font-size:1.55rem}
 .identityCard p{margin:0;color:var(--muted)}
 .dashboard{padding:0 0 100px;background:var(--bg)}
-.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;transform:translateY(-34px)}
+.quickActions{margin:0 0 26px;padding:26px;border:1px solid var(--border);border-radius:22px;background:var(--surface);transform:translateY(-34px);box-shadow:var(--shadow)}
+.quickActionsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.quickAction{display:flex;min-height:110px;flex-direction:column;justify-content:space-between;gap:18px;padding:20px;border:1px solid rgba(105,183,231,.16);border-radius:16px;background:rgba(4,16,32,.24);transition:transform .2s ease,border-color .2s ease}
+.quickAction:hover{transform:translateY(-2px);border-color:var(--accent)}
+.quickAction span{color:var(--muted);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.quickAction strong{color:var(--accent);font-size:1.05rem}
+.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:-8px}
 .statGrid article{padding:24px;border:1px solid var(--border);border-radius:18px;background:rgba(13,44,84,.97);box-shadow:var(--shadow)}
 .statGrid span{display:block;color:var(--muted);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .statGrid strong{display:block;margin:10px 0 7px;font-size:2rem}
 .statGrid small{color:var(--muted);line-height:1.5}
 .baseValue{font-size:1.55rem!important}
-.mainGrid{display:grid;grid-template-columns:1.35fr .65fr;gap:22px;margin-top:14px}
+.mainGrid{display:grid;grid-template-columns:1.35fr .65fr;gap:22px;margin-top:26px}
 .rankCard,.qualificationCard{padding:28px;border:1px solid var(--border);border-radius:22px;background:var(--surface)}
 .sectionHeading{display:flex;align-items:end;justify-content:space-between;gap:24px}
 .sectionHeading h2,.qualificationCard h2,.activitySection h2{margin:10px 0 0;font-size:clamp(1.8rem,3vw,2.5rem);letter-spacing:-.035em}
@@ -39,5 +45,5 @@
 .approved{background:rgba(57,220,138,.1);color:#82edb5}
 .pending{background:rgba(255,187,72,.1);color:#ffd584}
 .rejected{background:rgba(255,95,95,.1);color:#ff9a9a}
-@media(max-width:980px){.heroGrid,.mainGrid{grid-template-columns:1fr}.statGrid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:repeat(3,1fr)}.tableHead{display:none}}
-@media(max-width:620px){.hero{padding:62px 0 78px}.hero h1{font-size:3.4rem}.identityCard{align-items:flex-start}.statGrid{grid-template-columns:1fr}.sectionHeading{align-items:flex-start;flex-direction:column}.progressMeta{flex-direction:column;gap:7px}.row{grid-template-columns:1fr 1fr}.activitySection,.rankCard,.qualificationCard{padding:20px}}
+@media(max-width:980px){.heroGrid,.mainGrid{grid-template-columns:1fr}.quickActionsGrid,.statGrid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:repeat(3,1fr)}.tableHead{display:none}}
+@media(max-width:620px){.hero{padding:62px 0 78px}.hero h1{font-size:3.4rem}.identityCard{align-items:flex-start}.quickActionsGrid,.statGrid{grid-template-columns:1fr}.sectionHeading{align-items:flex-start;flex-direction:column}.progressMeta{flex-direction:column;gap:7px}.row{grid-template-columns:1fr 1fr}.activitySection,.rankCard,.qualificationCard,.quickActions{padding:20px}}
