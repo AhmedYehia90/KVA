@@ -1,177 +1,178 @@
-{
-  "Common": {
-    "homeAria": "Kalabsha Airlines home"
-  },
-  "Navigation": {
-    "mainNavigation": "Main navigation",
-    "fleet": "Fleet",
-    "liveFlights": "Live Flights",
-    "pilots": "Pilots",
-    "about": "About",
-    "pilotLogin": "Pilot Login"
-  },
-  "Footer": {
-    "description": "A virtual airline built around realistic operations, community and the passion for aviation.",
-    "navigationAria": "Footer navigation",
-    "fleet": "Fleet",
-    "liveFlights": "Live Flights",
-    "pilots": "Pilots",
-    "about": "About",
-    "copyright": "© 2026 Kalabsha Airlines"
-  },
-  "PilotDashboard": {
-    "crewOperations": "Crew operations",
-    "welcome": "Welcome back, Captain.",
-    "intro": "Track your virtual aviation career, review recent flight reports and prepare for your next Kalabsha Airlines assignment.",
-    "totalFlightTime": "Total flight time",
-    "hoursValue": "{hours}h",
-    "verifiedHours": "Verified virtual hours",
-    "completedFlights": "Completed flights",
-    "acrossNetwork": "Across the KVA network",
-    "approvedReports": "Approved reports",
-    "latestActivity": "From your latest activity",
-    "homeBase": "Home base",
-    "homeBaseName": "Cairo International — HECA",
-    "careerProgression": "Career progression",
-    "rankProgress": "Rank progress",
-    "loggedHours": "{hours} logged hours",
-    "hoursRemaining": "{hours} hours remaining",
-    "nextMilestone": "Next milestone",
-    "promotionRequirement": "Reach {hours} total flight hours to qualify for review and promotion to {rank}.",
-    "typeRatings": "Type ratings",
-    "aircraftQualifications": "Aircraft qualifications",
-    "exploreFleet": "Explore the fleet →",
-    "flightRecords": "Flight records",
-    "recentPireps": "Recent PIREPs",
-    "fileNewPirep": "File new PIREP",
-    "duration": "{hours}h {minutes}m",
-    "ranks": {
-    "cadet": "Cadet",
-    "secondofficer": "Second Officer",
-    "firstofficer": "First Officer",
-    "seniorfirstofficer": "Senior First Officer",
-    "captain": "Captain",
-    "seniorcaptain": "Senior Captain",
-    "chiefpilot": "Chief Pilot"
-    },
-    "statuses": {
-      "approved": "Approved",
-      "pending": "Pending",
-      "rejected": "Rejected"
-    },
-    "table": {
-      "flight": "Flight",
-      "route": "Route",
-      "aircraft": "Aircraft",
-      "date": "Date",
-      "duration": "Duration",
-      "status": "Status"
-    }
-  },
-  "Home": {
-    "hero": {
-      "eyebrow": "Kalabsha Virtual Airlines",
-      "titleLine1": "Fly To",
-      "titleLine2": "Dreams",
-      "description": "A modern virtual airline built for realistic operations, active pilots and a growing global network.",
-      "joinPilot": "Join as a Pilot",
-      "exploreFleet": "Explore Fleet",
-      "aircraftAria": "Aircraft image placeholder",
-      "artworkPlaceholder": "Official fleet artwork will be added here"
-    },
-    "search": {
-      "eyebrow": "Quick flight search",
-      "title": "Plan your next operation",
-      "from": "From",
-      "to": "To",
-      "aircraft": "Aircraft",
-      "findFlights": "Find Flights",
-      "departureAria": "Departure airport",
-      "arrivalAria": "Arrival airport",
-      "aircraftAria": "Aircraft type",
-      "airports": {
-        "cairo": "Cairo — HECA",
-        "hurghada": "Hurghada — HEGN",
-        "luxor": "Luxor — HELX",
-        "dubai": "Dubai — OMDB",
-        "kuwait": "Kuwait — OKKK",
-        "jeddah": "Jeddah — OEJN"
-      }
-    },
-    "stats": {
-      "aria": "Airline statistics",
-      "aircraft": "Aircraft",
-      "fleetTypes": "Fleet types",
-      "destinations": "Destinations",
-      "operations": "Operations"
-    },
-    "fleet": {
-      "eyebrow": "Our fleet",
-      "title": "Aircraft for every mission",
-      "viewAll": "View complete fleet →",
-      "roles": {
-        "regional": "Regional operations",
-        "mediumHaul": "Short and medium haul",
-        "longHaul": "Long-haul flagship"
-      }
-    },
-    "destinations": {
-      "eyebrow": "Popular destinations",
-      "title": "Connect Egypt to the region",
-      "cities": {
-        "dubai": "Dubai",
-        "kuwait": "Kuwait",
-        "jeddah": "Jeddah",
-        "istanbul": "Istanbul"
-      },
-      "regions": {
-        "uae": "United Arab Emirates",
-        "kuwait": "Kuwait",
-        "saudi": "Saudi Arabia",
-        "turkiye": "Türkiye"
-      }
-    },
-    "liveFlights": {
-      "eyebrow": "Operations center",
-      "title": "Live flights",
-      "networkActive": "Network active",
-      "aria": "Current flights",
-      "flight": "Flight",
-      "route": "Route",
-      "aircraft": "Aircraft",
-      "status": "Status",
-      "statuses": {
-        "boarding": "Boarding",
-        "enRoute": "En route",
-        "scheduled": "Scheduled"
-      }
-    },
-    "news": {
-      "eyebrow": "Latest updates",
-      "title": "From Kalabsha Airlines",
-      "articles": {
-        "roadmap": {
-          "category": "Operations",
-          "title": "Kalabsha Airlines development roadmap",
-          "text": "The platform is being prepared for pilot accounts, schedules, ACARS and live operational data."
-        },
-        "fleetStrategy": {
-          "category": "Fleet",
-          "title": "A flexible fleet strategy",
-          "text": "The planned fleet supports regional, medium-haul and long-haul virtual operations."
-        },
-        "community": {
-          "category": "Community",
-          "title": "Built around virtual pilots",
-          "text": "Training, events and realistic procedures will form the heart of the Kalabsha community."
-        }
-      }
-    },
-    "partners": {
-      "eyebrow": "Online aviation",
-      "title": "Ready for connected flying",
-      "description": "Kalabsha Airlines is being designed for structured operations, community events and compatibility with major online networks.",
-      "aria": "Planned online network support"
-    }
-  }
+﻿{
+    "Common":  {
+                   "homeAria":  "Kalabsha Airlines home"
+               },
+    "Navigation":  {
+                       "mainNavigation":  "Main navigation",
+                       "fleet":  "Fleet",
+                       "liveFlights":  "Live Flights",
+                       "pilots":  "Pilots",
+                       "about":  "About",
+                       "pilotLogin":  "Pilot Login"
+                   },
+    "Footer":  {
+                   "description":  "A virtual airline built around realistic operations, community and the passion for aviation.",
+                   "navigationAria":  "Footer navigation",
+                   "fleet":  "Fleet",
+                   "liveFlights":  "Live Flights",
+                   "pilots":  "Pilots",
+                   "about":  "About",
+                   "copyright":  "© 2026 Kalabsha Airlines"
+               },
+    "PilotDashboard":  {
+                           "crewOperations":  "Crew operations",
+                           "welcome":  "Welcome back, Captain.",
+                           "intro":  "Track your virtual aviation career, review recent flight reports and prepare for your next Kalabsha Airlines assignment.",
+                           "totalFlightTime":  "Total flight time",
+                           "hoursValue":  "{hours}h",
+                           "verifiedHours":  "Verified virtual hours",
+                           "completedFlights":  "Completed flights",
+                           "acrossNetwork":  "Across the KVA network",
+                           "approvedReports":  "Approved reports",
+                           "latestActivity":  "From your latest activity",
+                           "homeBase":  "Home base",
+                           "homeBaseName":  "Cairo International — HECA",
+                           "careerProgression":  "Career progression",
+                           "rankProgress":  "Rank progress",
+                           "loggedHours":  "{hours} logged hours",
+                           "hoursRemaining":  "{hours} hours remaining",
+                           "nextMilestone":  "Next milestone",
+                           "promotionRequirement":  "Reach {hours} total flight hours to qualify for review and promotion to {rank}.",
+                           "typeRatings":  "Type ratings",
+                           "aircraftQualifications":  "Aircraft qualifications",
+                           "exploreFleet":  "Explore the fleet →",
+                           "flightRecords":  "Flight records",
+                           "recentPireps":  "Recent PIREPs",
+                           "fileNewPirep":  "File new PIREP",
+                           "duration":  "{hours}h {minutes}m",
+                           "ranks":  {
+                                         "cadet":  "Cadet",
+                                         "secondofficer":  "Second Officer",
+                                         "firstofficer":  "First Officer",
+                                         "seniorfirstofficer":  "Senior First Officer",
+                                         "captain":  "Captain",
+                                         "seniorcaptain":  "Senior Captain",
+                                         "chiefpilot":  "Chief Pilot"
+                                     },
+                           "statuses":  {
+                                            "approved":  "Approved",
+                                            "pending":  "Pending",
+                                            "rejected":  "Rejected",
+                                            "submitted":  "Submitted"
+                                        },
+                           "table":  {
+                                         "flight":  "Flight",
+                                         "route":  "Route",
+                                         "aircraft":  "Aircraft",
+                                         "date":  "Date",
+                                         "duration":  "Duration",
+                                         "status":  "Status"
+                                     }
+                       },
+    "Home":  {
+                 "hero":  {
+                              "eyebrow":  "Kalabsha Virtual Airlines",
+                              "titleLine1":  "Fly To",
+                              "titleLine2":  "Dreams",
+                              "description":  "A modern virtual airline built for realistic operations, active pilots and a growing global network.",
+                              "joinPilot":  "Join as a Pilot",
+                              "exploreFleet":  "Explore Fleet",
+                              "aircraftAria":  "Aircraft image placeholder",
+                              "artworkPlaceholder":  "Official fleet artwork will be added here"
+                          },
+                 "search":  {
+                                "eyebrow":  "Quick flight search",
+                                "title":  "Plan your next operation",
+                                "from":  "From",
+                                "to":  "To",
+                                "aircraft":  "Aircraft",
+                                "findFlights":  "Find Flights",
+                                "departureAria":  "Departure airport",
+                                "arrivalAria":  "Arrival airport",
+                                "aircraftAria":  "Aircraft type",
+                                "airports":  {
+                                                 "cairo":  "Cairo — HECA",
+                                                 "hurghada":  "Hurghada — HEGN",
+                                                 "luxor":  "Luxor — HELX",
+                                                 "dubai":  "Dubai — OMDB",
+                                                 "kuwait":  "Kuwait — OKKK",
+                                                 "jeddah":  "Jeddah — OEJN"
+                                             }
+                            },
+                 "stats":  {
+                               "aria":  "Airline statistics",
+                               "aircraft":  "Aircraft",
+                               "fleetTypes":  "Fleet types",
+                               "destinations":  "Destinations",
+                               "operations":  "Operations"
+                           },
+                 "fleet":  {
+                               "eyebrow":  "Our fleet",
+                               "title":  "Aircraft for every mission",
+                               "viewAll":  "View complete fleet →",
+                               "roles":  {
+                                             "regional":  "Regional operations",
+                                             "mediumHaul":  "Short and medium haul",
+                                             "longHaul":  "Long-haul flagship"
+                                         }
+                           },
+                 "destinations":  {
+                                      "eyebrow":  "Popular destinations",
+                                      "title":  "Connect Egypt to the region",
+                                      "cities":  {
+                                                     "dubai":  "Dubai",
+                                                     "kuwait":  "Kuwait",
+                                                     "jeddah":  "Jeddah",
+                                                     "istanbul":  "Istanbul"
+                                                 },
+                                      "regions":  {
+                                                      "uae":  "United Arab Emirates",
+                                                      "kuwait":  "Kuwait",
+                                                      "saudi":  "Saudi Arabia",
+                                                      "turkiye":  "Türkiye"
+                                                  }
+                                  },
+                 "liveFlights":  {
+                                     "eyebrow":  "Operations center",
+                                     "title":  "Live flights",
+                                     "networkActive":  "Network active",
+                                     "aria":  "Current flights",
+                                     "flight":  "Flight",
+                                     "route":  "Route",
+                                     "aircraft":  "Aircraft",
+                                     "status":  "Status",
+                                     "statuses":  {
+                                                      "boarding":  "Boarding",
+                                                      "enRoute":  "En route",
+                                                      "scheduled":  "Scheduled"
+                                                  }
+                                 },
+                 "news":  {
+                              "eyebrow":  "Latest updates",
+                              "title":  "From Kalabsha Airlines",
+                              "articles":  {
+                                               "roadmap":  {
+                                                               "category":  "Operations",
+                                                               "title":  "Kalabsha Airlines development roadmap",
+                                                               "text":  "The platform is being prepared for pilot accounts, schedules, ACARS and live operational data."
+                                                           },
+                                               "fleetStrategy":  {
+                                                                     "category":  "Fleet",
+                                                                     "title":  "A flexible fleet strategy",
+                                                                     "text":  "The planned fleet supports regional, medium-haul and long-haul virtual operations."
+                                                                 },
+                                               "community":  {
+                                                                 "category":  "Community",
+                                                                 "title":  "Built around virtual pilots",
+                                                                 "text":  "Training, events and realistic procedures will form the heart of the Kalabsha community."
+                                                             }
+                                           }
+                          },
+                 "partners":  {
+                                  "eyebrow":  "Online aviation",
+                                  "title":  "Ready for connected flying",
+                                  "description":  "Kalabsha Airlines is being designed for structured operations, community events and compatibility with major online networks.",
+                                  "aria":  "Planned online network support"
+                              }
+             }
 }

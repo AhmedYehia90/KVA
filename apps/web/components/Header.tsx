@@ -24,11 +24,7 @@ export async function Header() {
   return (
     <header className="nav">
       <div className="container navin">
-        <Link
-          href="/"
-          className="brand"
-          aria-label={common("homeAria")}
-        >
+        <Link href="/" className="brand" aria-label={common("homeAria")}>
           <Image
             src="/brand/logo-reference.png"
             alt="Kalabsha Airlines"
@@ -47,8 +43,10 @@ export async function Header() {
           {user ? (
             <>
               <Link href="/pilot/dashboard">Dashboard</Link>
+              <Link href="/operations">Operations</Link>
               <Link href="/pilot/flights">Flights</Link>
-              <Link href="/pilot/pireps/new">PIREPs</Link>
+              <Link href="/pilot/bookings">My Bookings</Link>
+              <Link href="/pilot/pireps">PIREPs</Link>
               <Link href="/fleet">{t("fleet")}</Link>
             </>
           ) : (

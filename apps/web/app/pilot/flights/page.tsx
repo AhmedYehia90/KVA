@@ -31,6 +31,12 @@ type Route = {
   fleet_type: FleetType | FleetType[] | null;
 };
 
+type ActiveBooking = {
+  id: string;
+  route_id: string;
+  status: string;
+};
+
 type SearchParams = Promise<{
   q?: string;
   departure?: string;
@@ -49,6 +55,14 @@ function formatDuration(totalMinutes: number | null) {
 
   return `${hours}:${minutes.toString().padStart(2, "0")}`;
 }
+
+const activeStatuses = [
+  "booked",
+  "boarding",
+  "departed",
+  "enroute",
+  "landed"
+];
 
 export default async function PilotFlightsPage({
   searchParams
@@ -69,39 +83,57 @@ export default async function PilotFlightsPage({
     redirect("/pilots/login");
   }
 
-  const {data, error} = await supabase
-    .from("routes")
-    .select(
-      `
-        id,
-        flight_number,
-        scheduled_minutes,
-        distance_nm,
-        departure:airports!routes_departure_airport_id_fkey(
-          icao_code,
-          name,
-          city
-        ),
-        arrival:airports!routes_arrival_airport_id_fkey(
-          icao_code,
-          name,
-          city
-        ),
-        fleet_type:fleet_types!routes_fleet_type_id_fkey(
-          icao_code,
-          manufacturer,
-          model
-        )
-      `
-    )
-    .eq("active", true)
-    .order("flight_number", {ascending: true});
+  const [
+    {data: routeData, error: routeError},
+    {data: bookingData, error: bookingError}
+  ] = await Promise.all([
+    supabase
+      .from("routes")
+      .select(
+        `
+          id,
+          flight_number,
+          scheduled_minutes,
+          distance_nm,
+          departure:airports!routes_departure_airport_id_fkey(
+            icao_code,
+            name,
+            city
+          ),
+          arrival:airports!routes_arrival_airport_id_fkey(
+            icao_code,
+            name,
+            city
+          ),
+          fleet_type:fleet_types!routes_fleet_type_id_fkey(
+            icao_code,
+            manufacturer,
+            model
+          )
+        `
+      )
+      .eq("active", true)
+      .order("flight_number", {ascending: true}),
+    supabase
+      .from("flight_bookings")
+      .select("id, route_id, status")
+      .eq("pilot_id", user.id)
+      .in("status", activeStatuses)
+  ]);
 
-  if (error) {
-    throw new Error(`Unable to load available flights: ${error.message}`);
+  if (routeError) {
+    throw new Error(`Unable to load available flights: ${routeError.message}`);
   }
 
-  const routes = (data ?? []) as unknown as Route[];
+  if (bookingError) {
+    throw new Error(`Unable to load active booking: ${bookingError.message}`);
+  }
+
+  const routes = (routeData ?? []) as unknown as Route[];
+  const activeBookings = (bookingData ?? []) as ActiveBooking[];
+  const bookingByRoute = new Map(
+    activeBookings.map((booking) => [booking.route_id, booking])
+  );
 
   const departureOptions = Array.from(
     new Set(
@@ -147,6 +179,10 @@ export default async function PilotFlightsPage({
     );
   });
 
+  const availableCount = filteredRoutes.filter(
+    (route) => !bookingByRoute.has(route.id)
+  ).length;
+
   return (
     <main>
       <section className={styles.hero}>
@@ -174,10 +210,7 @@ export default async function PilotFlightsPage({
 
             <label>
               <span>Departure</span>
-              <select
-                defaultValue={departureFilter}
-                name="departure"
-              >
+              <select defaultValue={departureFilter} name="departure">
                 <option value="">All airports</option>
                 {departureOptions.map((icao) => (
                   <option key={icao} value={icao}>
@@ -211,9 +244,9 @@ export default async function PilotFlightsPage({
           <div className={styles.summary}>
             <div>
               <p className="eyebrow">Network Schedule</p>
-              <h2>{filteredRoutes.length} available routes</h2>
+              <h2>{availableCount} available routes</h2>
             </div>
-            <span>All times shown as scheduled block time</span>
+            <span>Booked routes remain visible with their current status</span>
           </div>
 
           {filteredRoutes.length ? (
@@ -232,51 +265,78 @@ export default async function PilotFlightsPage({
                 const departure = first(route.departure);
                 const arrival = first(route.arrival);
                 const fleet = first(route.fleet_type);
+                const booking = bookingByRoute.get(route.id);
+                const isBooked = Boolean(booking);
 
                 return (
-                  <article className={styles.row} key={route.id}>
+                  <article
+                    className={`${styles.row} ${
+                      isBooked ? styles.bookedRow : ""
+                    }`}
+                    key={route.id}
+                  >
                     <strong>{route.flight_number}</strong>
 
-               <span className={styles.route}>
-                <div>
-                 <strong>{departure?.icao_code}</strong>
-                 <span className={styles.city}> ({departure?.city})</span>
-                </div>
+                    <span className={styles.route}>
+                      <div>
+                        <strong>{departure?.icao_code}</strong>
+                        <span className={styles.city}>
+                          {" "}
+                          ({departure?.city})
+                        </span>
+                      </div>
 
-                <i>↓</i>
+                      <i>↓</i>
 
-                <div>
-                 <strong>{arrival?.icao_code}</strong>
-                 <span className={styles.city}> ({arrival?.city})</span>
-                </div>
-               </span>
+                      <div>
+                        <strong>{arrival?.icao_code}</strong>
+                        <span className={styles.city}>
+                          {" "}
+                          ({arrival?.city})
+                        </span>
+                      </div>
+                    </span>
 
-               <span className={styles.aircraft}>
-                 <strong>{fleet?.icao_code ?? "—"}</strong>
-
-                 <small>
-                      {fleet
-                         ? `${fleet.manufacturer} ${fleet.model}`
-                         : "Not assigned"}
-                 </small>
-               </span>
+                    <span className={styles.aircraft}>
+                      <strong>{fleet?.icao_code ?? "—"}</strong>
+                      <small>
+                        {fleet
+                          ? `${fleet.manufacturer} ${fleet.model}`
+                          : "Not assigned"}
+                      </small>
+                    </span>
 
                     <span>{formatDuration(route.scheduled_minutes)}</span>
 
                     <span>
                       {route.distance_nm
-                         ? `${route.distance_nm.toLocaleString("en-US")} NM`
-                         : "—"}
+                        ? `${route.distance_nm.toLocaleString("en-US")} NM`
+                        : "—"}
                     </span>
 
-                    <span className={styles.available}>Available</span>
-
-                    <Link
-                      className={styles.detailsLink}
-                      href={`/pilot/flights/${route.id}`}
+                    <span
+                      className={
+                        isBooked ? styles.booked : styles.available
+                      }
                     >
-                      View flight
-                    </Link>
+                      {isBooked ? booking?.status ?? "Booked" : "Available"}
+                    </span>
+
+                    {isBooked && booking ? (
+                      <Link
+                        className={styles.detailsLink}
+                        href={`/pilot/bookings/${booking.id}`}
+                      >
+                        Open booking
+                      </Link>
+                    ) : (
+                      <Link
+                        className={styles.detailsLink}
+                        href={`/pilot/flights/${route.id}`}
+                      >
+                        View flight
+                      </Link>
+                    )}
                   </article>
                 );
               })}

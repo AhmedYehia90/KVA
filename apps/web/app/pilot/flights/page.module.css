@@ -118,6 +118,10 @@
   border-top: 0;
 }
 
+.bookedRow {
+  background: rgba(255, 187, 72, .035);
+}
+
 .tableHead {
   min-height: auto;
   padding-top: 15px;
@@ -163,14 +167,25 @@
   color: var(--muted);
   font-size: .82rem;
 }
-.available {
+
+.available,
+.booked {
   width: max-content;
   padding: 7px 10px;
   border-radius: 999px;
-  background: rgba(57, 220, 138, .1);
-  color: #82edb5;
   font-size: .76rem;
   font-weight: 800;
+  text-transform: capitalize;
+}
+
+.available {
+  background: rgba(57, 220, 138, .1);
+  color: #82edb5;
+}
+
+.booked {
+  background: rgba(255, 187, 72, .1);
+  color: #ffd584;
 }
 
 .detailsLink {
