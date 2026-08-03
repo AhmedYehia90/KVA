@@ -8,7 +8,7 @@
 .identityCard h2{margin:6px 0 4px;font-size:1.55rem}
 .identityCard p{margin:0;color:var(--muted)}
 .dashboard{padding:0 0 100px;background:var(--bg)}
-.quickActions{margin:0 0 26px;padding:26px;border:1px solid var(--border);border-radius:22px;background:var(--surface);transform:translateY(-34px);box-shadow:var(--shadow)}
+.quickActions{margin:0 0 26px;padding:26px;border:1px solid var(--border);border-radius:22px;background:var(--surface);transform:none;box-shadow:var(--shadow)}
 .quickActionsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
 .quickAction{display:flex;min-height:110px;flex-direction:column;justify-content:space-between;gap:18px;padding:20px;border:1px solid rgba(105,183,231,.16);border-radius:16px;background:rgba(4,16,32,.24);transition:transform .2s ease,border-color .2s ease}
 .quickAction:hover{transform:translateY(-2px);border-color:var(--accent)}

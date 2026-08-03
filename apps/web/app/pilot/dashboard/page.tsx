@@ -4,7 +4,7 @@ import {redirect} from "next/navigation";
 import {getLocale, getTranslations} from "next-intl/server";
 import {createClient} from "@/lib/supabase/server";
 import styles from "./page.module.css";
-
+import CurrentFlightCard from "./current-flight";
 export const metadata: Metadata = {
   title: "Pilot Dashboard | Kalabsha Airlines",
   description: "Live pilot profile, rank progress and recent PIREPs."
@@ -218,6 +218,7 @@ export default async function PilotDashboardPage() {
 
       <section className={styles.dashboard}>
         <div className="container">
+          <CurrentFlightCard pilotId={user.id} />
           <section className={styles.quickActions}>
             <div className={styles.sectionHeading}>
               <div>
