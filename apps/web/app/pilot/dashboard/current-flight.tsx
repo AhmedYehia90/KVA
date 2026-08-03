@@ -55,7 +55,20 @@ export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
     throw new Error(`Unable to load current flight: ${error.message}`);
   }
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <section className={`${styles.card} ${styles.empty}`}>
+        <div>
+          <p className="eyebrow">Current Flight</p>
+          <h2>No Active Assignment</h2>
+          <p>You do not have an active flight at the moment.</p>
+        </div>
+        <Link className="button" href="/pilot/flights">
+          Browse Available Flights
+        </Link>
+      </section>
+    );
+  }
 
   const booking = data as unknown as ActiveBooking;
   const route = first(booking.route);
@@ -76,7 +89,7 @@ export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
               <strong>{departure?.icao_code ?? "—"}</strong>
               <span>{departure?.city ?? "Departure"}</span>
             </div>
-            <i aria-hidden="true">→</i>
+            <i aria-hidden="true">✈</i>
             <div>
               <strong>{arrival?.icao_code ?? "—"}</strong>
               <span>{arrival?.city ?? "Arrival"}</span>

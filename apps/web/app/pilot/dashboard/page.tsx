@@ -3,8 +3,9 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 import {getLocale, getTranslations} from "next-intl/server";
 import {createClient} from "@/lib/supabase/server";
-import styles from "./page.module.css";
 import CurrentFlightCard from "./current-flight";
+import styles from "./page.module.css";
+
 export const metadata: Metadata = {
   title: "Pilot Dashboard | Kalabsha Airlines",
   description: "Live pilot profile, rank progress and recent PIREPs."
@@ -196,29 +197,32 @@ export default async function PilotDashboardPage() {
   return (
     <main>
       <section className={styles.hero}>
-        <div className={`container ${styles.heroGrid}`}>
-          <div>
-            <p className="eyebrow">{t("crewOperations")}</p>
-            <h1>{t("welcome")}</h1>
-            <p className={styles.lead}>{t("intro")}</p>
+        <div className={`container ${styles.heroShell}`}>
+          <div className={styles.heroGrid}>
+            <div>
+              <p className="eyebrow">{t("crewOperations")}</p>
+              <h1>{t("welcome")}</h1>
+              <p className={styles.lead}>{t("intro")}</p>
+            </div>
+
+            <aside className={styles.identityCard}>
+              <span className={styles.avatar} aria-hidden="true">
+                {initials}
+              </span>
+              <div>
+                <span className={styles.callsign}>{profile.callsign}</span>
+                <h2>{profile.full_name}</h2>
+                <p>{currentRankLabel}</p>
+              </div>
+            </aside>
           </div>
 
-          <aside className={styles.identityCard}>
-            <span className={styles.avatar} aria-hidden="true">
-              {initials}
-            </span>
-            <div>
-              <span className={styles.callsign}>{profile.callsign}</span>
-              <h2>{profile.full_name}</h2>
-              <p>{currentRankLabel}</p>
-            </div>
-          </aside>
+          <CurrentFlightCard pilotId={user.id} />
         </div>
       </section>
 
       <section className={styles.dashboard}>
         <div className="container">
-          <CurrentFlightCard pilotId={user.id} />
           <section className={styles.quickActions}>
             <div className={styles.sectionHeading}>
               <div>
