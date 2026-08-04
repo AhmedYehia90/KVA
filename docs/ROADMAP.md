@@ -1,8 +1,22 @@
-# Roadmap
-1. Website and brand foundation
-2. Authentication, schedules and pilot portal
-3. Admin dashboard and live operations
-4. Kalabsha ACARS for FSX
-5. IVAO-compatible workflows
-6. Prepar3D and modern MSFS support
-7. Mobile application
+# KVA Roadmap
+
+## Genesis
+Documentation, event architecture, rule blueprint, legacy blueprint, module boundaries.
+
+## Core
+Operational stabilization, event store, aircraft state synchronization, auto PIREP.
+
+## Pilot
+Passport, Career, Wallet, Moments, Legacy timeline.
+
+## Intelligence
+Digital Flight Companion, AI Mentor, Aviation DNA.
+
+## Operations
+OCC, Smart Operations AI, AI Dispatcher.
+
+## World
+Living Airports, Global Events, Airline Story.
+
+## Integrations
+Black Box, ACARS, SimBrief, VATSIM, IVAO, Discord, weather.
