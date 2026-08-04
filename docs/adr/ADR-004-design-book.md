@@ -2,4 +2,4 @@
 
 Status: Approved
 
-Maintain product and architecture documentation inside the repository.
+Maintain product, architecture, event, rule, and experience documentation inside the repository.

@@ -2,4 +2,4 @@
 
 Status: Approved
 
-Use capability blueprints, design review, event maps, tests, and release notes.
+Use capability blueprints, design review, documented rules, event maps, tests, and release notes.

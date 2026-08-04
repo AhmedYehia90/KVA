@@ -1,10 +1,4 @@
-# Business Rule Engine Blueprint
+# Business Rule Engine
 
 ## Purpose
-Centralize configurable promotion, salary, reward, penalty, eligibility, and legacy decisions.
-
-## Rule lifecycle
-Draft → Review → Approved → Active → Superseded → Archived.
-
-## Safety
-Rules return decisions. Approved domain services execute changes and publish events.
+Centralize configurable decisions such as promotion, salary, rewards, penalties, eligibility, and legacy evaluation.

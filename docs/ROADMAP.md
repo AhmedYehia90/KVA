@@ -1,22 +1,13 @@
-# KVA Roadmap
+# Roadmap
 
 ## Genesis
-Documentation, event architecture, rule blueprint, legacy blueprint, module boundaries.
+Foundation documentation, architecture, event contracts, rule engine, legacy model.
 
 ## Core
-Operational stabilization, event store, aircraft state synchronization, auto PIREP.
+Event store, processing log, operational stabilization, aircraft state sync, auto PIREP.
 
 ## Pilot
-Passport, Career, Wallet, Moments, Legacy timeline.
+Universal Pilot Passport, Career & Economy, Wallet, Moments, Legacy timeline.
 
 ## Intelligence
-Digital Flight Companion, AI Mentor, Aviation DNA.
-
-## Operations
-OCC, Smart Operations AI, AI Dispatcher.
-
-## World
-Living Airports, Global Events, Airline Story.
-
-## Integrations
-Black Box, ACARS, SimBrief, VATSIM, IVAO, Discord, weather.
+Digital Flight Companion, AI Mentor, flight metrics, Aviation DNA.
