@@ -1,7 +1,9 @@
 import type {Metadata} from "next";
+import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {getOperationsData} from "@/lib/operations/getOperationsData";
+import {isOperationsConsoleAdminEmail} from "@/lib/operations/console-auth";
 import {OperationsStats} from "@/components/operations/OperationsStats";
 import {LiveFlights} from "@/components/operations/LiveFlights";
 import {FleetSummary} from "@/components/operations/FleetSummary";
@@ -24,6 +26,7 @@ export default async function OperationsPage() {
   }
 
   const data = await getOperationsData();
+  const canOpenEventConsole = isOperationsConsoleAdminEmail(user.email);
 
   return (
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
@@ -32,15 +35,36 @@ export default async function OperationsPage() {
         background:"radial-gradient(circle at 78% 30%, rgba(0,174,239,.22), transparent 28%), linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)"
       }}>
         <div className="container">
-          <p className="eyebrow">Kalabsha Operations</p>
-          <h1 style={{
-            margin:"14px 0 18px",
-            fontSize:"clamp(3.2rem,7vw,6rem)",
-            lineHeight:.95,
-            letterSpacing:"-.055em"
+          <div style={{
+            display:"flex",
+            justifyContent:"space-between",
+            alignItems:"flex-start",
+            gap:20,
+            flexWrap:"wrap"
           }}>
-            Operations Center
-          </h1>
+            <div>
+              <p className="eyebrow">Kalabsha Operations</p>
+              <h1 style={{
+                margin:"14px 0 18px",
+                fontSize:"clamp(3.2rem,7vw,6rem)",
+                lineHeight:.95,
+                letterSpacing:"-.055em"
+              }}>
+                Operations Center
+              </h1>
+            </div>
+
+            {canOpenEventConsole ? (
+              <Link
+                className="button"
+                href="/operations/events"
+                style={{marginTop:8}}
+              >
+                Open Event Console
+              </Link>
+            ) : null}
+          </div>
+
           <p style={{
             maxWidth:760,
             margin:0,
