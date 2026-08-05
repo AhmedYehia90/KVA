@@ -23,6 +23,14 @@ enum FlightStatus {
   CANCELLED
 }
 
+enum EventProcessingStatus {
+  PENDING
+  PROCESSING
+  PROCESSED
+  FAILED
+  DEAD_LETTER
+}
+
 model User {
   id          String   @id @default(cuid())
   email       String   @unique
@@ -94,4 +102,44 @@ model Pirep {
 
   flight Flight @relation(fields: [flightId], references: [id])
   pilot  Pilot  @relation(fields: [pilotId], references: [id])
+}
+
+model PlatformEvent {
+  id              String   @id @default(uuid()) @db.Uuid
+  eventType       String   @map("event_type")
+  eventVersion    Int      @default(1) @map("event_version")
+  organizationId  String?  @map("organization_id")
+  aggregateType   String   @map("aggregate_type")
+  aggregateId     String   @map("aggregate_id")
+  actorId         String?  @map("actor_id")
+  correlationId   String   @db.Uuid @map("correlation_id")
+  causationId     String?  @db.Uuid @map("causation_id")
+  occurredAt      DateTime @map("occurred_at") @db.Timestamptz(6)
+  payload         Json
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  processingLogs  EventProcessingLog[]
+
+  @@index([eventType, occurredAt])
+  @@index([organizationId, occurredAt])
+  @@index([aggregateType, aggregateId, occurredAt])
+  @@index([correlationId])
+  @@map("platform_events")
+}
+
+model EventProcessingLog {
+  id           String                @id @default(uuid()) @db.Uuid
+  eventId      String                @db.Uuid @map("event_id")
+  consumerName String                @map("consumer_name")
+  status       EventProcessingStatus @default(PENDING)
+  attempts     Int                   @default(0)
+  lastError    String?               @map("last_error")
+  processedAt  DateTime?             @map("processed_at") @db.Timestamptz(6)
+  createdAt    DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime              @updatedAt @map("updated_at") @db.Timestamptz(6)
+  event        PlatformEvent         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, consumerName])
+  @@index([status, updatedAt])
+  @@map("event_processing_log")
 }
