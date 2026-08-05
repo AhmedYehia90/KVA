@@ -4,14 +4,6 @@ import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 
-const transitions: Record<string, string> = {
-  booked: "boarding",
-  boarding: "departed",
-  departed: "enroute",
-  enroute: "landed",
-  landed: "completed"
-};
-
 export async function advanceFlightAction(formData: FormData) {
   const bookingId = formData.get("bookingId");
 
@@ -20,7 +12,6 @@ export async function advanceFlightAction(formData: FormData) {
   }
 
   const supabase = await createClient();
-
   const {
     data: {user}
   } = await supabase.auth.getUser();
@@ -29,56 +20,13 @@ export async function advanceFlightAction(formData: FormData) {
     redirect("/pilots/login");
   }
 
-  const {data: booking, error: bookingError} = await supabase
-    .from("flight_bookings")
-    .select("id, status")
-    .eq("id", bookingId)
-    .eq("pilot_id", user.id)
-    .maybeSingle();
+  const {error} = await supabase.rpc("advance_flight_booking", {
+    p_booking_id: bookingId
+  });
 
-  if (bookingError || !booking) {
+  if (error) {
     redirect(
-      `/pilot/bookings/${bookingId}?error=${encodeURIComponent(
-        bookingError?.message ?? "Booking not found."
-      )}`
-    );
-  }
-
-  const nextStatus = transitions[booking.status];
-
-  if (!nextStatus) {
-    redirect(`/pilot/bookings/${bookingId}`);
-  }
-
-  const now = new Date().toISOString();
-  const update: {
-    status: string;
-    started_at?: string;
-    completed_at?: string;
-  } = {
-    status: nextStatus
-  };
-
-  if (booking.status === "booked") {
-    update.started_at = now;
-  }
-
-  if (nextStatus === "completed") {
-    update.completed_at = now;
-  }
-
-  const {error: updateError} = await supabase
-    .from("flight_bookings")
-    .update(update)
-    .eq("id", bookingId)
-    .eq("pilot_id", user.id)
-    .eq("status", booking.status);
-
-  if (updateError) {
-    redirect(
-      `/pilot/bookings/${bookingId}?error=${encodeURIComponent(
-        updateError.message
-      )}`
+      `/pilot/bookings/${bookingId}?error=${encodeURIComponent(error.message)}`
     );
   }
 
@@ -87,6 +35,7 @@ export async function advanceFlightAction(formData: FormData) {
   revalidatePath("/pilot/flights");
   revalidatePath("/pilot/dashboard");
   revalidatePath("/live-flights");
+  revalidatePath("/operations");
 
   redirect(`/pilot/bookings/${bookingId}`);
 }

@@ -4,6 +4,7 @@ export * from "./event-bus";
 export * from "./event-contract";
 export * from "./event-runtime";
 export * from "./event-store";
+export * from "./flight-events";
 export * from "./idempotent-handler";
 export * from "./processing-log";
 export * from "./types";
