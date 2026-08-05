@@ -55,13 +55,19 @@ export default async function OperationsPage() {
             </div>
 
             {canOpenEventConsole ? (
-              <Link
-                className="button"
-                href="/operations/events"
-                style={{marginTop:8}}
-              >
-                Open Event Console
-              </Link>
+              <div style={{
+                display:"flex",
+                gap:10,
+                marginTop:8,
+                flexWrap:"wrap"
+              }}>
+                <Link className="button" href="/operations/ai">
+                  Open Smart Operations AI
+                </Link>
+                <Link className="button outline" href="/operations/events">
+                  Open Event Console
+                </Link>
+              </div>
             ) : null}
           </div>
 

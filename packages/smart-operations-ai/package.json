@@ -1,0 +1,19 @@
+{
+  "name": "@kva/smart-operations-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Explainable operational intelligence policies for KVA OS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "tsx --test test/smart-operations-ai.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.0"
+  }
+}
