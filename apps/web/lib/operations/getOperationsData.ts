@@ -28,10 +28,13 @@ type Pilot = {
   callsign: string;
 };
 
-type Booking = {
-  id: string;
+type OperationsProjection = {
+  booking_id: string;
   status: string;
   started_at: string | null;
+  last_event_type: string;
+  last_event_at: string;
+  projection_version: number;
   route: Route | Route[] | null;
   aircraft: Aircraft | Aircraft[] | null;
   pilot: Pilot | Pilot[] | null;
@@ -57,7 +60,7 @@ export async function getOperationsData() {
 
   const [
     {data: aircraftData, error: aircraftError},
-    {data: bookingData, error: bookingError},
+    {data: projectionData, error: projectionError},
     {data: pirepData, error: pirepError}
   ] = await Promise.all([
     supabase
@@ -73,17 +76,20 @@ export async function getOperationsData() {
         )
       `),
     supabase
-      .from("flight_bookings")
+      .from("operations_flight_projection")
       .select(`
-        id,
+        booking_id,
         status,
         started_at,
-        route:routes(
+        last_event_type,
+        last_event_at,
+        projection_version,
+        route:routes!operations_flight_projection_route_id_fkey(
           flight_number,
           departure:airports!routes_departure_airport_id_fkey(icao_code),
           arrival:airports!routes_arrival_airport_id_fkey(icao_code)
         ),
-        aircraft:aircraft(
+        aircraft:aircraft!operations_flight_projection_aircraft_id_fkey(
           registration,
           status,
           assigned_pilot_id,
@@ -93,13 +99,13 @@ export async function getOperationsData() {
             model
           )
         ),
-        pilot:profiles!flight_bookings_pilot_id_fkey(
+        pilot:profiles!operations_flight_projection_pilot_id_fkey(
           full_name,
           callsign
         )
       `)
       .in("status", ["boarding", "departed", "enroute", "landed"])
-      .order("started_at", {ascending: false}),
+      .order("last_event_at", {ascending: false}),
     supabase
       .from("pireps")
       .select(`
@@ -123,8 +129,10 @@ export async function getOperationsData() {
     throw new Error(`Unable to load fleet summary: ${aircraftError.message}`);
   }
 
-  if (bookingError) {
-    throw new Error(`Unable to load live flights: ${bookingError.message}`);
+  if (projectionError) {
+    throw new Error(
+      `Unable to load operations projection: ${projectionError.message}`
+    );
   }
 
   if (pirepError) {
@@ -132,7 +140,8 @@ export async function getOperationsData() {
   }
 
   const aircraft = (aircraftData ?? []) as unknown as Aircraft[];
-  const liveFlights = (bookingData ?? []) as unknown as Booking[];
+  const liveFlights =
+    (projectionData ?? []) as unknown as OperationsProjection[];
   const recentPireps = (pirepData ?? []) as unknown as Pirep[];
 
   const totalAircraft = aircraft.length;
@@ -224,13 +233,13 @@ export async function getOperationsData() {
       blockHours: Math.round((totalBlockMinutes / 60) * 10) / 10,
       averageLandingRate
     },
-    liveFlights: liveFlights.map((booking) => {
-      const route = first(booking.route);
-      const aircraftItem = first(booking.aircraft);
-      const pilot = first(booking.pilot);
+    liveFlights: liveFlights.map((projection) => {
+      const route = first(projection.route);
+      const aircraftItem = first(projection.aircraft);
+      const pilot = first(projection.pilot);
 
       return {
-        id: booking.id,
+        id: projection.booking_id,
         flightNumber: route?.flight_number ?? "—",
         departure: first(route?.departure)?.icao_code ?? "—",
         arrival: first(route?.arrival)?.icao_code ?? "—",
@@ -238,8 +247,11 @@ export async function getOperationsData() {
         aircraftType: first(aircraftItem?.fleet_type)?.icao_code ?? "—",
         pilotName: pilot?.full_name ?? "Unknown pilot",
         callsign: pilot?.callsign ?? "—",
-        status: booking.status,
-        startedAt: booking.started_at
+        status: projection.status,
+        startedAt: projection.started_at,
+        lastEventType: projection.last_event_type,
+        lastEventAt: projection.last_event_at,
+        projectionVersion: projection.projection_version
       };
     }),
     fleetSummary: Array.from(fleetMap.values()).sort((a, b) =>
