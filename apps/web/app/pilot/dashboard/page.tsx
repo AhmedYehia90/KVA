@@ -247,6 +247,10 @@ export default async function PilotDashboardPage() {
                 <strong>Explore Fleet →</strong>
               </Link>
 
+              <Link className={styles.quickAction} href="/pilot/passport">
+                <span>Universal Identity</span>
+                <strong>Open Passport →</strong>
+              </Link>
               <Link className={styles.quickAction} href="/live-flights">
                 <span>Network</span>
                 <strong>Live Flights →</strong>
