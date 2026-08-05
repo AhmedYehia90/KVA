@@ -1,20 +1,15 @@
 # Changelog
 
-## [Foundation Pack v1.1] - 2026-08-04
+## [Design Book v1.0] - 2026-08-04
 
 ### Added
-- New root README
-- Contribution guide
-- Project board
-- Product Bible
-- Vision and Constitution
-- Ten Pillars
-- Architecture and Database Blueprint
-- Event Catalog
-- Rule Engine Blueprint
-- Legacy Engine Blueprint
-- Governance model
-- Architecture Decision Records
+- Structured KVA Design Book documentation tree
+- Product, architecture, database, event, engine, AI, world, pilot, API, design, release, research, decision, specification, diagram, and blueprint sections
+- Documentation navigation indexes
+- Installation and rollback scripts
+
+### Changed
+- Root README links now target the structured documentation paths
 
 ### Runtime impact
 None. Documentation only.

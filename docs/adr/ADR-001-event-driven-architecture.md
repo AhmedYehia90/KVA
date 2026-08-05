@@ -2,4 +2,5 @@
 
 Status: Approved
 
-Use durable, versioned domain events to connect KVA capabilities.
+## Decision
+Use durable, versioned domain events. Consumers are idempotent and replay-safe.

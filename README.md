@@ -2,20 +2,16 @@
 
 > **Build Your Aviation Career**
 
-KVA OS is a next-generation Virtual Aviation Operating System designed to help virtual pilots build careers, create legacies, and become part of a living aviation world.
+KVA OS is a next-generation Virtual Aviation Operating System for virtual pilots, airlines, operations teams, and connected aviation communities.
 
 Kalabsha Airlines is the first airline powered by KVA OS.
 
-## Status
+## Project status
 
-- Current phase: Genesis
-- Development status: Active
-- Architecture: Modular, event-driven, multi-airline ready
-- Primary stack: Next.js, TypeScript, Supabase, PostgreSQL
-
-## Why KVA
-
-KVA is not only a virtual airline website. It is being designed as a connected aviation ecosystem where every flight affects the pilot, the airline, the economy, the story, and the wider world.
+- Phase: **Genesis**
+- Status: **Active development**
+- Architecture: **Modular, event-driven, multi-airline ready**
+- Stack: **Next.js, TypeScript, Supabase, PostgreSQL**
 
 ## The Ten Pillars
 
@@ -30,19 +26,22 @@ KVA is not only a virtual airline website. It is being designed as a connected a
 9. AI Dispatcher
 10. Global Aviation Events
 
+## Core loop
+
+Login → Book Flight → Dispatch → Fly → Debrief → Career Progress → Moment → Legacy → Airline Story → Next Flight
+
 ## Documentation
 
-- [Product Bible](docs/PRODUCT_BIBLE.md)
-- [Vision](docs/VISION.md)
-- [Constitution](docs/CONSTITUTION.md)
-- [Pillars](docs/PILLARS.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Database Blueprint](docs/DATABASE_BLUEPRINT.md)
-- [Event Catalog](docs/EVENT_CATALOG.md)
-- [Rule Engine](docs/RULE_ENGINE.md)
-- [Legacy Engine](docs/LEGACY_ENGINE.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Governance](docs/GOVERNANCE.md)
+Start with the [KVA Design Book](docs/README.md).
+
+- [Product Bible](docs/01-product/PRODUCT_BIBLE.md)
+- [Architecture](docs/02-architecture/ARCHITECTURE.md)
+- [Database Blueprint](docs/03-database/DATABASE_BLUEPRINT.md)
+- [Event Catalog](docs/04-events/EVENT_CATALOG.md)
+- [Rule Engine](docs/05-engines/RULE_ENGINE.md)
+- [Legacy Engine](docs/05-engines/LEGACY_ENGINE.md)
+- [Roadmap](docs/01-product/ROADMAP.md)
+- [Architecture Decisions](docs/adr/README.md)
 
 ## Development
 
@@ -51,12 +50,6 @@ pnpm install
 pnpm dev
 ```
 
-Open `http://localhost:3000`.
-
-## Contribution
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Product Philosophy
+## Product philosophy
 
 > **Don't build features. Build legacy.**

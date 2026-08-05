@@ -2,4 +2,5 @@
 
 Status: Approved
 
-Centralize configurable promotion, salary, reward, penalty, and legacy eligibility decisions.
+## Decision
+Centralize configurable decisions. Rules return decisions; services perform mutations.

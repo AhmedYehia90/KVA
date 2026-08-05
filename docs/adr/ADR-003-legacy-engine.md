@@ -2,4 +2,5 @@
 
 Status: Approved
 
-Treat Legacy as a domain engine that transforms meaningful events into permanent Moments.
+## Decision
+Transform meaningful events into permanent Moments.

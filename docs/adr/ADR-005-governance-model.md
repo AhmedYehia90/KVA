@@ -2,4 +2,5 @@
 
 Status: Approved
 
-Use capability blueprints, design review, documented rules, event maps, tests, and release notes.
+## Decision
+Require blueprints, rules, event maps, tests, and release notes for major capabilities.
