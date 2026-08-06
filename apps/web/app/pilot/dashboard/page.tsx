@@ -251,6 +251,12 @@ export default async function PilotDashboardPage() {
                 <span>Universal Identity</span>
                 <strong>Open Passport →</strong>
               </Link>
+
+              <Link className={styles.quickAction} href="/pilot/companion">
+                <span>Post-flight Coaching</span>
+                <strong>Open Companion →</strong>
+              </Link>
+
               <Link className={styles.quickAction} href="/live-flights">
                 <span>Network</span>
                 <strong>Live Flights →</strong>
