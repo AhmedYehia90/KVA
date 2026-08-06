@@ -64,6 +64,9 @@ export default async function OperationsPage() {
                 <Link className="button" href="/operations/ai">
                   Open Smart Operations AI
                 </Link>
+                <Link className="button outline" href="/operations/replay">
+                  Open Black Box Replay
+                </Link>
                 <Link className="button outline" href="/operations/events">
                   Open Event Console
                 </Link>

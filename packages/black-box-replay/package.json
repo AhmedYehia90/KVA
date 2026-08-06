@@ -1,0 +1,19 @@
+{
+  "name": "@kva/black-box-replay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deterministic flight replay and integrity analysis for KVA OS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "tsx --test test/black-box-replay.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.0"
+  }
+}
