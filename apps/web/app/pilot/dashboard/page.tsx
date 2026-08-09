@@ -262,6 +262,11 @@ export default async function PilotDashboardPage() {
                 <strong>Open Mentor AI →</strong>
               </Link>
 
+              <Link className={styles.quickAction} href="/pilot/airbot">
+                <span>Living Airbot</span>
+                <strong>Open AI Dispatcher →</strong>
+              </Link>
+
               <Link className={styles.quickAction} href="/live-flights">
                 <span>Network</span>
                 <strong>Live Flights →</strong>

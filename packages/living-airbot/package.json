@@ -1,0 +1,19 @@
+{
+  "name": "@kva/living-airbot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Evidence-backed living AI dispatcher for KVA OS pilots",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "tsx --test test/living-airbot.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.0"
+  }
+}
