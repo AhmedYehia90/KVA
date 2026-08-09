@@ -257,6 +257,11 @@ export default async function PilotDashboardPage() {
                 <strong>Open Companion →</strong>
               </Link>
 
+              <Link className={styles.quickAction} href="/pilot/mentor">
+                <span>Adaptive Learning</span>
+                <strong>Open Mentor AI →</strong>
+              </Link>
+
               <Link className={styles.quickAction} href="/live-flights">
                 <span>Network</span>
                 <strong>Live Flights →</strong>
