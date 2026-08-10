@@ -267,6 +267,11 @@ export default async function PilotDashboardPage() {
                 <strong>Open AI Dispatcher →</strong>
               </Link>
 
+              <Link className={styles.quickAction} href="/pilot/events">
+                <span>Global Network</span>
+                <strong>Open Aviation Events →</strong>
+              </Link>
+
               <Link className={styles.quickAction} href="/live-flights">
                 <span>Network</span>
                 <strong>Live Flights →</strong>

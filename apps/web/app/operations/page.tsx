@@ -70,6 +70,9 @@ export default async function OperationsPage() {
                 <Link className="button outline" href="/operations/events">
                   Open Event Console
                 </Link>
+                <Link className="button outline" href="/operations/global-events">
+                  Manage Global Events
+                </Link>
               </div>
             ) : null}
           </div>
