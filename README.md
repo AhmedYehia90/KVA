@@ -223,9 +223,207 @@ Global Aviation Events allows pilots and virtual airlines to participate in shar
 
 ## ⬜ Pillar 08 — Career & Economy
 
-Planned as the long-term progression and economy layer of KVA OS.
+Career & Economy is the long-term progression and economic layer of KVA OS.
 
-Expected direction includes pilot career progression, salary/rewards, virtual currency, economic participation, marketplace concepts and meaningful use of earned value inside the platform.
+It is intentionally split into **Pilot Economy** and **Company Economy** so pilot progression never becomes mixed with airline ownership or fleet-management authority.
+
+### Pilot Career
+
+- Career XP and long-term progression
+- Rank progression
+- Promotion requirements
+- Flight-hour and flight-count milestones
+- Performance-backed progression
+- Promotion history
+- Career achievements
+- Universal Pilot Passport integration
+
+### Pilot Salary & Rewards
+
+Eligible completed flights can generate evidence-backed rewards such as:
+
+- Base flight salary
+- Performance bonus
+- Event reward
+- Career milestone reward
+- Mentor / achievement reward where applicable
+
+Rewards must come from recorded KVA OS evidence.
+
+### Pilot Wallet
+
+Each pilot has a wallet showing:
+
+- Current balance
+- Total earned
+- Total spent
+- Recent transactions
+- Transaction source
+- Related flight, event, achievement or campaign
+
+The wallet balance is a projection of the economy ledger, not an independently editable number.
+
+### Pilot Marketplace
+
+The **Pilot Marketplace** is strictly for pilot engagement and progression items.
+
+Examples:
+
+- Profile cosmetics
+- Passport frames
+- Career display items
+- Special profile themes
+- Collectibles
+- Airline / event commemorative items
+
+The Pilot Marketplace does **not** sell aircraft and does not give pilots fleet ownership or fleet-management authority.
+
+### Route Support Campaigns
+
+Pilots can use part of their earned balance to support proposed airline routes.
+
+Example:
+
+`Cairo → Tokyo · Community Interest 72%`
+
+Pilot support proves community interest and can help airline management evaluate demand.
+
+Reaching 100% support does **not** automatically open the route.
+
+Final route approval remains an airline/company Operations decision.
+
+### Company Economy
+
+Company Economy is separate from Pilot Economy and is controlled through the airline operations layer.
+
+It represents airline-level economic decisions such as:
+
+- Airline operating budget
+- Fleet acquisition spending
+- Aircraft purchase decisions
+- Aircraft leasing
+- Fleet-related operational spending
+- Company marketplace purchases
+- Route investment decisions
+- Company economic history
+
+Pilots never own company aircraft through their personal wallet.
+
+### Company Marketplace
+
+The **Company Marketplace** lives under the **Operations Economy Console** and is fully separate from the Pilot Marketplace.
+
+It can support company-only transactions such as:
+
+- Aircraft purchase opportunities
+- Aircraft lease opportunities
+- Fleet-capacity additions
+- Airline operational assets
+- Company expansion items
+- Future company-level services
+
+All purchase, lease and fleet-management decisions remain restricted to authorized company / operations roles.
+
+Pilot route-support campaigns can signal interest, but pilots cannot trigger aircraft purchases, leases, fleet changes or route activation.
+
+### Operations Economy Console
+
+Authorized airline operations users can manage:
+
+- Salary policies
+- Reward policies
+- Pilot Marketplace items
+- Company Marketplace items
+- Route Support Campaigns
+- Company economic activity
+- Economy transactions
+- Audit history
+
+The console must not expose an ordinary unrestricted **Edit Balance** action.
+
+Exceptional adjustments must always create an auditable economy-ledger transaction with a recorded reason.
+
+### Unified Economy Ledger
+
+All economic activity is recorded in one append-only **Economy Ledger** with explicit ownership scope.
+
+Each entry records whether it belongs to:
+
+- `PILOT`
+- `COMPANY`
+
+Example pilot transaction types:
+
+- `FLIGHT_SALARY`
+- `PERFORMANCE_BONUS`
+- `EVENT_REWARD`
+- `MILESTONE_REWARD`
+- `PILOT_MARKETPLACE_PURCHASE`
+- `ROUTE_SUPPORT_CONTRIBUTION`
+
+Example company transaction types:
+
+- `COMPANY_MARKETPLACE_PURCHASE`
+- `AIRCRAFT_PURCHASE`
+- `AIRCRAFT_LEASE`
+- `FLEET_OPERATIONAL_EXPENSE`
+- `ROUTE_INVESTMENT`
+- `ROUTE_SUPPORT_FUNDS_RECEIVED`
+
+Ledger entries can reference the related:
+
+- Pilot
+- Company / organization
+- Flight / PIREP
+- Event
+- Marketplace item
+- Aircraft
+- Route campaign
+- Administrative actor
+
+No wallet or company balance can change without a corresponding ledger entry.
+
+### Economy Integrity Rules
+
+**No flight → no salary.**
+
+**No evidence → no reward.**
+
+**No ledger entry → no balance change.**
+
+**Pilot support → interest signal, not operational authority.**
+
+**Aircraft and fleet decisions → company authority only.**
+
+### Event Platform Integration
+
+Career & Economy will publish domain events such as:
+
+- `career.experience_awarded`
+- `career.promoted`
+- `economy.salary_awarded`
+- `economy.bonus_awarded`
+- `economy.transaction_created`
+- `pilot_marketplace.item_purchased`
+- `company_marketplace.item_purchased`
+- `route_support.contribution_created`
+- `route_support.goal_reached`
+- `company.aircraft_purchased`
+- `company.aircraft_leased`
+
+### Planned End-to-End Validation
+
+Pilot flow:
+
+`Complete Flight → Submit PIREP → Salary → Pilot Wallet → Career XP → Promotion Check → Pilot Spend / Route Support → Economy Ledger`
+
+Company flow:
+
+`Operations Decision → Company Marketplace → Aircraft Purchase / Lease or Company Spend → Economy Ledger → Fleet / Company Record`
+
+Route-support flow:
+
+`Pilot Contribution → Campaign Progress → Interest Threshold → Operations Review → Company Decision`
 
 **Status:** Pending
 
@@ -331,7 +529,7 @@ KVA OS prioritizes:
 
 The long-term KVA OS pilot journey is:
 
-`Identity → Flight → Operations → Replay → Debrief → Learning → Dispatcher → Events → Career → Legacy → World`
+`Identity → Flight → Operations → Replay → Debrief → Learning → Dispatcher → Events → Career & Pilot Economy → Company Economy → Legacy → World`
 
 The objective is not simply to log virtual flights.
 
