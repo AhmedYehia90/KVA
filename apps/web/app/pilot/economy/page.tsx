@@ -3,6 +3,8 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {purchasePilotItemAction,contributeRouteSupportAction} from "./actions";
+import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
+import {getMarketplaceThumbnailAlt,getPilotMarketplaceThumbnail} from "@/lib/marketplaceVisuals";
 
 export const metadata:Metadata={title:"Career & Economy | KVA OS"};
 export const dynamic="force-dynamic";
@@ -16,10 +18,15 @@ export default async function CareerEconomyPage({searchParams}:{searchParams:Sea
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
   if(!user) redirect("/pilots/login");
-  const {data,error}=await supabase.rpc("get_pilot_career_economy_dashboard");
+  const [{data,error},{data:visualMarketplace,error:visualMarketplaceError}]=await Promise.all([
+    supabase.rpc("get_pilot_career_economy_dashboard"),
+    supabase.rpc("get_pilot_visual_marketplace")
+  ]);
   if(error) throw new Error(`Unable to load Career & Economy: ${error.message}`);
+  if(visualMarketplaceError) throw new Error(`Unable to load Pilot Marketplace: ${visualMarketplaceError.message}`);
   const d=data as any;
   const c=d.career,w=d.wallet;
+  const marketplace=(visualMarketplace??[]) as any[];
   return <main style={{minHeight:"100vh",background:"var(--bg)"}}>
     <section style={{padding:"74px 20px 115px",background:"radial-gradient(circle at 80% 20%,rgba(0,174,239,.25),transparent 30%),linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)"}}>
       <div style={{maxWidth:1180,margin:"0 auto"}}>
@@ -44,7 +51,43 @@ export default async function CareerEconomyPage({searchParams}:{searchParams:Sea
         {c.nextRank?<p>Next rank requires {c.nextRank.minimumHours} hours and {c.nextRank.minimumFlights} flights.</p>:null}
       </section>
       <section style={panel}><p className="eyebrow">Pilot Marketplace</p><h2>Personal items only</h2><p style={{color:"var(--muted)"}}>Aircraft and fleet assets are never sold here. Those remain company-only decisions.</p>
-        <div style={grid}>{(d.marketplace??[]).map((i:any)=><article key={i.id} style={inner}><strong>{i.name}</strong><p style={{color:"var(--muted)"}}>{i.description}</p><b>{money(i.price)}</b><div style={{marginTop:12}}>{i.owned&&!i.repeatable?<span style={{color:"#98efbf"}}>Owned</span>:<form action={purchasePilotItemAction}><input type="hidden" name="itemId" value={i.id}/><button className="button" type="submit">Purchase</button></form>}</div></article>)}</div>
+        <div style={marketGrid}>{marketplace.map((i:any)=>{
+          const unlock=i.unlock??{};
+          const availability=String(unlock.state??"UNAVAILABLE");
+          const requirements=unlock.requirements??{};
+          const requirementParts:string[]=[];
+          if(Number(requirements.minimumCareerXp??0)>0) requirementParts.push(`${requirements.minimumCareerXp} Career XP`);
+          if(Number(requirements.minimumFlights??0)>0) requirementParts.push(`${requirements.minimumFlights} flights`);
+          if(requirements.requiredRankCode) requirementParts.push(`Rank ${requirements.requiredRankCode}`);
+          if(requirements.requiredMilestoneCode) requirementParts.push(requirements.requiredMilestoneTitle??requirements.requiredMilestoneCode);
+          const available=availability==="AVAILABLE";
+          const owned=availability==="OWNED";
+          const stateColor=owned?"#98efbf":available?"var(--accent)":"#ffcf7a";
+          return <article key={i.id} style={{...inner,display:"flex",flexDirection:"column"}}>
+            <MarketplaceThumbnail
+              src={getPilotMarketplaceThumbnail(`${i.code??""} ${i.name??""}`)}
+              alt={getMarketplaceThumbnailAlt(i.name)}
+              badge={i.category??"Pilot Item"}
+            />
+            <small style={{color:stateColor,fontWeight:850,letterSpacing:".06em",textTransform:"uppercase"}}>{availability.replace(/_/g," ")}</small>
+            <strong style={{fontSize:"1.08rem",marginTop:8}}>{i.name}</strong>
+            <p style={{color:"var(--muted)",lineHeight:1.55,flexGrow:1}}>{i.description}</p>
+            {requirementParts.length?<p style={{margin:"0 0 10px",color:"#bfe7fb",fontSize:".9rem"}}><strong>Requires:</strong> {requirementParts.join(" · ")}</p>:null}
+            <b>{money(i.price)}</b>
+            <div style={{marginTop:12}}>
+              {owned
+                ?<span style={{color:"#98efbf",fontWeight:800}}>Owned</span>
+                :available
+                  ?<form action={purchasePilotItemAction}>
+                      <input type="hidden" name="itemId" value={i.id}/>
+                      <button className="button" type="submit">Purchase</button>
+                    </form>
+                  :<button className="button" type="button" disabled style={{opacity:.55,cursor:"not-allowed"}}>
+                      {availability.replace(/_/g," ")}
+                    </button>}
+            </div>
+          </article>
+        })}</div>
       </section>
       <section style={panel}><p className="eyebrow">Route Support</p><h2>Prove interest, not authority</h2><p style={{color:"var(--muted)"}}>Funding progress is a community-interest signal. Even at 100%, Operations decides whether the route is approved or opened.</p>
         <div style={{display:"grid",gap:12}}>{(d.routeCampaigns??[]).map((x:any)=>{const pct=Math.min(100,Math.round(x.fundedAmount/x.targetAmount*100));return <article key={x.id} style={inner}><strong>{x.departure} → {x.arrival} · {x.title}</strong><p>{pct}% · {money(x.fundedAmount)} / {money(x.targetAmount)} · Your support {money(x.myContribution)}</p><div style={{height:9,borderRadius:999,background:"rgba(255,255,255,.08)",overflow:"hidden"}}><span style={{display:"block",height:"100%",width:`${pct}%`,background:"var(--accent)"}}/></div>{["active","goal_reached"].includes(x.status)?<form action={contributeRouteSupportAction} style={{display:"flex",gap:8,marginTop:12,flexWrap:"wrap"}}><input type="hidden" name="campaignId" value={x.id}/><input name="amount" type="number" min="1" step="1" placeholder="250" style={input}/><button className="button" type="submit">Support route</button></form>:null}</article>})}</div>
@@ -59,6 +102,7 @@ const inner={padding:16,border:"1px solid rgba(105,183,231,.14)",borderRadius:14
 const stats={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12} as const;
 const stat={...panel,minHeight:110} as const;
 const grid={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))",gap:12} as const;
+const marketGrid={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:14,alignItems:"stretch"} as const;
 const input={padding:"12px 13px",border:"1px solid var(--border)",borderRadius:10,background:"rgba(4,16,32,.42)",color:"inherit"} as const;
 const noticeOk={padding:14,borderRadius:12,color:"#98efbf",background:"rgba(57,220,138,.1)"} as const;
 const noticeBad={padding:14,borderRadius:12,color:"#ffb1b1",background:"rgba(255,95,95,.1)"} as const;

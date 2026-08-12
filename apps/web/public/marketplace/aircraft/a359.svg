@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#06172f"/>
+      <stop offset=".55" stop-color="#0b3159"/>
+      <stop offset="1" stop-color="#087fb4"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" x2="1">
+      <stop stop-color="#f7fbff"/>
+      <stop offset=".65" stop-color="#d9effc"/>
+      <stop offset="1" stop-color="#8bd7fb"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1200" height="675" rx="44" fill="url(#bg)"/>
+  <circle cx="925" cy="150" r="210" fill="#13bdf2" opacity=".14" filter="url(#glow)"/>
+  <path d="M80 525 C350 475 805 495 1120 430" stroke="#23b8f1" stroke-width="4" opacity=".30" fill="none"/>
+  <path d="M110 555 C420 505 830 525 1140 475" stroke="#73d7ff" stroke-width="2" opacity=".18" fill="none"/>
+  <!-- fuselage -->
+  <path d="M225 318 C280 283 370 270 1010 282 C1060 286 1075 302 1071 318 C1060 340 720 345 395 347 C305 347 250 340 225 326 Z" fill="url(#body)"/>
+  <!-- cockpit -->
+  <path d="M895 291 l48 11 -39 18 -55 -7z" fill="#071a34" opacity=".9"/>
+  <!-- wings -->
+  <path d="M540 326 L195 458 L610 465 L675 333 Z" fill="#7fcff6" opacity=".95"/>
+  <path d="M600 326 L945 430 L930 414 L690 330 Z" fill="#99dcfb" opacity=".95"/>
+  <!-- tail -->
+  <path d="M305 303 L255 178 L345 184 L395 312 Z" fill="#18aee9"/>
+  <path d="M300 310 L205 260 L230 328 Z" fill="#61cbf7"/>
+
+        <ellipse cx="395" cy="370" rx="42" ry="25" fill="#39bdf8" opacity=".95"/>
+        <ellipse cx="585" cy="370" rx="42" ry="25" fill="#39bdf8" opacity=".95"/>
+
+
+  <!-- windows -->
+  <path d="M390 306 H845" stroke="#123150" stroke-width="8" stroke-linecap="round" stroke-dasharray="5 17" opacity=".78"/>
+  <!-- brand accent -->
+  <path d="M255 330 C390 320 520 325 690 338" stroke="#0a67c8" stroke-width="10" opacity=".85" fill="none"/>
+  <path d="M257 341 C430 333 570 340 733 349" stroke="#16bcef" stroke-width="6" opacity=".92" fill="none"/>
+</svg>

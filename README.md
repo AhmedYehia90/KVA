@@ -324,6 +324,172 @@ Pilot route-support campaigns can signal interest, but pilots cannot trigger air
 
 A Company Marketplace aircraft purchase creates an economic company asset and ledger record, but does **not** automatically create or modify a fleet registration.
 
+
+### Visual Marketplace Layer
+
+The **Visual Marketplace Layer** is a presentation and discovery layer built on top of the existing Career & Economy architecture.
+
+It does **not** change ownership, economic authority, transaction rules, route authority or fleet authority.
+
+Every marketplace item can be presented as a visual card containing:
+
+- Thumbnail image
+- Item name
+- Item category
+- KVA Credits price or unlock requirement
+- Availability state
+- Ownership / acquisition state
+- Authority badge where applicable
+- Context-aware action
+
+#### Pilot Marketplace Visual Cards
+
+Pilot-facing cards are limited to identity, progression and cosmetic items such as:
+
+- Badges
+- Certificates
+- Passport frames
+- Profile themes
+- Liveries and cosmetic presentation items
+- Collectibles
+- Career display items
+- Event and airline commemorative items
+
+Pilot visual cards can expose states such as:
+
+- `AVAILABLE`
+- `LOCKED`
+- `OWNED`
+- `REQUIRES_MILESTONE`
+- `INSUFFICIENT_KVC`
+
+Pilot visual cards never expose aircraft purchase, aircraft lease, fleet ownership or fleet-management authority.
+
+#### Company Marketplace Visual Cards
+
+Company-facing cards remain inside the **Operations Economy Console** and are visible only to authorized company / operations roles.
+
+Company visual cards can represent:
+
+- Aircraft acquisition opportunities
+- Aircraft lease opportunities
+- Fleet-capacity assets
+- Operational assets
+- Company expansion items
+- Future company-level services
+
+Aircraft cards display the aircraft-type thumbnail, ICAO code, manufacturer/model, price, availability and a clear **Company Only** authority indicator.
+
+Company visual cards can expose states such as:
+
+- `AVAILABLE_FOR_OPERATIONS`
+- `UNDER_REVIEW`
+- `ACQUIRED`
+- `UNAVAILABLE`
+- `INSUFFICIENT_COMPANY_BUDGET`
+
+A visual aircraft acquisition continues to create only the economic company asset and ledger transaction. It does **not** automatically create, register, activate or modify an aircraft in the operational fleet.
+
+#### Visual Asset Rules
+
+Marketplace thumbnails are UI assets, not economic records.
+
+Image metadata must never be used as the source of truth for:
+
+- Price
+- Ownership
+- Wallet balance
+- Company balance
+- Unlock eligibility
+- Fleet status
+- Route activation
+- Operational authority
+
+Those values continue to come from the existing KVA OS database, domain logic and economy ledger.
+
+For aircraft, the preferred visual source is the aircraft **fleet type**, allowing one canonical image per model to be reused by Company Marketplace cards without changing the fleet or economy model.
+
+#### Secure Pilot Unlock & Availability Rules
+
+Pilot Marketplace unlock requirements reuse the existing `pilot_marketplace_items.metadata` JSONB field under the `visualMarketplace.unlock` namespace.
+
+Supported evidence-backed requirements include:
+
+- Minimum Career XP
+- Minimum completed flights
+- Required career rank
+- Required career milestone
+
+The UI is **not** the authorization layer.
+
+Pilot eligibility is evaluated server-side and the purchase RPC enforces the same unlock state before any purchase or Economy Ledger transaction can be created.
+
+The secure Pilot Marketplace states are:
+
+- `AVAILABLE`
+- `OWNED`
+- `LOCKED`
+- `REQUIRES_MILESTONE`
+- `INSUFFICIENT_KVC`
+- `UNAVAILABLE`
+
+Authorized Operations users can configure unlock requirements from the Operations Economy Console without creating a new economy authority layer.
+
+This extension reuses existing Career & Economy evidence:
+
+- Career XP
+- Completed flights
+- Career ranks
+- Career milestones
+- Pilot wallet balance
+- Marketplace ownership
+
+No new marketplace ownership model, wallet model, company authority model, table or database column is introduced.
+
+#### Visual Marketplace v1.1 Validation
+
+The Visual Marketplace Layer was validated end-to-end with the existing Career & Economy architecture.
+
+Validated Pilot Marketplace behavior includes:
+
+- Thumbnail rendering
+- Category badges
+- KVC pricing
+- `AVAILABLE`
+- `OWNED`
+- `LOCKED`
+- `REQUIRES_MILESTONE`
+- `INSUFFICIENT_KVC`
+- Disabled actions when an item is not eligible
+- Server-side purchase enforcement
+- Existing ownership persistence
+- Existing Economy Ledger purchase flow
+
+The **Ten Flight Foundation Badge** is linked to the existing `FIRST_10_FLIGHTS` career milestone rather than introducing a duplicate progression rule.
+
+Validated Company Marketplace behavior includes:
+
+- Aircraft / asset thumbnails
+- Clear `Company Only` authority presentation
+- `AVAILABLE_FOR_OPERATIONS`
+- `ACQUIRED`
+- Company-budget availability
+- Existing company economic asset recognition
+- No automatic fleet mutation after an economic aircraft acquisition
+
+Current aircraft visual coverage includes:
+
+- E170
+- A21N
+- B788
+- A333
+- B77W
+- A359
+- B748
+
+**Visual Marketplace Layer status:** Validated as a Career & Economy v1.1 extension.
+
+
 ### Operations Economy Console
 
 Authorized airline operations users can manage:
