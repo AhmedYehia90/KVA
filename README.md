@@ -19,7 +19,7 @@ KVA OS is being built as a modular, event-driven, multi-airline-ready platform w
 - **Web:** Next.js · TypeScript
 - **Backend:** Supabase · PostgreSQL
 - **Core Model:** Domain Events + Projections + Evidence-Backed Automation
-- **Pillars Completed:** **7 / 10**
+- **Pillars Completed:** **8 / 10**
 
 ---
 
@@ -34,11 +34,11 @@ KVA OS is being built as a modular, event-driven, multi-airline-ready platform w
 | 05 | Mentor AI | ✅ Completed |
 | 06 | Living Airbot / AI Dispatcher | ✅ Completed |
 | 07 | Global Aviation Events | ✅ Completed |
-| 08 | Career & Economy | ⬜ Pending |
+| 08 | Career & Economy | ✅ Completed |
 | 09 | Museum / History | ⬜ Pending |
 | 10 | Living Airports | ⬜ Pending |
 
-**Current progress: 7 / 10 pillars completed.**
+**Current progress: 8 / 10 pillars completed.**
 
 ---
 
@@ -219,13 +219,13 @@ Global Aviation Events allows pilots and virtual airlines to participate in shar
 
 ---
 
-# Remaining Pillars
-
-## ⬜ Pillar 08 — Career & Economy
+## ✅ Pillar 08 — Career & Economy
 
 Career & Economy is the long-term progression and economic layer of KVA OS.
 
 It is intentionally split into **Pilot Economy** and **Company Economy** so pilot progression never becomes mixed with airline ownership or fleet-management authority.
+
+The official KVA OS virtual currency is **KVA Credits (KVC)**.
 
 ### Pilot Career
 
@@ -252,7 +252,7 @@ Rewards must come from recorded KVA OS evidence.
 
 ### Pilot Wallet
 
-Each pilot has a wallet showing:
+Each pilot has a KVA Credits wallet showing:
 
 - Current balance
 - Total earned
@@ -280,17 +280,13 @@ The Pilot Marketplace does **not** sell aircraft and does not give pilots fleet 
 
 ### Route Support Campaigns
 
-Pilots can use part of their earned balance to support proposed airline routes.
-
-Example:
-
-`Cairo → Tokyo · Community Interest 72%`
+Pilots can use part of their earned KVA Credits to support proposed airline routes.
 
 Pilot support proves community interest and can help airline management evaluate demand.
 
 Reaching 100% support does **not** automatically open the route.
 
-Final route approval remains an airline/company Operations decision.
+Final route approval and activation remain airline/company Operations decisions.
 
 ### Company Economy
 
@@ -313,7 +309,7 @@ Pilots never own company aircraft through their personal wallet.
 
 The **Company Marketplace** lives under the **Operations Economy Console** and is fully separate from the Pilot Marketplace.
 
-It can support company-only transactions such as:
+It supports company-only transactions such as:
 
 - Aircraft purchase opportunities
 - Aircraft lease opportunities
@@ -325,6 +321,8 @@ It can support company-only transactions such as:
 All purchase, lease and fleet-management decisions remain restricted to authorized company / operations roles.
 
 Pilot route-support campaigns can signal interest, but pilots cannot trigger aircraft purchases, leases, fleet changes or route activation.
+
+A Company Marketplace aircraft purchase creates an economic company asset and ledger record, but does **not** automatically create or modify a fleet registration.
 
 ### Operations Economy Console
 
@@ -339,7 +337,7 @@ Authorized airline operations users can manage:
 - Economy transactions
 - Audit history
 
-The console must not expose an ordinary unrestricted **Edit Balance** action.
+The console does not expose an ordinary unrestricted **Edit Balance** action.
 
 Exceptional adjustments must always create an auditable economy-ledger transaction with a recorded reason.
 
@@ -363,12 +361,12 @@ Example pilot transaction types:
 
 Example company transaction types:
 
-- `COMPANY_MARKETPLACE_PURCHASE`
-- `AIRCRAFT_PURCHASE`
-- `AIRCRAFT_LEASE`
-- `FLEET_OPERATIONAL_EXPENSE`
-- `ROUTE_INVESTMENT`
+- `FLIGHT_SALARY_EXPENSE`
+- `MILESTONE_REWARD_EXPENSE`
+- `EVENT_REWARD_EXPENSE`
+- `PILOT_MARKETPLACE_REVENUE`
 - `ROUTE_SUPPORT_FUNDS_RECEIVED`
+- `COMPANY_MARKETPLACE_PURCHASE`
 
 Ledger entries can reference the related:
 
@@ -377,7 +375,7 @@ Ledger entries can reference the related:
 - Flight / PIREP
 - Event
 - Marketplace item
-- Aircraft
+- Company asset
 - Route campaign
 - Administrative actor
 
@@ -397,10 +395,11 @@ No wallet or company balance can change without a corresponding ledger entry.
 
 ### Event Platform Integration
 
-Career & Economy will publish domain events such as:
+Career & Economy publishes domain events including:
 
 - `career.experience_awarded`
 - `career.promoted`
+- `career.milestone_achieved`
 - `economy.salary_awarded`
 - `economy.bonus_awarded`
 - `economy.transaction_created`
@@ -408,26 +407,47 @@ Career & Economy will publish domain events such as:
 - `company_marketplace.item_purchased`
 - `route_support.contribution_created`
 - `route_support.goal_reached`
+- `route_support.operations_reviewed`
 - `company.aircraft_purchased`
 - `company.aircraft_leased`
 
-### Planned End-to-End Validation
+### Validated End-to-End
 
 Pilot flow:
 
-`Complete Flight → Submit PIREP → Salary → Pilot Wallet → Career XP → Promotion Check → Pilot Spend / Route Support → Economy Ledger`
+`Complete Flight → Submit PIREP → Salary → KVA Credits Wallet → Career XP → Milestone / Promotion Check → Pilot Marketplace / Route Support → Economy Ledger`
 
 Company flow:
 
-`Operations Decision → Company Marketplace → Aircraft Purchase / Lease or Company Spend → Economy Ledger → Fleet / Company Record`
+`Operations Decision → Company Marketplace → Economic Asset → Economy Ledger → Operations-Only Fleet Authority`
 
 Route-support flow:
 
-`Pilot Contribution → Campaign Progress → Interest Threshold → Operations Review → Company Decision`
+`Pilot Contribution → 100% Interest Threshold → Operations Review → Approved Interest → No Automatic Route Creation`
 
-**Status:** Pending
+Validated integrity included:
+
+- Evidence-backed flight salary
+- Career XP progression
+- Ten-flight milestone reward
+- Duplicate-payment protection
+- Pilot Marketplace debit
+- Company marketplace revenue
+- Route-support pilot debit
+- Route-support company receipt
+- Company Marketplace purchase
+- Company economic asset creation
+- No automatic fleet mutation
+- No automatic route creation
+- Admin audit history
+- Event Platform records
+- Supabase remote database up to date
+
+**Status:** Completed
 
 ---
+
+# Remaining Pillars
 
 ## ⬜ Pillar 09 — Museum / History
 
@@ -464,6 +484,7 @@ Examples include:
 - PIREP events
 - Passport events
 - Global Aviation Events
+- Career & Economy events
 - Operational intelligence events
 
 This foundation powers:
@@ -475,6 +496,7 @@ This foundation powers:
 - Mentor AI
 - Living Airbot
 - Global Aviation Events
+- Career & Economy
 - Future KVA OS pillars
 
 ---
@@ -559,7 +581,8 @@ KVA OS Event Platform
         ├──► Digital Flight Companion
         ├──► Mentor AI
         ├──► Living Airbot
-        └──► Global Aviation Events
+        ├──► Global Aviation Events
+        └──► Career & Economy
 ```
 
 The architecture is intentionally modular so future virtual airlines can operate on the same KVA OS foundation without becoming tightly coupled to Kalabsha Airlines.
@@ -585,7 +608,8 @@ KVA/
 │   ├── digital-flight-companion/
 │   ├── mentor-ai/
 │   ├── living-airbot/
-│   └── global-aviation-events/
+│   ├── global-aviation-events/
+│   └── career-economy/
 │
 ├── supabase/
 │   └── migrations/
@@ -698,13 +722,13 @@ The goal is a shared operating system where virtual aviation communities can bui
 
 ## Current Milestone
 
-**7 / 10 Core Pillars Completed**
+**8 / 10 Core Pillars Completed**
 
-`✅ ✅ ✅ ✅ ✅ ✅ ✅ ⬜ ⬜ ⬜`
+`✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ⬜ ⬜`
 
 Next:
 
-**Pillar 08 — Career & Economy**
+**Pillar 09 — Museum / History**
 
 ---
 

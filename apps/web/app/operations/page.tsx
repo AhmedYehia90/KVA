@@ -73,6 +73,9 @@ export default async function OperationsPage() {
                 <Link className="button outline" href="/operations/global-events">
                   Manage Global Events
                 </Link>
+                <Link className="button outline" href="/operations/economy">
+                  Open Economy Console
+                </Link>
               </div>
             ) : null}
           </div>

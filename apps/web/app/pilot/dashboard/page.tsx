@@ -272,6 +272,11 @@ export default async function PilotDashboardPage() {
                 <strong>Open Aviation Events →</strong>
               </Link>
 
+              <Link className={styles.quickAction} href="/pilot/economy">
+                <span>Career & Economy</span>
+                <strong>Open Career Wallet →</strong>
+              </Link>
+
               <Link className={styles.quickAction} href="/live-flights">
                 <span>Network</span>
                 <strong>Live Flights →</strong>
