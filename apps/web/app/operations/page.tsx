@@ -1,4 +1,4 @@
-import type {Metadata} from "next";
+﻿import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -76,6 +76,12 @@ export default async function OperationsPage() {
                 <Link className="button outline" href="/operations/economy">
                   Open Economy Console
                 </Link>
+              <Link className="button outline" href="/operations/history">
+                Open Museum Curator
+              </Link>
+              <Link className="button outline" href="/operations/airports">
+                Open Airport World Console
+              </Link>
               </div>
             ) : null}
           </div>

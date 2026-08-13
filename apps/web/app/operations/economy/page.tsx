@@ -3,8 +3,9 @@ import Link from "next/link";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {updatePolicyAction,createPilotItemAction,setPilotItemUnlockAction,createCompanyItemAction,purchaseCompanyItemAction,createRouteCampaignAction,reviewRouteCampaignAction} from "./actions";
+import {CompanyAircraftMarket} from "@/components/marketplace/CompanyAircraftMarket";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
-import {getAircraftMarketplaceThumbnail,getMarketplaceThumbnailAlt,getPilotMarketplaceThumbnail} from "@/lib/marketplaceVisuals";
+import {getMarketplaceThumbnailAlt,getPilotMarketplaceThumbnail} from "@/lib/marketplaceVisuals";
 
 export const metadata:Metadata={title:"Operations Economy Console | KVA OS"};
 export const dynamic="force-dynamic";
@@ -37,40 +38,8 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
       {first(q.message)?<div style={ok}>{first(q.message)}</div>:null}{first(q.error)?<div style={bad}>{first(q.error)}</div>:null}
       <div style={stats}><Stat label="Company KVA Credits" value={money(a.balance)}/><Stat label="Income" value={money(a.total_income)}/><Stat label="Spent" value={money(a.total_spent)}/><Stat label="Active Campaigns" value={String(campaigns.filter(x=>["active","goal_reached","under_review"].includes(x.status)).length)}/></div>
       <section style={panel}><p className="eyebrow">Salary & Rewards</p><h2>Evidence-backed policy</h2><form action={updatePolicyAction} style={grid}><Field n="baseSalary" l="Base salary" v={p.base_salary}/><Field n="perBlockMinute" l="Per block minute" v={p.per_block_minute}/><Field n="performanceThreshold" l="Performance threshold" v={p.performance_threshold}/><Field n="performanceBonus" l="Performance bonus" v={p.performance_bonus}/><Field n="eventReward" l="Event reward" v={p.event_completion_reward}/><Field n="milestoneReward" l="Milestone reward" v={p.milestone_reward}/><button className="button" type="submit">Save policy</button></form></section>
-      <section style={panel}><p className="eyebrow">Company Marketplace</p><h2>Company-only acquisitions</h2><p style={{color:"var(--muted)"}}>A purchase creates a company economic asset and ledger entry. It never creates or edits an aircraft registration automatically.</p><div style={marketGrid}>{ci.map(i=>{
-  const fleetCode=i.fleet_type?.icao_code??null;
-  const matchingAsset=assets.find((asset:any)=>
-    asset.status==="acquired" &&
-    String(asset.metadata?.marketplaceItemId??"")===String(i.id)
-  );
-  const oneTimeAcquired=i.item_kind==="aircraft_purchase"&&Boolean(matchingAsset);
-  const canAfford=Number(a.balance)>=Number(i.price);
-  const availability=oneTimeAcquired?"ACQUIRED":canAfford?"AVAILABLE FOR OPERATIONS":"INSUFFICIENT COMPANY BUDGET";
-  return <article key={i.id} style={{...inner,display:"flex",flexDirection:"column"}}>
-    <MarketplaceThumbnail
-      src={fleetCode?getAircraftMarketplaceThumbnail(fleetCode):"/marketplace/placeholder.svg"}
-      alt={getMarketplaceThumbnailAlt(i.name)}
-      badge="Company Only"
-    />
-    <small style={{color:oneTimeAcquired?"#98efbf":"var(--accent)",fontWeight:850,letterSpacing:".06em",textTransform:"uppercase"}}>{availability}</small>
-    <strong style={{fontSize:"1.08rem",marginTop:8}}>{i.name}</strong>
-    <p style={{color:"var(--muted)",lineHeight:1.5,flexGrow:1}}>
-      {i.item_kind} · {fleetCode??"No fleet type"}
-    </p>
-    <b>{money(i.price)}</b>
-    {oneTimeAcquired
-      ?<div style={{marginTop:10,color:"#98efbf",fontWeight:800}}>
-          Acquired
-          {matchingAsset?.acquired_at?<small style={{display:"block",color:"var(--muted)",fontWeight:500,marginTop:4}}>Economic asset recorded</small>:null}
-        </div>
-      :<form action={purchaseCompanyItemAction} style={{marginTop:10}}>
-          <input type="hidden" name="itemId" value={i.id}/>
-          <button className="button" type="submit" disabled={!canAfford} style={!canAfford?{opacity:.55,cursor:"not-allowed"}:undefined}>
-            {canAfford?"Acquire asset":"Insufficient company KVC"}
-          </button>
-        </form>}
-  </article>
-})}</div><h3>Create Company item</h3><form action={createCompanyItemAction} style={grid}><Input n="code" p="COMPANY-ITEM-002"/><Input n="name" p="Item name"/><Input n="description" p="Description"/><select name="itemKind" style={input}><option value="aircraft_purchase">Aircraft Purchase</option><option value="aircraft_lease">Aircraft Lease</option><option value="operational_asset">Operational Asset</option><option value="expansion">Expansion</option><option value="service">Service</option></select><select name="fleetTypeId" style={input}><option value="">No fleet type</option>{fleet.map(f=><option key={f.id} value={f.id}>{f.icao_code}</option>)}</select><Input n="price" p="500000" type="number"/><button className="button" type="submit">Create company item</button></form></section>
+      <CompanyAircraftMarket items={ci} assets={assets} balance={Number(a.balance)} money={money}/>
+      <section style={panel}><p className="eyebrow">Marketplace Administration</p><h2>Company catalog controls</h2><h3>Create Company item</h3><form action={createCompanyItemAction} style={grid}><Input n="code" p="COMPANY-ITEM-002"/><Input n="name" p="Item name"/><Input n="description" p="Description"/><select name="itemKind" style={input}><option value="aircraft_purchase">Aircraft Purchase</option><option value="aircraft_lease">Aircraft Lease</option><option value="operational_asset">Operational Asset</option><option value="expansion">Expansion</option><option value="service">Service</option></select><select name="fleetTypeId" style={input}><option value="">No fleet type</option>{fleet.map(f=><option key={f.id} value={f.id}>{f.icao_code}</option>)}</select><Input n="price" p="500000" type="number"/><button className="button" type="submit">Create company item</button></form></section>
       <section style={panel}><p className="eyebrow">Pilot Marketplace Administration</p><h2>Personal progression items</h2><div style={marketGrid}>{pi.map(i=>{
   const unlock=i.metadata?.visualMarketplace?.unlock??{};
   return <article key={i.id} style={{...inner,display:"flex",flexDirection:"column"}}>

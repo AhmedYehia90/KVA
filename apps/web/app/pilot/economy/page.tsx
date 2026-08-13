@@ -3,6 +3,7 @@ import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {purchasePilotItemAction,contributeRouteSupportAction} from "./actions";
+import {PilotStore} from "@/components/marketplace/PilotStore";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
 import {getMarketplaceThumbnailAlt,getPilotMarketplaceThumbnail} from "@/lib/marketplaceVisuals";
 
@@ -50,45 +51,7 @@ export default async function CareerEconomyPage({searchParams}:{searchParams:Sea
         <p style={{color:"var(--muted)"}}>{c.completedFlights} flights · {Math.round(c.flightMinutes/60*10)/10} hours · Lifetime salary {money(c.lifetimeSalary)} · Bonuses {money(c.lifetimeBonus)}</p>
         {c.nextRank?<p>Next rank requires {c.nextRank.minimumHours} hours and {c.nextRank.minimumFlights} flights.</p>:null}
       </section>
-      <section style={panel}><p className="eyebrow">Pilot Marketplace</p><h2>Personal items only</h2><p style={{color:"var(--muted)"}}>Aircraft and fleet assets are never sold here. Those remain company-only decisions.</p>
-        <div style={marketGrid}>{marketplace.map((i:any)=>{
-          const unlock=i.unlock??{};
-          const availability=String(unlock.state??"UNAVAILABLE");
-          const requirements=unlock.requirements??{};
-          const requirementParts:string[]=[];
-          if(Number(requirements.minimumCareerXp??0)>0) requirementParts.push(`${requirements.minimumCareerXp} Career XP`);
-          if(Number(requirements.minimumFlights??0)>0) requirementParts.push(`${requirements.minimumFlights} flights`);
-          if(requirements.requiredRankCode) requirementParts.push(`Rank ${requirements.requiredRankCode}`);
-          if(requirements.requiredMilestoneCode) requirementParts.push(requirements.requiredMilestoneTitle??requirements.requiredMilestoneCode);
-          const available=availability==="AVAILABLE";
-          const owned=availability==="OWNED";
-          const stateColor=owned?"#98efbf":available?"var(--accent)":"#ffcf7a";
-          return <article key={i.id} style={{...inner,display:"flex",flexDirection:"column"}}>
-            <MarketplaceThumbnail
-              src={getPilotMarketplaceThumbnail(`${i.code??""} ${i.name??""}`)}
-              alt={getMarketplaceThumbnailAlt(i.name)}
-              badge={i.category??"Pilot Item"}
-            />
-            <small style={{color:stateColor,fontWeight:850,letterSpacing:".06em",textTransform:"uppercase"}}>{availability.replace(/_/g," ")}</small>
-            <strong style={{fontSize:"1.08rem",marginTop:8}}>{i.name}</strong>
-            <p style={{color:"var(--muted)",lineHeight:1.55,flexGrow:1}}>{i.description}</p>
-            {requirementParts.length?<p style={{margin:"0 0 10px",color:"#bfe7fb",fontSize:".9rem"}}><strong>Requires:</strong> {requirementParts.join(" · ")}</p>:null}
-            <b>{money(i.price)}</b>
-            <div style={{marginTop:12}}>
-              {owned
-                ?<span style={{color:"#98efbf",fontWeight:800}}>Owned</span>
-                :available
-                  ?<form action={purchasePilotItemAction}>
-                      <input type="hidden" name="itemId" value={i.id}/>
-                      <button className="button" type="submit">Purchase</button>
-                    </form>
-                  :<button className="button" type="button" disabled style={{opacity:.55,cursor:"not-allowed"}}>
-                      {availability.replace(/_/g," ")}
-                    </button>}
-            </div>
-          </article>
-        })}</div>
-      </section>
+      <PilotStore items={marketplace} balance={Number(w.balance)} money={money}/>
       <section style={panel}><p className="eyebrow">Route Support</p><h2>Prove interest, not authority</h2><p style={{color:"var(--muted)"}}>Funding progress is a community-interest signal. Even at 100%, Operations decides whether the route is approved or opened.</p>
         <div style={{display:"grid",gap:12}}>{(d.routeCampaigns??[]).map((x:any)=>{const pct=Math.min(100,Math.round(x.fundedAmount/x.targetAmount*100));return <article key={x.id} style={inner}><strong>{x.departure} → {x.arrival} · {x.title}</strong><p>{pct}% · {money(x.fundedAmount)} / {money(x.targetAmount)} · Your support {money(x.myContribution)}</p><div style={{height:9,borderRadius:999,background:"rgba(255,255,255,.08)",overflow:"hidden"}}><span style={{display:"block",height:"100%",width:`${pct}%`,background:"var(--accent)"}}/></div>{["active","goal_reached"].includes(x.status)?<form action={contributeRouteSupportAction} style={{display:"flex",gap:8,marginTop:12,flexWrap:"wrap"}}><input type="hidden" name="campaignId" value={x.id}/><input name="amount" type="number" min="1" step="1" placeholder="250" style={input}/><button className="button" type="submit">Support route</button></form>:null}</article>})}</div>
       </section>
@@ -102,7 +65,6 @@ const inner={padding:16,border:"1px solid rgba(105,183,231,.14)",borderRadius:14
 const stats={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:12} as const;
 const stat={...panel,minHeight:110} as const;
 const grid={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))",gap:12} as const;
-const marketGrid={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:14,alignItems:"stretch"} as const;
 const input={padding:"12px 13px",border:"1px solid var(--border)",borderRadius:10,background:"rgba(4,16,32,.42)",color:"inherit"} as const;
 const noticeOk={padding:14,borderRadius:12,color:"#98efbf",background:"rgba(57,220,138,.1)"} as const;
 const noticeBad={padding:14,borderRadius:12,color:"#ffb1b1",background:"rgba(255,95,95,.1)"} as const;

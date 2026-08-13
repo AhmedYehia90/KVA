@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import Link from "next/link";
 import {getTranslations} from "next-intl/server";
 import {createClient} from "@/lib/supabase/server";
@@ -47,6 +47,8 @@ export async function Header() {
               <Link href="/pilot/flights">Flights</Link>
               <Link href="/pilot/bookings">My Bookings</Link>
               <Link href="/pilot/pireps">PIREPs</Link>
+              <Link href="/pilot/history">History</Link>
+              <Link href="/airports">Airports</Link>
               <Link href="/fleet">{t("fleet")}</Link>
             </>
           ) : (
