@@ -1,21 +1,24 @@
 {
-    "name":  "kalabsha-airlines",
-    "version":  "0.1.0",
-    "private":  true,
-    "packageManager":  "pnpm@9.15.0",
-    "scripts":  {
-                    "dev":  "pnpm --filter @kalabsha/web dev",
-                    "build":  "pnpm --filter @kalabsha/web build",
-                    "lint":  "pnpm --filter @kalabsha/web lint",
-                    "api":  "pnpm --filter @kalabsha/api dev",
-                    "db:generate":  "pnpm --filter @kalabsha/database prisma:generate",
-                    "db:migrate":  "pnpm --filter @kalabsha/database prisma:migrate",
-                    "event:build":  "pnpm --filter @kva/event-core build",
-                    "event:typecheck":  "pnpm --filter @kva/event-core typecheck",
-                    "event:test":  "pnpm --filter @kva/event-core test"
-                },
-    "dependencies":  {
-                         "@supabase/ssr":  "^0.12.3",
-                         "@supabase/supabase-js":  "^2.110.9"
-                     }
+  "name": "kalabsha-airlines",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @kalabsha/web dev",
+    "build": "pnpm --filter @kalabsha/web build",
+    "lint": "pnpm --filter @kalabsha/web lint",
+    "api": "pnpm --filter @kalabsha/api dev",
+    "db:generate": "pnpm --filter @kalabsha/database prisma:generate",
+    "db:migrate": "pnpm --filter @kalabsha/database prisma:migrate",
+    "event:build": "pnpm --filter @kva/event-core build",
+    "event:typecheck": "pnpm --filter @kva/event-core typecheck",
+    "event:test": "pnpm --filter @kva/event-core test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
+    "verify": "pnpm typecheck && pnpm test && pnpm lint && pnpm build"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.9"
+  }
 }

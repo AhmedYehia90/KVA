@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {updatePolicyAction,createPilotItemAction,setPilotItemUnlockAction,createCompanyItemAction,purchaseCompanyItemAction,createRouteCampaignAction,reviewRouteCampaignAction} from "./actions";
+import {updatePolicyAction,createPilotItemAction,setPilotItemUnlockAction,createCompanyItemAction,createRouteCampaignAction,reviewRouteCampaignAction} from "./actions";
 import {CompanyAircraftMarket} from "@/components/marketplace/CompanyAircraftMarket";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
 import {getMarketplaceThumbnailAlt,getPilotMarketplaceThumbnail} from "@/lib/marketplaceVisuals";
@@ -11,6 +11,19 @@ export const metadata:Metadata={title:"Operations Economy Console | KVA OS"};
 export const dynamic="force-dynamic";
 const ORG="kalabsha-airlines";
 type SearchParams=Promise<Record<string,string|string[]|undefined>>;
+type CompanyEconomyAccount={balance:number;total_income:number;total_spent:number};
+type EconomySalaryPolicy={base_salary:number;per_block_minute:number;performance_threshold:number;performance_bonus:number;event_completion_reward:number;milestone_reward:number};
+type AdminPilotItem={id:string;code?:string|null;name:string;category?:string|null;price:number;metadata?:{visualMarketplace?:{unlock?:{minimumCareerXp?:number|null;minimumFlights?:number|null;requiredRankCode?:string|null;requiredMilestoneCode?:string|null}|null}|null}|null};
+type CompanyItem={id:string;name:string;description?:string|null;item_kind:string;price:number;fleet_type?:{icao_code?:string|null}|null};
+type CompanyAsset={id?:string;status:string;metadata?:{marketplaceItemId?:string|null}|null};
+type RouteCampaign={id:string;title:string;funded_amount:number;target_amount:number;status:string;departure?:{icao_code?:string|null}|null;arrival?:{icao_code?:string|null}|null};
+type LedgerEntry={id:string;transaction_type:string;description:string;amount:number};
+type AuditEntry={id:string;action:string;target_type:string;target_id?:string|null};
+type FleetOption={id:string;icao_code:string};
+type AirportOption={id:string;icao_code:string;name:string};
+type RankOption={code:string;name:string;priority:number};
+type MilestoneOption={code:string;title:string;threshold:number};
+
 function first(v:string|string[]|undefined){return Array.isArray(v)?v[0]??"":v??""}
 function money(v:number){return new Intl.NumberFormat("en-US").format(v)+" KVC"}
 
@@ -30,8 +43,20 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
     admin.from("ranks").select("code,name,priority").order("priority"),
     admin.from("career_milestone_definitions").select("code,title,threshold").eq("active",true).order("threshold")
   ]);
-  const err=[accountR,policyR,pilotItemsR,companyItemsR,assetsR,campaignR,ledgerR,auditR,fleetR,airportR,ranksR,milestoneDefsR].find((r:any)=>r.error)?.error;if(err)throw new Error(`Unable to load Operations Economy Console: ${err.message}`);
-  const a:any=accountR.data,p:any=policyR.data,pi:any[]=pilotItemsR.data??[],ci:any[]=companyItemsR.data??[],assets:any[]=assetsR.data??[],campaigns:any[]=campaignR.data??[],ledger:any[]=ledgerR.data??[],audits:any[]=auditR.data??[],fleet:any[]=fleetR.data??[],airports:any[]=airportR.data??[],ranks:any[]=ranksR.data??[],milestoneDefs:any[]=milestoneDefsR.data??[];
+  const err=accountR.error??policyR.error??pilotItemsR.error??companyItemsR.error??assetsR.error??campaignR.error??ledgerR.error??auditR.error??fleetR.error??airportR.error??ranksR.error??milestoneDefsR.error;
+  if(err)throw new Error(`Unable to load Operations Economy Console: ${err.message}`);
+  const a=accountR.data as unknown as CompanyEconomyAccount;
+  const p=policyR.data as unknown as EconomySalaryPolicy;
+  const pi=(pilotItemsR.data??[]) as unknown as AdminPilotItem[];
+  const ci=(companyItemsR.data??[]) as unknown as CompanyItem[];
+  const assets=(assetsR.data??[]) as unknown as CompanyAsset[];
+  const campaigns=(campaignR.data??[]) as unknown as RouteCampaign[];
+  const ledger=(ledgerR.data??[]) as unknown as LedgerEntry[];
+  const audits=(auditR.data??[]) as unknown as AuditEntry[];
+  const fleet=(fleetR.data??[]) as unknown as FleetOption[];
+  const airports=(airportR.data??[]) as unknown as AirportOption[];
+  const ranks=(ranksR.data??[]) as unknown as RankOption[];
+  const milestoneDefs=(milestoneDefsR.data??[]) as unknown as MilestoneOption[];
   return <main style={{minHeight:"100vh",background:"var(--bg)"}}>
     <section style={{padding:"74px 20px 110px",background:"radial-gradient(circle at 80% 20%,rgba(0,174,239,.25),transparent 30%),linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)"}}><div style={{maxWidth:1180,margin:"0 auto"}}><Link href="/operations" style={{color:"var(--accent)",fontWeight:850}}>← Operations Center</Link><p className="eyebrow" style={{marginTop:32}}>KVA OS · Pillar 08 · Company Authority</p><h1 style={{fontSize:"clamp(3.2rem,7vw,5.7rem)",margin:"10px 0"}}>Operations Economy Console</h1><p style={{maxWidth:850,color:"var(--muted)",lineHeight:1.8}}>Pilot and company economies share one ledger, but authority stays separate. Aircraft purchase, lease, fleet management and route activation remain Operations-only decisions.</p></div></section>
     <section style={{padding:"0 20px 100px"}}><div style={{maxWidth:1180,margin:"0 auto",display:"grid",gap:22,transform:"translateY(-44px)"}}>

@@ -23,7 +23,7 @@
 .baseValue{font-size:1.55rem!important}
 .mainGrid{display:grid;grid-template-columns:1.35fr .65fr;gap:22px;margin-top:26px}
 .rankCard,.qualificationCard{padding:28px;border:1px solid var(--border);border-radius:22px;background:var(--surface)}
-.sectionHeading{display:flex;align-items:end;justify-content:space-between;gap:24px}
+.sectionHeading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
 .sectionHeading h2,.qualificationCard h2,.activitySection h2{margin:10px 0 0;font-size:clamp(1.8rem,3vw,2.5rem);letter-spacing:-.035em}
 .sectionHeading>strong{font-size:2rem}
 .progressTrack{height:13px;margin:32px 0 12px;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.08)}

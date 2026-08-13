@@ -1,5 +1,9 @@
 import {purchaseCompanyItemAction} from "@/app/operations/economy/actions";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
+import type {
+  CompanyEconomyAsset,
+  CompanyMarketplaceItem,
+} from "@/components/marketplace/types";
 import {
   getAircraftMarketplaceThumbnail,
   getMarketplaceThumbnailAlt,
@@ -7,8 +11,8 @@ import {
 import styles from "./MarketplacePremium.module.css";
 
 type CompanyAircraftMarketProps = {
-  items: any[];
-  assets: any[];
+  items: CompanyMarketplaceItem[];
+  assets: CompanyEconomyAsset[];
   balance: number;
   money: (value: number) => string;
 };
@@ -39,7 +43,8 @@ export function CompanyAircraftMarket({
               </div>
               <p className={styles.subtitle}>
                 Acquire economic aircraft assets through Operations. Purchase
-                and lease decisions remain company-only and never mutate the fleet automatically.
+                and lease decisions remain company-only and never mutate the
+                fleet automatically.
               </p>
             </div>
           </div>
@@ -60,13 +65,15 @@ export function CompanyAircraftMarket({
 
         <div className={styles.grid}>
           {items.length === 0 ? (
-            <div className={styles.empty}>No company marketplace assets are currently available.</div>
+            <div className={styles.empty}>
+              No company marketplace assets are currently available.
+            </div>
           ) : null}
 
-          {items.map((item: any) => {
+          {items.map((item) => {
             const fleetCode = item.fleet_type?.icao_code ?? null;
             const matchingAsset = assets.find(
-              (asset: any) =>
+              (asset) =>
                 asset.status === "acquired" &&
                 String(asset.metadata?.marketplaceItemId ?? "") === String(item.id),
             );
@@ -129,7 +136,9 @@ export function CompanyAircraftMarket({
                           type="submit"
                           disabled={!canAfford}
                         >
-                          {canAfford ? "Acquire Asset" : "Insufficient Company KVC"}
+                          {canAfford
+                            ? "Acquire Asset"
+                            : "Insufficient Company KVC"}
                         </button>
                       </form>
                     )}

@@ -270,14 +270,12 @@ export default async function AirportWorldConsole({
                           {notice.lifecycle_status !== "published" ? (
                             <Lifecycle
                               notice={notice}
-                              airport={airport}
                               status="published"
                               label="Publish"
                             />
                           ) : (
                             <Lifecycle
                               notice={notice}
-                              airport={airport}
                               status="draft"
                               label="Return to Draft"
                             />
@@ -285,7 +283,6 @@ export default async function AirportWorldConsole({
                           {notice.lifecycle_status !== "closed" ? (
                             <Lifecycle
                               notice={notice}
-                              airport={airport}
                               status="closed"
                               label="Close"
                             />
@@ -397,12 +394,10 @@ export default async function AirportWorldConsole({
 
 function Lifecycle({
   notice,
-  airport,
   status,
   label,
 }: {
   notice: Notice;
-  airport: Airport | null;
   status: string;
   label: string;
 }) {

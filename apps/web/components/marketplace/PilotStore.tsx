@@ -1,5 +1,9 @@
 import {purchasePilotItemAction} from "@/app/pilot/economy/actions";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
+import type {
+  PilotMarketplaceVisualItem,
+  PilotUnlockRequirements,
+} from "@/components/marketplace/types";
 import {
   getMarketplaceThumbnailAlt,
   getPilotMarketplaceThumbnail,
@@ -7,13 +11,17 @@ import {
 import styles from "./MarketplacePremium.module.css";
 
 type PilotStoreProps = {
-  items: any[];
+  items: PilotMarketplaceVisualItem[];
   balance: number;
   money: (value: number) => string;
 };
 
 function categoryLabel(value: string | null | undefined) {
   return String(value ?? "Pilot item").replace(/_/g, " ");
+}
+
+function unlockRequirements(item: PilotMarketplaceVisualItem): PilotUnlockRequirements {
+  return item.unlock?.requirements ?? {};
 }
 
 export function PilotStore({items, balance, money}: PilotStoreProps) {
@@ -54,13 +62,14 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
 
         <div className={styles.grid}>
           {items.length === 0 ? (
-            <div className={styles.empty}>No Pilot Marketplace items are currently available.</div>
+            <div className={styles.empty}>
+              No Pilot Marketplace items are currently available.
+            </div>
           ) : null}
 
-          {items.map((item: any) => {
-            const unlock = item.unlock ?? {};
-            const state = String(unlock.state ?? "UNAVAILABLE");
-            const requirements = unlock.requirements ?? {};
+          {items.map((item) => {
+            const state = String(item.unlock?.state ?? "UNAVAILABLE");
+            const requirements = unlockRequirements(item);
             const requirementParts: string[] = [];
 
             if (Number(requirements.minimumCareerXp ?? 0) > 0) {
@@ -74,7 +83,8 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
             }
             if (requirements.requiredMilestoneCode) {
               requirementParts.push(
-                requirements.requiredMilestoneTitle ?? requirements.requiredMilestoneCode,
+                requirements.requiredMilestoneTitle ??
+                  requirements.requiredMilestoneCode,
               );
             }
 
@@ -90,7 +100,9 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
               <article className={styles.card} key={item.id}>
                 <div className={styles.visual}>
                   <MarketplaceThumbnail
-                    src={getPilotMarketplaceThumbnail(`${item.code ?? ""} ${item.name ?? ""}`)}
+                    src={getPilotMarketplaceThumbnail(
+                      `${item.code ?? ""} ${item.name ?? ""}`,
+                    )}
                     alt={getMarketplaceThumbnailAlt(item.name)}
                     badge={categoryLabel(item.category)}
                   />

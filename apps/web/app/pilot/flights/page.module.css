@@ -1,4 +1,4 @@
-.hero {
+﻿.hero {
   padding: 76px 0 108px;
   background:
     radial-gradient(circle at 78% 30%, rgba(0, 174, 239, .22), transparent 28%),
@@ -30,7 +30,7 @@
 .filters {
   display: grid;
   grid-template-columns: minmax(220px, 1.4fr) minmax(150px, .7fr) minmax(150px, .7fr) auto auto;
-  align-items: end;
+  align-items: flex-end;
   gap: 14px;
   padding: 22px;
   transform: translateY(-38px);
@@ -79,7 +79,7 @@
 
 .summary {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   margin: 4px 0 24px;
