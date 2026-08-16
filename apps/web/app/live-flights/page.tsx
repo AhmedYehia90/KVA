@@ -1,1 +1,11 @@
-export default function Page(){return <main className="section"><div className="container"><div className="eyebrow">Operations</div><h2>Live Flights</h2><div className="card"><h3>Realtime map planned</h3><p className="muted">Positions, altitude, speed, fuel and events will be received from Kalabsha ACARS.</p></div></div></main>}
+import {LiveFlights} from "@/components/LiveFlights";
+
+export const dynamic = "force-dynamic";
+
+export default function Page() {
+  return (
+    <main>
+      <LiveFlights />
+    </main>
+  );
+}

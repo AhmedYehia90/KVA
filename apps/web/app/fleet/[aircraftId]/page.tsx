@@ -1,6 +1,8 @@
 import Link from "next/link";
 import {notFound} from "next/navigation";
-import {createClient} from "@/lib/supabase/server";
+import {createAdminClient} from "@/lib/supabase/admin";
+
+export const dynamic = "force-dynamic";
 
 type FleetType = {
   icao_code: string;
@@ -17,11 +19,6 @@ type Airport = {
   city: string | null;
 };
 
-type Pilot = {
-  callsign: string;
-  full_name: string;
-};
-
 type Aircraft = {
   id: string;
   registration: string;
@@ -29,10 +26,8 @@ type Aircraft = {
   flight_hours: number | string;
   assigned_pilot_id: string | null;
   livery_version: string;
-  notes: string | null;
   fleet_type: FleetType | FleetType[] | null;
   current_airport: Airport | Airport[] | null;
-  assigned_pilot: Pilot | Pilot[] | null;
 };
 
 function first<T>(value: T | T[] | null | undefined): T | null {
@@ -46,7 +41,7 @@ export default async function AircraftDetailsPage({
 }) {
   const {aircraftId} = await params;
   const registration = decodeURIComponent(aircraftId).trim().toUpperCase();
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const {data, error} = await supabase
     .from("aircraft")
@@ -57,7 +52,6 @@ export default async function AircraftDetailsPage({
       flight_hours,
       assigned_pilot_id,
       livery_version,
-      notes,
       fleet_type:fleet_types(
         icao_code,
         manufacturer,
@@ -70,10 +64,6 @@ export default async function AircraftDetailsPage({
         icao_code,
         name,
         city
-      ),
-      assigned_pilot:profiles!aircraft_assigned_pilot_id_fkey(
-        callsign,
-        full_name
       )
     `)
     .eq("registration", registration)
@@ -88,7 +78,6 @@ export default async function AircraftDetailsPage({
   const aircraft = data as unknown as Aircraft;
   const fleetType = first(aircraft.fleet_type);
   const airport = first(aircraft.current_airport);
-  const pilot = first(aircraft.assigned_pilot);
   const available =
     aircraft.status === "active" && !aircraft.assigned_pilot_id;
 
@@ -128,16 +117,11 @@ export default async function AircraftDetailsPage({
           <Info label="Aircraft Type" value={fleetType?.icao_code ?? "—"} />
           <Info label="Manufacturer" value={fleetType?.manufacturer ?? "—"} />
           <Info label="Model" value={fleetType?.model ?? "—"} />
-          <Info label="Status" value={available ? "Available" : aircraft.status} />
+          <Info label="Status" value={available ? "Available" : aircraft.status === "active" ? "Assigned" : aircraft.status} />
           <Info
             label="Current Airport"
             value={airport?.icao_code ?? "Not set"}
             subValue={airport?.name ?? undefined}
-          />
-          <Info
-            label="Assigned Pilot"
-            value={pilot?.full_name ?? "None"}
-            subValue={pilot?.callsign ?? undefined}
           />
           <Info
             label="Flight Hours"
@@ -157,13 +141,6 @@ export default async function AircraftDetailsPage({
           />
           <Info label="Livery Version" value={aircraft.livery_version} />
         </div>
-
-        {aircraft.notes ? (
-          <section style={{marginTop:22,padding:22,border:"1px solid var(--border)",borderRadius:18,background:"var(--surface)"}}>
-            <p className="eyebrow">Notes</p>
-            <p style={{color:"var(--muted)",lineHeight:1.7}}>{aircraft.notes}</p>
-          </section>
-        ) : null}
       </section>
     </main>
   );

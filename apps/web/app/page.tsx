@@ -7,6 +7,8 @@ import { News } from "@/components/News";
 import { Partners } from "@/components/Partners";
 import { Stats } from "@/components/Stats";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <main>

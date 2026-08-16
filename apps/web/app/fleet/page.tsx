@@ -1,5 +1,7 @@
 import Link from "next/link";
-import {createClient} from "@/lib/supabase/server";
+import {createAdminClient} from "@/lib/supabase/admin";
+
+export const dynamic = "force-dynamic";
 
 type FleetType = {
   icao_code: string;
@@ -25,7 +27,7 @@ function toNumber(value: number | string | null | undefined) {
 }
 
 export default async function FleetPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const {data, error} = await supabase
     .from("aircraft")
