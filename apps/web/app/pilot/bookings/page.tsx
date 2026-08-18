@@ -93,46 +93,27 @@ export default async function PilotBookingsPage() {
   const bookings = (data ?? []) as unknown as Booking[];
 
   return (
-    <main
-      style={{
-        minHeight: "calc(100vh - 80px)",
-        padding: "76px 20px 100px",
-        background:
-          "radial-gradient(circle at 76% 14%, rgba(0,174,239,.12), transparent 28%), var(--bg)"
-      }}
-    >
-      <section style={{maxWidth: 1100, margin: "0 auto"}}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 20,
-            alignItems: "end",
-            flexWrap: "wrap",
-            marginBottom: 28
-          }}
-        >
+    <main className="kvaPremiumSubpage">
+      <section className="kvaPremiumHero">
+        <div className="kvaPremiumHeroInner">
+          <div className="kvaPremiumHeroRow">
           <div>
             <p className="eyebrow">Pilot Operations</p>
-            <h1
-              style={{
-                margin: "10px 0 8px",
-                fontSize: "clamp(2.8rem, 7vw, 5rem)",
-                letterSpacing: "-.05em"
-              }}
-            >
-              My Bookings
-            </h1>
-            <p style={{margin: 0, color: "var(--muted)"}}>
+            <h1 className="kvaPremiumHeroTitle">My Bookings</h1>
+            <p className="kvaPremiumHeroText">
               Open your current assignment or review previous bookings.
             </p>
           </div>
 
-          <Link className="button" href="/pilot/flights">
+          <Link className="button kvaPremiumHeroSide" href="/pilot/flights">
             Browse Flights
           </Link>
+          </div>
         </div>
+      </section>
 
+      <section className="kvaPremiumSubpageContent">
+        <div className="kvaPremiumSubpageBody kvaPremiumSubpageBodyLift">
         {bookings.length ? (
           <div
             style={{
@@ -234,11 +215,12 @@ export default async function PilotBookingsPage() {
             <p style={{color: "var(--muted)", marginBottom: 22}}>
               Choose an available flight to create your first booking.
             </p>
-            <Link className="button" href="/pilot/flights">
+            <Link className="button kvaPremiumHeroSide" href="/pilot/flights">
               Browse Flights
             </Link>
           </section>
         )}
+        </div>
       </section>
     </main>
   );

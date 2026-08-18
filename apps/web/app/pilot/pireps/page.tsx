@@ -53,16 +53,24 @@ export default async function PirepsPage({
   const pireps = (data ?? []) as unknown as Pirep[];
 
   return (
-    <main style={{minHeight:"calc(100vh - 80px)",padding:"76px 20px",background:"var(--bg)"}}>
-      <section style={{maxWidth:1050,margin:"0 auto"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"end",gap:20,flexWrap:"wrap",marginBottom:28}}>
-          <div>
-            <p className="eyebrow">Flight Records</p>
-            <h1 style={{fontSize:"clamp(2.8rem,7vw,5rem)",margin:"10px 0"}}>My PIREPs</h1>
+    <main className="kvaPremiumSubpage">
+      <section className="kvaPremiumHero">
+        <div className="kvaPremiumHeroInner">
+          <div className="kvaPremiumHeroRow">
+            <div>
+              <p className="eyebrow">Flight Records</p>
+              <h1 className="kvaPremiumHeroTitle">My PIREPs</h1>
+              <p className="kvaPremiumHeroText">
+                Review the flight reports preserved from your completed operations.
+              </p>
+            </div>
+            <Link className="button kvaPremiumHeroSide" href="/pilot/bookings">My Bookings</Link>
           </div>
-          <Link className="button" href="/pilot/bookings">My Bookings</Link>
         </div>
+      </section>
 
+      <section className="kvaPremiumSubpageContent">
+        <div className="kvaPremiumSubpageBody kvaPremiumSubpageBodyLift">
         {query.submitted ? (
           <div style={{padding:15,marginBottom:20,border:"1px solid rgba(57,220,138,.22)",borderRadius:12,color:"#82edb5",background:"rgba(57,220,138,.08)"}}>
             PIREP submitted successfully.
@@ -88,6 +96,7 @@ export default async function PirepsPage({
               <p style={{color:"var(--muted)"}}>Complete a flight and submit its report.</p>
             </div>
           )}
+        </div>
         </div>
       </section>
     </main>

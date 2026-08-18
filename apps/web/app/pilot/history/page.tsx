@@ -1,4 +1,4 @@
-﻿import type {Metadata} from "next";
+import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -106,16 +106,10 @@ export default async function PilotMuseumHistoryPage() {
   const firstEvent = memories.firstEventAchievement ?? {};
 
   return (
-    <main
-      style={{
-        minHeight: "calc(100vh - 80px)",
-        padding: "76px 20px 110px",
-        background:
-          "radial-gradient(circle at 76% 5%, rgba(24,167,224,.16), transparent 30%), radial-gradient(circle at 12% 36%, rgba(7,43,90,.32), transparent 34%), var(--bg)",
-      }}
-    >
-      <div style={{maxWidth: 1180, margin: "0 auto"}}>
-        <div style={{display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 24}}>
+    <main className="kvaPremiumSubpage">
+      <section className="kvaPremiumHero">
+        <div className="kvaPremiumHeroInner">
+        <div className="kvaPremiumHeroNav">
           <Link className="button outline" href="/pilot/history/memories">
             Living Memories
           </Link>
@@ -123,18 +117,16 @@ export default async function PilotMuseumHistoryPage() {
             Airline Museum →
           </Link>
         </div>
-        <section style={hero}>
+        <section className="kvaPremiumHeroRow" style={hero}>
           <div>
             <p className="eyebrow">KVA OS · PILLAR 09</p>
-            <h1 style={{margin: "12px 0 12px", fontSize: "clamp(2.8rem, 7vw, 5.6rem)", letterSpacing: "-.055em"}}>
-              Museum & History
-            </h1>
-            <p style={{maxWidth: 720, margin: 0, color: "var(--muted)", fontSize: "1.05rem", lineHeight: 1.75}}>
+            <h1 className="kvaPremiumHeroTitle">Museum & History</h1>
+            <p className="kvaPremiumHeroText">
               Every completed operation, promotion, milestone, qualification and event achievement becomes part of one persistent aviation legacy.
             </p>
           </div>
 
-          <div style={legacySeal}>
+          <div className="kvaPremiumHeroMetaCard kvaPremiumHeroSide" style={legacySeal}>
             <small style={label}>LEGACY SINCE</small>
             <strong style={{display: "block", marginTop: 8, fontSize: "1.2rem"}}>
               {date(summary.journeySince)}
@@ -148,8 +140,12 @@ export default async function PilotMuseumHistoryPage() {
                 : "Universal Pilot Passport"}
             </span>
           </div>
-        </section>
+          </section>
+        </div>
+      </section>
 
+      <section className="kvaPremiumSubpageContent">
+        <div className="kvaPremiumSubpageBody kvaPremiumSubpageBodyLift">
         <section style={statsGrid}>
           <Stat label="CAREER XP" value={String(summary.careerXp ?? 0)} />
           <Stat label="COMPLETED FLIGHTS" value={String(summary.completedFlights ?? 0)} />
@@ -260,7 +256,8 @@ export default async function PilotMuseumHistoryPage() {
             This page does not create flight history, award ranks, alter the economy, activate routes or change the fleet.
           </span>
         </section>
-      </div>
+        </div>
+      </section>
     </main>
   );
 }

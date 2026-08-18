@@ -104,7 +104,7 @@ if (firstError || !passportResult.data || !profileResult.data) {
     .reduce((sum, item) => sum + Number(item.block_minutes ?? 0), 0);
 
   return (
-    <main style={{minHeight:"100vh",padding:"72px 20px 100px",background:"var(--bg)"}}>
+    <main className="kvaPassportPage" style={{minHeight:"100vh",padding:"72px 20px 100px",background:"var(--bg)"}}>
       <section style={{maxWidth:1180,margin:"0 auto"}}>
         <Link href="/pilot/dashboard" style={{color:"var(--accent)",fontWeight:850}}>
           ← Pilot Dashboard
@@ -121,7 +121,7 @@ if (firstError || !passportResult.data || !profileResult.data) {
             </p>
           </div>
 
-          <div style={{padding:"14px 18px",border:"1px solid var(--border)",borderRadius:14,background:"var(--surface)"}}>
+          <div className="kvaPassportIdentityCard" style={{padding:"14px 18px",border:"1px solid var(--border)",borderRadius:14,background:"var(--surface)"}}>
             <small style={{display:"block",color:"var(--muted)",fontWeight:850}}>PASSPORT NUMBER</small>
             <strong style={{display:"block",marginTop:7,fontFamily:"monospace"}}>
               {passport.passport_number}
@@ -132,7 +132,7 @@ if (firstError || !passportResult.data || !profileResult.data) {
         {message ? <Notice success>{message}</Notice> : null}
         {errorMessage ? <Notice>{errorMessage}</Notice> : null}
 
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12,marginTop:28}}>
+        <div className="kvaPassportStatsGrid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12,marginTop:28}}>
           <Stat label="Pilot" value={profile.full_name} />
           <Stat label="Callsign" value={profile.callsign} />
           <Stat label="Platform Hours" value={String(Number(profile.total_hours ?? 0).toFixed(1))} />

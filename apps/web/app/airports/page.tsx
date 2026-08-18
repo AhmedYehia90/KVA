@@ -80,20 +80,14 @@ export default async function LivingAirportsPage() {
   const spotlight = airports[0];
 
   return (
-    <main
-      style={{
-        minHeight: "calc(100vh - 80px)",
-        padding: "74px 20px 110px",
-        background:
-          "radial-gradient(circle at 82% 6%, rgba(24,167,224,.20), transparent 31%), radial-gradient(circle at 15% 45%, rgba(7,43,90,.36), transparent 36%), var(--bg)",
-      }}
-    >
-      <div style={{maxWidth: 1180, margin: "0 auto"}}>
-        <section style={hero}>
+    <main className="kvaPremiumSubpage">
+      <section className="kvaPremiumHero">
+        <div className="kvaPremiumHeroInner">
+        <section className="kvaPremiumHeroRow" style={hero}>
           <div style={{maxWidth: 810}}>
             <p className="eyebrow">KVA OS · PILLAR 10 · WORLD AWARENESS</p>
-            <h1 style={heroTitle}>Living Airports</h1>
-            <p style={heroText}>
+            <h1 className="kvaPremiumHeroTitle">Living Airports</h1>
+            <p className="kvaPremiumHeroText">
               Airports become living nodes in the KVA OS world — connected to
               live flight evidence, fleet presence, route networks, Global
               Aviation Events, community route interest and published platform
@@ -101,7 +95,7 @@ export default async function LivingAirportsPage() {
             </p>
           </div>
 
-          <div style={worldCard}>
+          <div className="kvaPremiumHeroMetaCard kvaPremiumHeroSide" style={worldCard}>
             <small style={label}>WORLD STATUS</small>
             <strong style={{display: "block", marginTop: 9, fontSize: "1.35rem"}}>
               {summary.airports} connected airports
@@ -111,8 +105,12 @@ export default async function LivingAirportsPage() {
               {summary.activeGlobalEventLinks} event links
             </span>
           </div>
-        </section>
+          </section>
+        </div>
+      </section>
 
+      <section className="kvaPremiumSubpageContent">
+        <div className="kvaPremiumSubpageBody kvaPremiumSubpageBodyLift">
         <section style={stats}>
           <Stat label="CONNECTED AIRPORTS" value={String(summary.airports)} />
           <Stat label="LIVE MOVEMENT LINKS" value={String(summary.liveMovements)} />
@@ -227,7 +225,8 @@ export default async function LivingAirportsPage() {
             traffic status unless a future verified external source is explicitly integrated.
           </span>
         </section>
-      </div>
+        </div>
+      </section>
     </main>
   );
 }

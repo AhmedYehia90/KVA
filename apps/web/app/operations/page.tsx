@@ -1,4 +1,4 @@
-﻿import type {Metadata} from "next";
+import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -55,7 +55,7 @@ export default async function OperationsPage() {
             </div>
 
             {canOpenEventConsole ? (
-              <div style={{
+              <div className="kvaOperationsActionGrid" style={{
                 display:"flex",
                 gap:10,
                 marginTop:8,

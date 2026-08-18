@@ -4,13 +4,18 @@ import {getTranslations} from "next-intl/server";
 import {createClient} from "@/lib/supabase/server";
 import {LanguageSelector} from "./LanguageSelector";
 import {signOutAction} from "./actions";
-import mobileStyles from "./HeaderMobile.module.css";
+import {
+  PremiumPageContext,
+  PremiumSidebarNav,
+  type PremiumNavItem,
+} from "./PremiumNavigation";
 
 const publicNavigation = [
-  {href: "/fleet", key: "fleet"},
-  {href: "/live-flights", key: "liveFlights"},
-  {href: "/pilots", key: "pilots"},
-  {href: "/about", key: "about"},
+  {href: "/", key: "home", icon: "⌂"},
+  {href: "/fleet", key: "fleet", icon: "✦"},
+  {href: "/live-flights", key: "liveFlights", icon: "◉"},
+  {href: "/pilots", key: "pilots", icon: "♙"},
+  {href: "/about", key: "about", icon: "i"},
 ] as const;
 
 export async function Header() {
@@ -22,49 +27,108 @@ export async function Header() {
     data: {user},
   } = await supabase.auth.getUser();
 
-  const navigationItems = user
-    ? [
-        {href: "/pilot/dashboard", label: "Dashboard"},
-        {href: "/operations", label: "Operations"},
-        {href: "/pilot/flights", label: "Flights"},
-        {href: "/pilot/bookings", label: "My Bookings"},
-        {href: "/pilot/pireps", label: "PIREPs"},
-        {href: "/pilot/history", label: "History"},
-        {href: "/airports", label: "Airports"},
-        {href: "/fleet", label: t("fleet")},
-      ]
-    : publicNavigation.map((item) => ({
-        href: item.href,
-        label: t(item.key),
-      }));
+  const authenticatedNavigation: PremiumNavItem[] = [
+    {href: "/pilot/dashboard", label: "Dashboard", icon: "⌂"},
+    {href: "/pilot/passport", label: "Pilot Passport", icon: "◉"},
+    {href: "/pilot/flights", label: "Flights", icon: "✈"},
+    {href: "/pilot/bookings", label: "My Bookings", icon: "▣"},
+    {href: "/pilot/pireps", label: "PIREPs", icon: "▤"},
+    {href: "/pilot/economy", label: "Career & Economy", icon: "◇"},
+    {href: "/fleet", label: t("fleet"), icon: "✦"},
+    {href: "/pilot/history", label: "Museum & History", icon: "◆"},
+    {href: "/airports", label: "Living Airports", icon: "◎"},
+    {href: "/operations", label: "Operations", icon: "⚙"},
+  ];
+
+  const publicItems: PremiumNavItem[] = publicNavigation.map((item) => ({
+    href: item.href,
+    label: item.key === "home" ? "Home" : t(item.key),
+    icon: item.icon,
+  }));
+
+  const navigationItems = user ? authenticatedNavigation : publicItems;
+  const displayName = user?.email?.split("@")[0] ?? "Pilot";
+  const initial = displayName.slice(0, 1).toUpperCase();
 
   return (
-    <header className={`nav ${mobileStyles.header}`}>
-      <div className="container navin">
-        <Link href="/" className="brand" aria-label={common("homeAria")}>
+    <div
+      className={`kvaPremiumShell ${
+        user ? "kvaPremiumShellAuth" : "kvaPremiumShellPublic"
+      }`}
+    >
+      <aside className="kvaSidebar" aria-label="KVA OS sidebar">
+        <Link
+          href={user ? "/pilot/dashboard" : "/"}
+          className="kvaSidebarBrand"
+          aria-label={common("homeAria")}
+        >
           <Image
             src="/brand/logo-reference.png"
             alt="Kalabsha Airlines"
-            width={108}
-            height={76}
+            width={88}
+            height={62}
             priority
           />
-
-          <div>
+          <span className="kvaSidebarBrandText">
             <strong>Kalabsha Airlines</strong>
-            <div className="tag">Fly To Dreams</div>
-          </div>
+            <span>Fly To Dreams</span>
+          </span>
         </Link>
 
-        <nav className="links" aria-label={t("mainNavigation")}>
-          {navigationItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="kvaSidebarSectionLabel">
+          {user ? "KVA OS Workspace" : "Navigation"}
+        </div>
 
-        <div className="navActions">
+        <PremiumSidebarNav items={navigationItems} />
+
+        <div className="kvaSidebarFooter">
+          <div className="kvaSidebarSystem">
+            <span className="kvaSidebarSystemMark">K</span>
+            <span>
+              <strong>KVA OS</strong>
+              <small>Premium Design System v1.2</small>
+            </span>
+          </div>
+        </div>
+      </aside>
+
+      <header className="kvaTopbar">
+        <Link
+          href={user ? "/pilot/dashboard" : "/"}
+          className="kvaTopbarMobileBrand"
+          aria-label={common("homeAria")}
+        >
+          <Image
+            src="/brand/logo-reference.png"
+            alt="Kalabsha Airlines"
+            width={68}
+            height={48}
+            priority
+          />
+          <strong>Kalabsha Airlines</strong>
+        </Link>
+
+        <div className="kvaTopbarContext">
+          <PremiumPageContext
+            items={navigationItems}
+            authenticated={Boolean(user)}
+          />
+          <span className="kvaTopbarDivider" aria-hidden="true" />
+        </div>
+
+        <div className="kvaTopbarActions">
+          {user ? (
+            <div className="kvaTopbarUser" aria-label="Signed in pilot">
+              <span className="kvaTopbarAvatar" aria-hidden="true">
+                {initial}
+              </span>
+              <span>
+                <strong>{displayName}</strong>
+                <small>KVA Pilot</small>
+              </span>
+            </div>
+          ) : null}
+
           <LanguageSelector />
 
           {user ? (
@@ -80,35 +144,16 @@ export async function Header() {
           )}
         </div>
 
-        <details className={mobileStyles.mobileMenu}>
-          <summary className={mobileStyles.summary}>
-            <span className={mobileStyles.summaryLabel}>
-              <span className={mobileStyles.menuIcon} aria-hidden="true">
-                ☰
-              </span>
-              Menu
-            </span>
-            <span className={mobileStyles.chevron} aria-hidden="true">
-              ▾
-            </span>
+        <details className="kvaMobileNav">
+          <summary>
+            <span aria-hidden="true">☰</span>
+            <span>Menu</span>
           </summary>
-
-          <nav
-            className={mobileStyles.panel}
-            aria-label={`${t("mainNavigation")} mobile`}
-          >
-            {navigationItems.map((item) => (
-              <Link
-                key={`mobile-${item.href}`}
-                href={item.href}
-                className={mobileStyles.link}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="kvaMobilePanel">
+            <PremiumSidebarNav items={navigationItems} />
+          </div>
         </details>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

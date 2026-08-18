@@ -3,6 +3,7 @@ import Link from "next/link";
 import {NextIntlClientProvider, useTranslations} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
 import "./globals.css";
+import "./kva-premium-design-system.css";
 import {Header} from "@/components/Header";
 import {getDirection, type Locale} from "@/i18n/config";
 

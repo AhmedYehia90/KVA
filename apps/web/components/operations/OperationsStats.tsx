@@ -28,7 +28,7 @@ export function OperationsStats({stats}: {stats: Stats}) {
   ];
 
   return (
-    <section style={gridStyle}>
+    <section className="kvaOperationsStatsGrid" style={gridStyle}>
       {cards.map((card) => (
         <article key={card.label} style={cardStyle}>
           <span style={labelStyle}>{card.label}</span>

@@ -1,0 +1,1286 @@
+/*
+ * KVA OS Premium Design System v1.0 — Consolidated Final RC
+ * Global visual contract for Kalabsha Airlines / KVA OS.
+ * Loaded after globals.css so legacy --bg/--surface/etc. resolve to this system.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Brand + canvas */
+  --kva-navy-950: #020913;
+  --kva-navy-900: #041123;
+  --kva-navy-850: #06182f;
+  --kva-navy-800: #08213f;
+  --kva-navy-750: #0a2b51;
+  --kva-navy-700: #0d3562;
+  --kva-blue-600: #0c76cd;
+  --kva-blue-500: #119de4;
+  --kva-cyan-500: #20bdf3;
+  --kva-cyan-400: #63d5ff;
+  --kva-silver-200: #c6d9e8;
+  --kva-white: #f7fbff;
+
+  /* Semantic surfaces */
+  --kva-bg: var(--kva-navy-900);
+  --kva-bg-deep: var(--kva-navy-950);
+  --kva-nav-bg: rgba(3, 17, 36, .94);
+  --kva-surface: rgba(9, 39, 74, .92);
+  --kva-surface-elevated: rgba(11, 48, 90, .95);
+  --kva-surface-strong: rgba(13, 58, 105, .94);
+  --kva-surface-inset: rgba(3, 22, 44, .54);
+  --kva-surface-hover: rgba(10, 51, 94, .96);
+  --kva-field-bg: rgba(3, 24, 48, .72);
+  --kva-track-bg: rgba(255, 255, 255, .075);
+
+  /* Text */
+  --kva-text: #edf7ff;
+  --kva-text-strong: var(--kva-white);
+  --kva-text-muted: #9db9cf;
+  --kva-text-soft: #7f9fb8;
+  --kva-link: #73d8ff;
+
+  /* Borders */
+  --kva-border-faint: rgba(105, 183, 231, .10);
+  --kva-border-soft: rgba(105, 183, 231, .16);
+  --kva-border: rgba(105, 183, 231, .24);
+  --kva-border-strong: rgba(105, 183, 231, .42);
+  --kva-border-accent: rgba(32, 189, 243, .52);
+
+  /* States */
+  --kva-available: #51d99a;
+  --kva-available-text: #a6f5ca;
+  --kva-available-soft: rgba(57, 220, 138, .10);
+  --kva-available-border: rgba(57, 220, 138, .34);
+
+  --kva-owned: #66d7ff;
+  --kva-owned-text: #c8f2ff;
+  --kva-owned-soft: rgba(32, 189, 243, .10);
+  --kva-owned-border: rgba(32, 189, 243, .36);
+
+  --kva-warning: #ffc45c;
+  --kva-warning-text: #ffe2a8;
+  --kva-warning-soft: rgba(255, 187, 72, .10);
+  --kva-warning-border: rgba(255, 187, 72, .34);
+
+  --kva-danger: #ff6b78;
+  --kva-danger-text: #ffc1c6;
+  --kva-danger-soft: rgba(255, 95, 95, .10);
+  --kva-danger-border: rgba(255, 95, 95, .34);
+
+  --kva-locked: #8da4ba;
+  --kva-locked-text: #bed0df;
+  --kva-locked-soft: rgba(126, 151, 174, .10);
+  --kva-locked-border: rgba(150, 174, 194, .24);
+
+  --kva-success-text: var(--kva-available-text);
+  --kva-success-soft: var(--kva-available-soft);
+
+  /* Spacing */
+  --kva-space-1: 4px;
+  --kva-space-2: 8px;
+  --kva-space-3: 12px;
+  --kva-space-4: 16px;
+  --kva-space-5: 20px;
+  --kva-space-6: 24px;
+  --kva-space-7: 32px;
+  --kva-space-8: 40px;
+  --kva-space-9: 52px;
+  --kva-space-10: 64px;
+
+  /* Shape */
+  --kva-radius-xs: 7px;
+  --kva-radius-sm: 10px;
+  --kva-radius-md: 13px;
+  --kva-radius-lg: 20px;
+  --kva-radius-xl: 26px;
+  --kva-radius-pill: 999px;
+
+  /* Elevation */
+  --kva-shadow-sm: 0 8px 22px rgba(0, 0, 0, .16);
+  --kva-shadow-card: 0 18px 48px rgba(0, 0, 0, .22);
+  --kva-shadow-panel: 0 28px 74px rgba(0, 0, 0, .28);
+  --kva-shadow-focus: 0 0 0 3px rgba(32, 189, 243, .20);
+
+  /* Motion */
+  --kva-motion-fast: 150ms;
+  --kva-motion-base: 220ms;
+  --kva-ease: cubic-bezier(.2, .8, .2, 1);
+
+  /* Shared gradients */
+  --kva-gradient-brand: linear-gradient(135deg, var(--kva-blue-600), var(--kva-cyan-500));
+  --kva-gradient-panel: linear-gradient(155deg, rgba(12, 49, 91, .96), rgba(5, 27, 55, .98));
+  --kva-gradient-hero:
+    radial-gradient(circle at 78% 22%, rgba(32, 189, 243, .22), transparent 31%),
+    radial-gradient(circle at 18% 84%, rgba(21, 101, 192, .17), transparent 34%),
+    linear-gradient(145deg, #041123, #082448 58%, #0f4c79);
+
+  /* Backward-compatible aliases used throughout the existing app. */
+  --bg: var(--kva-bg);
+  --bg-deep: var(--kva-bg-deep);
+  --nav: var(--kva-nav-bg);
+  --surface: var(--kva-surface-elevated);
+  --surface-2: var(--kva-surface-strong);
+  --panel: var(--kva-surface);
+  --accent: var(--kva-cyan-500);
+  --accent-2: var(--kva-blue-600);
+  --white: var(--kva-white);
+  --text: var(--kva-text);
+  --muted: var(--kva-text-muted);
+  --border: var(--kva-border);
+  --border-bright: var(--kva-border-strong);
+  --success: var(--kva-available);
+  --warning: var(--kva-warning);
+  --danger: var(--kva-danger);
+  --shadow: var(--kva-shadow-panel);
+}
+
+html { background: var(--kva-bg-deep); }
+body {
+  background:
+    radial-gradient(circle at 84% 4%, rgba(32, 189, 243, .055), transparent 24%),
+    var(--kva-bg);
+  color: var(--kva-text);
+}
+
+::selection { background: rgba(32, 189, 243, .24); color: var(--kva-white); }
+
+a {
+  transition:
+    color var(--kva-motion-fast) var(--kva-ease),
+    border-color var(--kva-motion-fast) var(--kva-ease),
+    background-color var(--kva-motion-fast) var(--kva-ease),
+    opacity var(--kva-motion-fast) var(--kva-ease);
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+input:not([type="hidden"]):focus-visible {
+  outline: 2px solid var(--kva-cyan-400);
+  outline-offset: 2px;
+  box-shadow: var(--kva-shadow-focus);
+}
+
+/* Header / navigation */
+.nav {
+  border-bottom: 1px solid var(--kva-border-soft);
+  background: var(--kva-nav-bg);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .16);
+  backdrop-filter: blur(18px) saturate(130%);
+}
+
+.brand strong { color: var(--kva-text-strong); }
+.tag { color: var(--kva-cyan-400); }
+.links a { color: var(--kva-text-muted); }
+.links a:hover,
+.links a:focus-visible { color: var(--kva-white); }
+
+/* Buttons */
+.button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kva-space-2);
+  padding: 0 17px;
+  border: 1px solid rgba(70, 203, 250, .55);
+  border-radius: var(--kva-radius-sm);
+  background: var(--kva-gradient-brand);
+  color: var(--kva-white);
+  font-weight: 850;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), var(--kva-shadow-sm);
+  transition:
+    transform var(--kva-motion-fast) var(--kva-ease),
+    filter var(--kva-motion-fast) var(--kva-ease),
+    border-color var(--kva-motion-fast) var(--kva-ease),
+    background var(--kva-motion-fast) var(--kva-ease),
+    color var(--kva-motion-fast) var(--kva-ease);
+}
+
+.button:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.07); }
+.button:active:not(:disabled) { transform: translateY(0); }
+.button.outline {
+  background: rgba(7, 36, 68, .58);
+  border-color: var(--kva-border-strong);
+  color: var(--kva-text);
+  box-shadow: none;
+}
+.button.outline:hover:not(:disabled) {
+  background: rgba(32, 189, 243, .09);
+  border-color: var(--kva-border-accent);
+  color: var(--kva-white);
+}
+.button:disabled,
+.button[aria-disabled="true"] {
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+  opacity: .58;
+}
+
+/* Form controls */
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+select,
+textarea {
+  min-height: 42px;
+  border: 1px solid var(--kva-border);
+  border-radius: var(--kva-radius-sm);
+  background: var(--kva-field-bg);
+  color: var(--kva-text);
+  transition:
+    border-color var(--kva-motion-fast) var(--kva-ease),
+    background var(--kva-motion-fast) var(--kva-ease),
+    box-shadow var(--kva-motion-fast) var(--kva-ease);
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):hover,
+select:hover,
+textarea:hover { border-color: var(--kva-border-strong); }
+input::placeholder,
+textarea::placeholder { color: var(--kva-text-soft); }
+
+/* Shared panels / cards */
+.card,
+.bookingCard,
+.stat,
+.fleetCard,
+.newsCard {
+  border-color: var(--kva-border);
+  background: var(--kva-gradient-panel);
+  box-shadow: var(--kva-shadow-card);
+}
+
+.card,
+.bookingCard,
+.fleetCard,
+.newsCard { border-radius: var(--kva-radius-lg); }
+.stat { border-radius: var(--kva-radius-md); }
+
+.fleetCard,
+.newsCard {
+  transition:
+    transform var(--kva-motion-base) var(--kva-ease),
+    border-color var(--kva-motion-base) var(--kva-ease),
+    background var(--kva-motion-base) var(--kva-ease),
+    box-shadow var(--kva-motion-base) var(--kva-ease);
+}
+.fleetCard:hover,
+.newsCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--kva-border-accent);
+  box-shadow: var(--kva-shadow-panel);
+}
+
+.eyebrow { color: var(--kva-cyan-400); letter-spacing: .15em; }
+.muted { color: var(--kva-text-muted); }
+.textLink { color: var(--kva-link); }
+
+/* Public page surfaces */
+.hero { background: var(--kva-gradient-hero); }
+.heroAircraft {
+  border-color: var(--kva-border-strong);
+  border-radius: var(--kva-radius-xl);
+  background: linear-gradient(155deg, rgba(15, 64, 111, .78), rgba(5, 30, 59, .92));
+  box-shadow: var(--kva-shadow-panel);
+}
+.bookingWrap { position: relative; }
+.sectionAlt { background: rgba(3, 20, 40, .42); }
+.destinationCard {
+  border-radius: var(--kva-radius-lg);
+  border-color: var(--kva-border-soft);
+  box-shadow: var(--kva-shadow-card);
+}
+.liveBadge {
+  border-color: var(--kva-available-border);
+  background: var(--kva-available-soft);
+  color: var(--kva-available-text);
+}
+.footer {
+  border-top-color: var(--kva-border-soft);
+  background: var(--kva-bg-deep);
+}
+
+/* Semantic states: reusable across markets, fleet and future modules. */
+.kva-state,
+[data-kva-state] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  width: fit-content;
+  padding: 0 9px;
+  border: 1px solid var(--kva-border);
+  border-radius: var(--kva-radius-pill);
+  background: var(--kva-surface-inset);
+  color: var(--kva-text-muted);
+  font-size: .67rem;
+  font-weight: 900;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+.kva-state--available,
+[data-kva-state="available"] {
+  border-color: var(--kva-available-border);
+  background: var(--kva-available-soft);
+  color: var(--kva-available-text);
+}
+.kva-state--owned,
+.kva-state--acquired,
+[data-kva-state="owned"],
+[data-kva-state="acquired"] {
+  border-color: var(--kva-owned-border);
+  background: var(--kva-owned-soft);
+  color: var(--kva-owned-text);
+}
+.kva-state--warning,
+[data-kva-state="warning"] {
+  border-color: var(--kva-warning-border);
+  background: var(--kva-warning-soft);
+  color: var(--kva-warning-text);
+}
+.kva-state--locked,
+[data-kva-state="locked"] {
+  border-color: var(--kva-locked-border);
+  background: var(--kva-locked-soft);
+  color: var(--kva-locked-text);
+}
+.kva-state--danger,
+[data-kva-state="danger"] {
+  border-color: var(--kva-danger-border);
+  background: var(--kva-danger-soft);
+  color: var(--kva-danger-text);
+}
+
+/* Generic notices used by current pilot/operations economy pages. */
+.kva-notice--success { color: var(--kva-success-text); background: var(--kva-success-soft); border: 1px solid var(--kva-available-border); }
+.kva-notice--danger { color: var(--kva-danger-text); background: var(--kva-danger-soft); border: 1px solid var(--kva-danger-border); }
+
+/* Tables / dense operations UI */
+table { border-color: var(--kva-border-soft); }
+th { color: var(--kva-text-soft); }
+td, th { border-color: var(--kva-border-faint); }
+
+@media (max-width: 820px) {
+  :root {
+    --kva-radius-lg: 18px;
+    --kva-radius-xl: 22px;
+  }
+  .button { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ==========================================================================
+   KVA OS Premium Design System v1.0 — DARK SIDEBAR MASTER
+   Official visual baseline:
+   - dark canvas everywhere
+   - fixed left sidebar on desktop
+   - unified top bar
+   - lighter tones only for cards, panels and interaction states
+   ========================================================================== */
+
+:root {
+  --kva-sidebar-width: 236px;
+  --kva-topbar-height: 74px;
+
+  /* Official dark master palette */
+  --kva-navy-950: #01050d;
+  --kva-navy-900: #020914;
+  --kva-navy-850: #03101f;
+  --kva-navy-800: #04172c;
+  --kva-navy-750: #06203b;
+  --kva-navy-700: #08294a;
+
+  --kva-bg: #020914;
+  --kva-bg-deep: #01050d;
+  --kva-nav-bg: rgba(2, 9, 20, .97);
+
+  /* Lighter values are reserved for elevated UI only. */
+  --kva-surface: rgba(6, 25, 48, .94);
+  --kva-surface-elevated: rgba(7, 32, 61, .96);
+  --kva-surface-strong: rgba(9, 40, 74, .97);
+  --kva-surface-inset: rgba(3, 18, 35, .82);
+  --kva-surface-hover: rgba(10, 47, 85, .98);
+  --kva-field-bg: rgba(3, 20, 39, .92);
+
+  --kva-border-faint: rgba(91, 162, 213, .08);
+  --kva-border-soft: rgba(91, 162, 213, .14);
+  --kva-border: rgba(91, 162, 213, .23);
+  --kva-border-strong: rgba(73, 180, 244, .38);
+  --kva-border-accent: rgba(32, 189, 243, .55);
+
+  --kva-gradient-panel:
+    linear-gradient(155deg, rgba(8, 37, 69, .96), rgba(3, 18, 35, .98));
+
+  /* Hero remains dark. Accent glow is subtle, never a page background color. */
+  --kva-gradient-hero:
+    radial-gradient(circle at 82% 20%, rgba(18, 125, 205, .11), transparent 30%),
+    radial-gradient(circle at 18% 88%, rgba(19, 93, 171, .07), transparent 34%),
+    linear-gradient(145deg, #020914, #031224 58%, #051a31);
+
+  --bg: var(--kva-bg);
+  --surface: var(--kva-surface-elevated);
+  --surface-2: var(--kva-surface-strong);
+  --panel: var(--kva-surface);
+}
+
+html,
+body {
+  background: var(--kva-bg-deep);
+}
+
+body {
+  background-image: none;
+}
+
+/* --------------------------------------------------------------------------
+   Application chrome
+   -------------------------------------------------------------------------- */
+
+.kvaPremiumShell {
+  position: relative;
+  z-index: 300;
+  height: var(--kva-topbar-height);
+  margin-left: var(--kva-sidebar-width);
+}
+
+.kvaSidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 330;
+  width: var(--kva-sidebar-width);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--kva-border-soft);
+  background:
+    linear-gradient(180deg, rgba(3, 14, 29, .995), rgba(1, 7, 16, .998));
+  box-shadow: 14px 0 44px rgba(0, 0, 0, .16);
+}
+
+.kvaSidebarBrand {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--kva-border-faint);
+}
+
+.kvaSidebarBrand img {
+  width: 44px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.kvaSidebarBrandText strong {
+  display: block;
+  color: var(--kva-text-strong);
+  font-size: .94rem;
+  line-height: 1.15;
+}
+
+.kvaSidebarBrandText span {
+  display: block;
+  margin-top: 4px;
+  color: var(--kva-cyan-400);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.kvaSidebarSectionLabel {
+  padding: 17px 18px 8px;
+  color: var(--kva-text-soft);
+  font-size: .61rem;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.kvaSidebarNav {
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 0 10px 14px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.kvaSidebarLink {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: var(--kva-text-muted);
+  font-size: .85rem;
+  font-weight: 720;
+}
+
+.kvaSidebarLink:hover,
+.kvaSidebarLink:focus-visible {
+  border-color: var(--kva-border-soft);
+  background: rgba(8, 41, 75, .62);
+  color: var(--kva-text-strong);
+}
+
+.kvaSidebarLinkActive {
+  border-color: rgba(32, 189, 243, .48);
+  background:
+    linear-gradient(90deg, rgba(15, 97, 175, .34), rgba(7, 35, 67, .78));
+  color: var(--kva-white);
+  box-shadow:
+    inset 3px 0 0 var(--kva-cyan-500),
+    0 0 22px rgba(0, 137, 224, .07);
+}
+
+.kvaSidebarIcon {
+  width: 22px;
+  flex: 0 0 22px;
+  color: var(--kva-cyan-400);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.kvaSidebarFooter {
+  margin-top: auto;
+  padding: 14px 18px 18px;
+  border-top: 1px solid var(--kva-border-faint);
+}
+
+.kvaSidebarSystem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kvaSidebarSystemMark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--kva-border-accent);
+  border-radius: 10px;
+  background: rgba(32, 189, 243, .07);
+  color: var(--kva-cyan-400);
+  font-weight: 900;
+}
+
+.kvaSidebarSystem strong {
+  display: block;
+  font-size: .82rem;
+}
+
+.kvaSidebarSystem small {
+  display: block;
+  margin-top: 2px;
+  color: var(--kva-text-soft);
+  font-size: .66rem;
+}
+
+.kvaTopbar {
+  position: fixed;
+  inset: 0 0 auto var(--kva-sidebar-width);
+  z-index: 320;
+  min-height: var(--kva-topbar-height);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 22px;
+  border-bottom: 1px solid var(--kva-border-soft);
+  background: rgba(2, 9, 20, .965);
+  backdrop-filter: blur(18px) saturate(125%);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .12);
+}
+
+.kvaTopbarContext {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.kvaPageContext {
+  min-width: 0;
+}
+
+.kvaPageContext span {
+  display: block;
+  color: var(--kva-cyan-400);
+  font-size: .61rem;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.kvaPageContext strong {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--kva-text-strong);
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kvaTopbarDivider {
+  width: 1px;
+  height: 28px;
+  background: var(--kva-border-soft);
+}
+
+.kvaTopbarActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kvaTopbar .languageSelector select {
+  min-width: 116px;
+  min-height: 38px;
+  border-radius: 9px;
+  background: var(--kva-surface-inset);
+}
+
+.kvaTopbar .button {
+  min-height: 38px;
+}
+
+.kvaTopbarUser {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 9px 5px 6px;
+  border: 1px solid var(--kva-border-soft);
+  border-radius: 10px;
+  background: var(--kva-surface-inset);
+}
+
+.kvaTopbarAvatar {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(32, 189, 243, .35);
+  border-radius: 50%;
+  background: rgba(12, 118, 205, .24);
+  color: var(--kva-white);
+  font-size: .76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.kvaTopbarUser strong {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  font-size: .75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kvaTopbarUser small {
+  display: block;
+  margin-top: 2px;
+  color: var(--kva-text-soft);
+  font-size: .61rem;
+}
+
+.kvaTopbarMobileBrand,
+.kvaMobileNav {
+  display: none;
+}
+
+/* Offset all existing pages without changing their application logic. */
+.kvaPremiumShell ~ main,
+.kvaPremiumShell ~ .footer {
+  margin-left: var(--kva-sidebar-width);
+}
+
+.kvaPremiumShellAuth ~ .footer {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Official dark page language
+   -------------------------------------------------------------------------- */
+
+.kvaPremiumShell ~ main {
+  min-height: calc(100vh - var(--kva-topbar-height));
+  background: var(--kva-bg) !important;
+}
+
+.kvaPremiumShell ~ main > section:first-child,
+.kvaPremiumShell ~ main .hero,
+.kvaPremiumShell ~ main .subpageHero,
+.kvaPremiumShell ~ main .kvaPremiumHero {
+  background: var(--kva-gradient-hero) !important;
+}
+
+.kvaPremiumShell ~ main .sectionAlt,
+.kvaPremiumShell ~ main .partners {
+  background: var(--kva-bg) !important;
+}
+
+/* Cards and panels are the only consistently lighter layers. */
+.kvaPremiumShell ~ main :where(
+  .bookingCard,
+  .stat,
+  .fleetCard,
+  .newsCard,
+  .aircraftCard,
+  .flightTable,
+  .fleetToolbar
+) {
+  background: var(--kva-gradient-panel);
+  border-color: var(--kva-border);
+}
+
+/* Existing inline surfaces mainly use these aliases, so they inherit the rule. */
+.kvaPremiumShell ~ main [style*="var(--surface)"] {
+  border-color: var(--kva-border);
+}
+
+/* Generic top-level panels retain a restrained elevated tone. */
+.kvaPremiumShell ~ main :where(table, fieldset) {
+  background: var(--kva-surface);
+}
+
+.kvaPremiumShell ~ main :where(
+  .fleetCard,
+  .newsCard,
+  .aircraftCard,
+  .bookingCard
+):hover {
+  border-color: var(--kva-border-accent);
+  background: var(--kva-surface-hover);
+}
+
+/* --------------------------------------------------------------------------
+   Shared Premium Subpage Hero contract
+   Keeps current Bookings / PIREPs / History / Airports markup consistent.
+   -------------------------------------------------------------------------- */
+
+.kvaPremiumSubpage {
+  min-height: calc(100vh - var(--kva-topbar-height));
+  background: var(--kva-bg);
+}
+
+.kvaPremiumHero {
+  min-height: 330px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 64px 20px 84px;
+}
+
+.kvaPremiumHeroInner,
+.kvaPremiumSubpageBody {
+  width: min(1180px, 100%);
+  margin-inline: auto;
+}
+
+.kvaPremiumHeroRow {
+  width: 100%;
+  display: flex;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding: 0 !important;
+}
+
+.kvaPremiumHeroTitle {
+  max-width: 900px;
+  margin: 12px 0 16px !important;
+  color: var(--kva-text-strong);
+  font-size: clamp(3rem, 6vw, 5.35rem) !important;
+  line-height: .96 !important;
+  letter-spacing: -.052em !important;
+}
+
+.kvaPremiumHeroText {
+  max-width: 760px;
+  margin: 0 !important;
+  color: var(--kva-text-muted);
+  font-size: 1rem !important;
+  line-height: 1.72 !important;
+}
+
+.kvaPremiumHeroNav {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+
+.kvaPremiumHeroSide {
+  align-self: center;
+  margin-left: auto;
+}
+
+.kvaPremiumHeroMetaCard {
+  min-width: 220px;
+  max-width: 280px;
+  padding: 18px 20px;
+  border: 1px solid var(--kva-border);
+  border-radius: var(--kva-radius-md);
+  background: var(--kva-surface);
+  box-shadow: var(--kva-shadow-card);
+}
+
+.kvaPremiumSubpageContent {
+  padding: 0 20px 100px;
+  background: var(--kva-bg);
+}
+
+.kvaPremiumSubpageBodyLift {
+  position: relative;
+  z-index: 2;
+  transform: translateY(-30px);
+}
+
+/* Public legacy sticky header is superseded by the official shell. */
+.nav {
+  position: static;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile / tablet
+   -------------------------------------------------------------------------- */
+
+.kvaMobileNav {
+  margin-left: auto;
+}
+
+.kvaMobileNav summary {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--kva-border);
+  border-radius: 9px;
+  background: var(--kva-surface-inset);
+  color: var(--kva-text);
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.kvaMobileNav summary::-webkit-details-marker { display: none; }
+
+.kvaMobilePanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 12px;
+  width: min(360px, calc(100vw - 24px));
+  max-height: calc(100vh - 92px);
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid var(--kva-border);
+  border-radius: 12px;
+  background: rgba(3, 14, 29, .995);
+  box-shadow: var(--kva-shadow-panel);
+}
+
+.kvaMobilePanel .kvaSidebarNav {
+  display: grid;
+  padding: 0;
+  overflow: visible;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --kva-topbar-height: 70px;
+  }
+
+  .kvaPremiumShell {
+    height: var(--kva-topbar-height);
+    margin-left: 0;
+  }
+
+  .kvaSidebar {
+    display: none;
+  }
+
+  .kvaTopbar {
+    left: 0;
+    min-height: var(--kva-topbar-height);
+    padding: 0 14px;
+  }
+
+  .kvaTopbarMobileBrand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+  }
+
+  .kvaTopbarMobileBrand img {
+    width: 34px;
+    height: 26px;
+    object-fit: contain;
+  }
+
+  .kvaTopbarMobileBrand strong {
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+
+  .kvaTopbarContext,
+  .kvaTopbarUser {
+    display: none;
+  }
+
+  .kvaMobileNav {
+    display: block;
+  }
+
+  .kvaPremiumShell ~ main,
+  .kvaPremiumShell ~ .footer {
+    margin-left: 0;
+  }
+
+  .kvaPremiumShellAuth ~ .footer {
+    display: none;
+  }
+
+  .kvaTopbarActions {
+    margin-left: auto;
+  }
+
+  .kvaTopbarActions .button {
+    display: none;
+  }
+
+  .kvaPremiumHero {
+    min-height: 300px;
+    padding: 54px 20px 74px;
+  }
+}
+
+@media (max-width: 620px) {
+  .kvaTopbar {
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .kvaTopbar .languageSelector select {
+    min-width: 92px;
+    max-width: 104px;
+  }
+
+  .kvaPremiumHero {
+    min-height: 0;
+    padding: 48px 16px 68px;
+  }
+
+  .kvaPremiumHeroRow {
+    align-items: flex-start !important;
+    flex-direction: column;
+  }
+
+  .kvaPremiumHeroTitle {
+    font-size: clamp(2.7rem, 14vw, 4rem) !important;
+  }
+
+  .kvaPremiumHeroSide,
+  .kvaPremiumHeroMetaCard {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+  }
+
+  .kvaPremiumSubpageBodyLift {
+    transform: translateY(-22px);
+  }
+}
+
+/* KVA_DARK_CANVAS_FINAL_POLISH_BEGIN */
+/* ==========================================================================
+   KVA OS Premium Design System v1.1
+   DARK CANVAS FINAL VISUAL POLISH
+
+   Approved visual contract:
+   - near-black page/hero canvas
+   - left sidebar remains the navigation baseline
+   - unified dark top bar
+   - lighter blue surfaces only for cards / panels / hover
+   - no backend/database/logic effect
+   ========================================================================== */
+
+:root {
+  --kva-bg: #010713;
+  --kva-bg-deep: #00040a;
+  --kva-nav-bg: rgba(1, 7, 16, .985);
+
+  --kva-surface: rgba(5, 22, 43, .96);
+  --kva-surface-elevated: rgba(7, 29, 55, .97);
+  --kva-surface-strong: rgba(8, 36, 67, .98);
+  --kva-surface-inset: rgba(2, 15, 29, .90);
+  --kva-surface-hover: rgba(9, 42, 77, .99);
+  --kva-field-bg: rgba(2, 16, 31, .94);
+
+  --kva-gradient-hero:
+    radial-gradient(circle at 82% 18%, rgba(13, 99, 169, .075), transparent 27%),
+    radial-gradient(circle at 18% 84%, rgba(12, 72, 133, .045), transparent 32%),
+    linear-gradient(145deg, #00050d, #010a16 58%, #02101e);
+
+  --bg: var(--kva-bg);
+  --surface: var(--kva-surface-elevated);
+  --surface-2: var(--kva-surface-strong);
+  --panel: var(--kva-surface);
+}
+
+html,
+body {
+  background-color: var(--kva-bg-deep) !important;
+  background-image: none !important;
+}
+
+/* The page itself is always the dark base layer. */
+.kvaPremiumShell ~ main,
+.kvaPremiumShell ~ main > section,
+.kvaPremiumSubpage,
+.kvaPremiumSubpageContent {
+  background-color: var(--kva-bg) !important;
+}
+
+/* Hero areas must NOT become large bright-blue washes. */
+.kvaPremiumShell ~ main > section:first-child,
+.kvaPremiumShell ~ main .hero,
+.kvaPremiumShell ~ main .subpageHero,
+.kvaPremiumShell ~ main .kvaPremiumHero {
+  background-color: #010713 !important;
+  background-image: var(--kva-gradient-hero) !important;
+}
+
+/* Legacy sections that used page-wide lighter fills are normalized. */
+.kvaPremiumShell ~ main .section,
+.kvaPremiumShell ~ main .sectionAlt,
+.kvaPremiumShell ~ main .partners,
+.kvaPremiumShell ~ main .fleetSummary,
+.kvaPremiumShell ~ main .fleetCatalog {
+  background-color: var(--kva-bg) !important;
+}
+
+.kvaPremiumShell ~ main .partners {
+  background-image:
+    radial-gradient(circle at 78% 30%, rgba(13, 99, 169, .055), transparent 30%),
+    linear-gradient(145deg, #00050d, #010a16) !important;
+}
+
+/* Cards/panels are the intentional lighter layers. */
+.kvaPremiumShell ~ main :where(
+  .bookingCard,
+  .stat,
+  .fleetCard,
+  .newsCard,
+  .aircraftCard,
+  .flightTable,
+  .fleetToolbar,
+  .heroAircraft,
+  .fleetHeroGraphic,
+  .kvaPremiumHeroMetaCard
+) {
+  background-color: var(--kva-surface) !important;
+}
+
+/* Artwork / presentation panels can carry a controlled blue lift. */
+.kvaPremiumShell ~ main :where(.heroAircraft, .fleetHeroGraphic) {
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(18, 111, 181, .12), transparent 42%),
+    linear-gradient(145deg, rgba(8, 39, 72, .88), rgba(3, 18, 35, .96)) !important;
+}
+
+/* Stats stay elevated but do not become page-background blue. */
+.kvaPremiumShell ~ main .stat {
+  background-image:
+    linear-gradient(145deg, rgba(8, 34, 64, .96), rgba(4, 20, 39, .98)) !important;
+}
+
+/* Top bar becomes a compact OS chrome layer. */
+.kvaTopbar {
+  background:
+    linear-gradient(90deg, rgba(1, 7, 16, .995), rgba(2, 12, 25, .985)) !important;
+  border-bottom-color: rgba(91, 162, 213, .12) !important;
+}
+
+.kvaPageContext {
+  display: grid !important;
+  grid-template-columns: auto auto !important;
+  align-items: center !important;
+  column-gap: 9px !important;
+}
+
+.kvaPageContext span {
+  padding: 4px 8px !important;
+  border: 1px solid rgba(32, 189, 243, .18) !important;
+  border-radius: 999px !important;
+  background: rgba(32, 189, 243, .045) !important;
+}
+
+.kvaPageContext strong {
+  margin-top: 0 !important;
+  font-size: .93rem !important;
+}
+
+.kvaTopbarDivider {
+  height: 24px !important;
+  opacity: .7;
+}
+
+.kvaTopbarUser {
+  background: rgba(3, 18, 35, .72) !important;
+}
+
+/* Active sidebar state: cyan edge + restrained dark lift. */
+.kvaSidebarLinkActive {
+  background:
+    linear-gradient(90deg, rgba(11, 77, 139, .28), rgba(5, 25, 48, .72)) !important;
+  box-shadow:
+    inset 3px 0 0 var(--kva-cyan-500),
+    0 0 18px rgba(0, 137, 224, .055) !important;
+}
+
+@media (max-width: 1024px) {
+  .kvaPremiumShell ~ main > section:first-child,
+  .kvaPremiumShell ~ main .hero,
+  .kvaPremiumShell ~ main .subpageHero,
+  .kvaPremiumShell ~ main .kvaPremiumHero {
+    background-image:
+      radial-gradient(circle at 80% 16%, rgba(13, 99, 169, .055), transparent 25%),
+      linear-gradient(145deg, #00050d, #010a16 62%, #02101e) !important;
+  }
+}
+/* KVA_DARK_CANVAS_FINAL_POLISH_END */
+
+/* KVA_FINAL_UI_POLISH_V12_BEGIN */
+/* KVA OS Premium Design System v1.2 — FINAL UI POLISH */
+
+.kvaSidebarLinkActive:focus-visible {
+  outline: none !important;
+  border-color: rgba(32, 189, 243, .52) !important;
+  box-shadow:
+    inset 3px 0 0 var(--kva-cyan-500),
+    0 0 18px rgba(0, 137, 224, .055) !important;
+}
+
+.kvaSidebarLink:not(.kvaSidebarLinkActive):focus-visible {
+  outline: 2px solid rgba(86, 211, 255, .72) !important;
+  outline-offset: 2px;
+}
+
+.kvaPremiumShell ~ main a[href="/pilot/dashboard"]:not(.button) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid rgba(91, 162, 213, .13);
+  border-radius: 8px;
+  background: rgba(3, 18, 35, .44);
+  color: var(--kva-cyan-400) !important;
+  font-size: .78rem;
+  font-weight: 800 !important;
+  text-decoration: none;
+}
+
+.kvaPremiumShell ~ main a[href="/pilot/dashboard"]:not(.button):hover {
+  border-color: rgba(32, 189, 243, .38);
+  background: rgba(7, 33, 61, .78);
+}
+
+.kvaPremiumHeroNav {
+  margin-bottom: 18px !important;
+}
+
+.kvaPremiumHeroNav .button,
+.kvaPremiumHeroNav a {
+  min-height: 36px;
+  border-radius: 8px;
+}
+
+.kvaOperationsActionGrid {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px !important;
+  margin-top: 10px !important;
+}
+
+.kvaOperationsActionGrid .button {
+  width: 100%;
+  min-height: 40px;
+  justify-content: center;
+  text-align: center;
+}
+
+.kvaOperationsStatsGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.kvaPassportPage {
+  background: var(--kva-bg) !important;
+}
+
+.kvaPassportPage h1 {
+  max-width: 960px;
+  font-size: clamp(3.25rem, 6.1vw, 5.35rem) !important;
+  line-height: .96;
+  letter-spacing: -.052em;
+}
+
+.kvaPassportIdentityCard {
+  flex: 0 0 min(320px, 100%);
+  align-self: center;
+  background: var(--kva-surface) !important;
+}
+
+.kvaPassportIdentityCard strong {
+  overflow-wrap: anywhere;
+}
+
+.kvaPassportStatsGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+@media (max-width: 1180px) {
+  .kvaOperationsActionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .kvaOperationsStatsGrid,
+  .kvaPassportStatsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .kvaOperationsActionGrid,
+  .kvaOperationsStatsGrid,
+  .kvaPassportStatsGrid {
+    grid-template-columns: 1fr !important;
+  }
+  .kvaPassportIdentityCard {
+    width: 100%;
+    flex-basis: auto;
+  }
+}
+/* KVA_FINAL_UI_POLISH_V12_END */
+
+/* KVA_OS_PREMIUM_V1_2_FINAL_STABLE */
+:root { --kva-premium-release: 1; }
