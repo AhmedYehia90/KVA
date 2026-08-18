@@ -14,7 +14,7 @@ type PirepItem = {
 
 export function RecentPireps({items}: {items: PirepItem[]}) {
   return (
-    <section style={panelStyle}>
+    <section className="kvaOperationsPanel kvaRecentPirepsPanel" style={panelStyle}>
       <div style={headingStyle}>
         <div>
           <p className="eyebrow">Flight Records</p>
@@ -25,9 +25,9 @@ export function RecentPireps({items}: {items: PirepItem[]}) {
         </Link>
       </div>
 
-      <div style={listStyle}>
+      <div className="kvaOperationsList kvaRecentPirepsList" style={listStyle}>
         {items.map((item) => (
-          <article key={item.id} style={rowStyle}>
+          <article className="kvaRecentPirepRow" key={item.id} style={rowStyle}>
             <div>
               <strong>{item.code}</strong>
               <span style={subStyle}>{item.flightNumber}</span>

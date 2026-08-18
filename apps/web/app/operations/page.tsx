@@ -29,7 +29,7 @@ export default async function OperationsPage() {
   const canOpenEventConsole = isOperationsConsoleAdminEmail(user.email);
 
   return (
-    <main style={{minHeight:"100vh",background:"var(--bg)"}}>
+    <main className="kvaOperationsPage" style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"76px 0 106px",
         background:"radial-gradient(circle at 78% 30%, rgba(0,174,239,.22), transparent 28%), linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)"
@@ -105,7 +105,7 @@ export default async function OperationsPage() {
             <OperationsStats stats={data.stats} />
           </div>
 
-          <div style={{display:"grid",gap:22,marginTop:-12}}>
+          <div className="kvaOperationsLowerStack" style={{display:"grid",gap:22,marginTop:-12}}>
             <LiveFlights flights={data.liveFlights} />
             <FleetSummary items={data.fleetSummary} />
             <RecentPireps items={data.recentPireps} />

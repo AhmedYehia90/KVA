@@ -15,7 +15,7 @@ type LiveFlight = {
 
 export function LiveFlights({flights}: {flights: LiveFlight[]}) {
   return (
-    <section style={panelStyle}>
+    <section className="kvaOperationsPanel kvaLiveOperationsPanel" style={panelStyle}>
       <div style={headingStyle}>
         <div>
           <p className="eyebrow">Live Operations</p>
@@ -27,9 +27,9 @@ export function LiveFlights({flights}: {flights: LiveFlight[]}) {
       </div>
 
       {flights.length ? (
-        <div style={listStyle}>
+        <div className="kvaOperationsList kvaLiveOperationsList" style={listStyle}>
           {flights.map((flight) => (
-            <article key={flight.id} style={rowStyle}>
+            <article className="kvaLiveFlightRow" key={flight.id} style={rowStyle}>
               <div>
                 <strong>{flight.flightNumber}</strong>
                 <span style={subStyle}>

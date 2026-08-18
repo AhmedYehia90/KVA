@@ -1284,3 +1284,115 @@ body {
 
 /* KVA_OS_PREMIUM_V1_2_FINAL_STABLE */
 :root { --kva-premium-release: 1; }
+
+/* KVA_OPERATIONS_MOBILE_WIDTH_FIX_V121_BEGIN */
+/* ==========================================================================\n   KVA OS v1.2.1 — Operations Mobile Width Fix\n   UI-only responsive correction.\n   Prevents Live Operations / Fleet Summary / Recent PIREPs from expanding\n   the mobile content track beyond the Operations upper section.\n   ========================================================================== */
+
+.kvaOperationsPage,
+.kvaOperationsPage * {
+  box-sizing: border-box;
+}
+
+.kvaOperationsPage :where(
+  .kvaOperationsLowerStack,
+  .kvaOperationsPanel,
+  .kvaOperationsPanel > *,
+  .kvaOperationsList,
+  .kvaFleetSummaryGrid,
+  .kvaLiveFlightRow,
+  .kvaRecentPirepRow
+) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kvaOperationsLowerStack,
+.kvaOperationsPanel,
+.kvaOperationsList,
+.kvaFleetSummaryGrid {
+  width: 100%;
+}
+
+.kvaOperationsPanel {
+  overflow: hidden;
+}
+
+.kvaOperationsPanel :where(
+  .kvaLiveFlightRow,
+  .kvaRecentPirepRow
+) > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .kvaOperationsLowerStack {
+    gap: 16px !important;
+  }
+
+  .kvaOperationsPanel {
+    padding: 18px !important;
+    border-radius: 18px !important;
+  }
+
+  .kvaOperationsPanel > div:first-child {
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .kvaOperationsList,
+  .kvaFleetSummaryGrid {
+    margin-top: 16px !important;
+  }
+
+  .kvaLiveFlightRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    padding: 14px !important;
+  }
+
+  .kvaLiveFlightRow > :last-child {
+    justify-self: start;
+  }
+
+  .kvaRecentPirepRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    padding: 14px !important;
+  }
+
+  .kvaRecentPirepRow > :last-child {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .kvaFleetSummaryGrid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .kvaFleetSummaryCard {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .kvaOperationsPanel {
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .kvaLiveFlightRow,
+  .kvaRecentPirepRow {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .kvaRecentPirepRow > :last-child {
+    grid-column: auto;
+  }
+
+  .kvaOperationsPanel h2 {
+    font-size: 1.65rem !important;
+  }
+}
+/* KVA_OPERATIONS_MOBILE_WIDTH_FIX_V121_END */

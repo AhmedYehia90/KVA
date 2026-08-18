@@ -12,7 +12,7 @@ type FleetItem = {
 
 export function FleetSummary({items}: {items: FleetItem[]}) {
   return (
-    <section style={panelStyle}>
+    <section className="kvaOperationsPanel kvaFleetSummaryPanel" style={panelStyle}>
       <div style={headingStyle}>
         <div>
           <p className="eyebrow">Fleet Status</p>
@@ -23,9 +23,9 @@ export function FleetSummary({items}: {items: FleetItem[]}) {
         </Link>
       </div>
 
-      <div style={gridStyle}>
+      <div className="kvaFleetSummaryGrid" style={gridStyle}>
         {items.map((item) => (
-          <article key={item.icaoCode} style={cardStyle}>
+          <article className="kvaFleetSummaryCard" key={item.icaoCode} style={cardStyle}>
             <div style={topStyle}>
               <div>
                 <strong style={codeStyle}>{item.icaoCode}</strong>
