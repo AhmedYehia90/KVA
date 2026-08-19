@@ -1,5 +1,11 @@
 # KVA OS
 
+<!-- KVA_OS_README_HERO_BEGIN -->
+<p align="center">
+  <img src="docs/assets/kva-os-coming-soon.jpeg" alt="KVA OS — Coming Soon" width="100%" />
+</p>
+<!-- KVA_OS_README_HERO_END -->
+
 > **Build Your Aviation Career. Fly Your Story. Leave a Legacy.**
 
 **KVA OS** is a next-generation Virtual Aviation Operating System for virtual pilots, virtual airlines, operations teams, and connected aviation communities.
