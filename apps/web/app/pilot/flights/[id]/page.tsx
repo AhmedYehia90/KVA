@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound, redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
+import {OfficialFleetImage} from "@/components/OfficialFleetImage";
 import {bookFlightAction} from "./actions";
 import styles from "./page.module.css";
 
@@ -161,6 +162,12 @@ export default async function FlightDetailsPage({
       <section className={styles.content}>
         <div className={`container ${styles.layout}`}>
           <div className={styles.mainColumn}>
+            <OfficialFleetImage
+              icaoCode={fleet?.icao_code}
+              name={fleet ? `${fleet.manufacturer} ${fleet.model}` : undefined}
+              flightNumber={route.flight_number}
+            />
+
             <section className={styles.airports}>
               <article>
                 <p className="eyebrow">Departure</p>

@@ -1,36 +1,68 @@
-import Link from "next/link";
-import {useTranslations} from "next-intl";
+"use client";
 
-const fleet = [
-  {code: "E170", name: "Embraer 170", role: "regional"},
-  {code: "A21N", name: "Airbus A321neo", role: "mediumHaul"},
-  {code: "B77W", name: "Boeing 777-300ER", role: "longHaul"}
-] as const;
+import Image from "next/image";
+import {useEffect, useRef} from "react";
+import Link from "next/link";
+import {officialFleetTypes} from "@/lib/fleet-artwork";
+import styles from "./FleetPreview.module.css";
 
 export function FleetPreview() {
-  const t = useTranslations("Home.fleet");
+  const trackRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    track.scrollTo({
+      left: 0,
+      behavior: "auto"
+    });
+  }, []);
   return (
-    <section className="section">
+    <section className={`section ${styles.section}`} aria-labelledby="official-fleet-title">
       <div className="container">
-        <div className="sectionHeader">
+        <div className={styles.header}>
           <div>
-            <div className="eyebrow">{t("eyebrow")}</div>
-            <h2>{t("title")}</h2>
+            <span className={styles.eyebrow}>Kalabsha Airlines</span>
+            <h2 id="official-fleet-title">Official Fleet</h2>
+            <p>
+              Explore the aircraft that power the Kalabsha Airlines network.
+            </p>
           </div>
-          <Link className="textLink" href="/fleet">{t("viewAll")}</Link>
+
+          <Link className={styles.viewAll} href="/fleet">
+            Explore Fleet →
+          </Link>
         </div>
 
-        <div className="fleetGrid">
-          {fleet.map((aircraft) => (
-            <article className="fleetCard" key={aircraft.code}>
-              <div className="fleetVisual" aria-hidden="true">✈</div>
-              <div className="fleetCode">{aircraft.code}</div>
-              <h3>{aircraft.name}</h3>
-              <p className="muted">{t(`roles.${aircraft.role}`)}</p>
-            </article>
+        <div ref={trackRef} className={styles.track} aria-label="Official Kalabsha Airlines fleet">
+          {officialFleetTypes.map((aircraft) => (
+            <Link className={styles.card} href="/fleet" key={aircraft.code}>
+              <span className={styles.badge}>Official Kalabsha Fleet</span>
+
+              <div className={styles.imageFrame}>
+                <Image
+                  src={aircraft.src}
+                  alt={aircraft.alt}
+                  width={2048}
+                  height={1156}
+                  sizes="(max-width: 680px) 84vw, (max-width: 1100px) 44vw, 330px"
+                  className={styles.image}
+                />
+              </div>
+
+              <div className={styles.cardMeta}>
+                <div>
+                  <span className={styles.code}>{aircraft.code}</span>
+                  <h3>{aircraft.name}</h3>
+                </div>
+                <span className={styles.category}>{aircraft.category}</span>
+              </div>
+            </Link>
           ))}
         </div>
+
+        <p className={styles.hint}>Swipe or scroll horizontally to explore the full fleet.</p>
       </div>
     </section>
   );

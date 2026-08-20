@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import {createAdminClient} from "@/lib/supabase/admin";
+import styles from "./FleetPremium.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +26,14 @@ function first<T>(value: T | T[] | null | undefined): T | null {
 function toNumber(value: number | string | null | undefined) {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function statusClass(status: string, available: boolean) {
+  if (available) return `${styles.statusPill} ${styles.statusAvailable}`;
+  if (status === "active") return `${styles.statusPill} ${styles.statusAssigned}`;
+  if (status === "maintenance") return `${styles.statusPill} ${styles.statusMaintenance}`;
+  if (status === "grounded") return `${styles.statusPill} ${styles.statusGrounded}`;
+  return `${styles.statusPill} ${styles.statusRetired}`;
 }
 
 export default async function FleetPage() {
@@ -126,20 +136,20 @@ export default async function FleetPage() {
   );
 
   return (
-    <main style={mainStyle}>
-      <section style={heroStyle}>
+    <main className={styles.main}>
+      <section className={styles.hero}>
         <div className="container">
           <p className="eyebrow">Fleet Management</p>
-          <h1 style={heroTitleStyle}>Fleet Overview</h1>
-          <p style={heroTextStyle}>
+          <h1 className={styles.heroTitle}>Fleet Overview</h1>
+          <p className={styles.heroText}>
             Live aircraft totals and availability from the Kalabsha Airlines database.
           </p>
         </div>
       </section>
 
-      <section style={contentStyle}>
+      <section className={styles.content}>
         <div className="container">
-          <div style={statsGridStyle}>
+          <div className={styles.statsGrid}>
             <StatCard label="Total Aircraft" value={totalAircraft} />
             <StatCard label="Available" value={availableAircraft} tone="good" />
             <StatCard label="Assigned" value={assignedAircraft} tone="info" />
@@ -148,36 +158,37 @@ export default async function FleetPage() {
             <StatCard label="Retired" value={retiredAircraft} />
           </div>
 
-          <div style={sectionHeadingStyle}>
+          <div className={styles.sectionHeading}>
             <div>
               <p className="eyebrow">Aircraft Types</p>
-              <h2 style={sectionTitleStyle}>{fleetTypes.length} fleet types</h2>
+              <h2 className={styles.sectionTitle}>{fleetTypes.length} fleet types</h2>
             </div>
-            <span style={mutedStyle}>
+            <span className={styles.muted}>
               In this system, aircraft status <strong>active</strong> means operational.
             </span>
           </div>
 
-          <div style={typeGridStyle}>
+          <div className={styles.typeGrid}>
             {fleetTypes.map((type) => (
-              <article key={type.icaoCode} style={typeCardStyle}>
-                <div style={typeTopStyle}>
+              <article key={type.icaoCode} className={styles.typeCard}>
+                <FleetArtwork icaoCode={type.icaoCode} />
+                <div className={styles.typeTop}>
                   <div>
-                    <span style={typeCodeStyle}>{type.icaoCode}</span>
-                    <h2 style={typeNameStyle}>
+                    <span className={styles.typeCode}>{type.icaoCode}</span>
+                    <h2 className={styles.typeName}>
                       {type.manufacturer} {type.model}
                     </h2>
                   </div>
-                  <strong style={typeCountStyle}>{type.total}</strong>
+                  <strong className={styles.typeCount}>{type.total}</strong>
                 </div>
 
-                <div style={miniStatsStyle}>
+                <div className={styles.miniStats}>
                   <MiniStat label="Available" value={type.available} />
                   <MiniStat label="Assigned" value={type.assigned} />
                   <MiniStat label="Maintenance" value={type.maintenance} />
                 </div>
 
-                <div style={aircraftListStyle}>
+                <div className={styles.aircraftList}>
                   {type.aircraft.map((item) => {
                     const available =
                       item.status === "active" && !item.assigned_pilot_id;
@@ -186,25 +197,16 @@ export default async function FleetPage() {
                       <Link
                         key={item.registration}
                         href={`/fleet/${encodeURIComponent(item.registration)}`}
-                        style={aircraftRowStyle}
+                        className={styles.aircraftRow}
                       >
                         <div>
                           <strong>{item.registration}</strong>
-                          <span style={hoursStyle}>
+                          <span className={styles.hours}>
                             {toNumber(item.flight_hours).toFixed(1)} hours
                           </span>
                         </div>
 
-                        <span
-                          style={{
-                            ...statusPillStyle,
-                            ...(available
-                              ? availablePillStyle
-                              : item.status === "maintenance"
-                                ? maintenancePillStyle
-                                : assignedPillStyle)
-                          }}
-                        >
+                        <span className={statusClass(item.status, available)}>
                           {available
                             ? "Available"
                             : item.status === "active"
@@ -224,6 +226,97 @@ export default async function FleetPage() {
   );
 }
 
+
+type FleetArtworkDefinition = {
+  src: string;
+  alt: string;
+};
+
+const fleetArtworkByIcao: Record<string, FleetArtworkDefinition> = {
+  B748: {src: "/fleet/official/b747-8.webp", alt: "Kalabsha Airlines Boeing 747-8 at Aswan International Airport"},
+  B747: {src: "/fleet/official/b747-8.webp", alt: "Kalabsha Airlines Boeing 747-8 at Aswan International Airport"},
+  A359: {src: "/fleet/official/a350-900.webp", alt: "Kalabsha Airlines Airbus A350-900 at Aswan International Airport"},
+  E170: {src: "/fleet/official/e170.webp", alt: "Kalabsha Airlines Embraer E170 at Aswan International Airport"},
+  A21N: {src: "/fleet/official/a321neo.webp", alt: "Kalabsha Airlines Airbus A321neo at Aswan International Airport"},
+  A321: {src: "/fleet/official/a321neo.webp", alt: "Kalabsha Airlines Airbus A321neo at Aswan International Airport"},
+  A333: {src: "/fleet/official/a330-300.webp", alt: "Kalabsha Airlines Airbus A330-300 at Aswan International Airport"},
+  A330: {src: "/fleet/official/a330-300.webp", alt: "Kalabsha Airlines Airbus A330 at Aswan International Airport"},
+  B788: {src: "/fleet/official/b787-8.webp", alt: "Kalabsha Airlines Boeing 787-8 Dreamliner at Aswan International Airport"},
+  B789: {src: "/fleet/official/b787-9.webp", alt: "Kalabsha Airlines Boeing 787-9 at Aswan International Airport"},
+  B787: {src: "/fleet/official/b787-9.webp", alt: "Kalabsha Airlines Boeing 787 at Aswan International Airport"},
+  B77W: {src: "/fleet/official/b777-300er.webp", alt: "Kalabsha Airlines Boeing 777-300ER at Aswan International Airport"},
+  B773: {src: "/fleet/official/b777-300er.webp", alt: "Kalabsha Airlines Boeing 777-300ER at Aswan International Airport"}
+};
+
+function FleetArtwork({icaoCode}: {icaoCode: string}) {
+  const artwork = fleetArtworkByIcao[icaoCode.trim().toUpperCase()];
+
+  if (!artwork) {
+    return null;
+  }
+
+  return (
+    <div style={fleetArtworkBlockStyle}>
+      <span style={fleetArtworkBadgeStyle}>Official Kalabsha Fleet</span>
+
+      <div style={fleetArtworkFrameStyle}>
+        <Image
+          src={artwork.src}
+          alt={artwork.alt}
+          width={2048}
+          height={1156}
+          sizes="(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          style={fleetArtworkImageStyle}
+        />
+      </div>
+    </div>
+  );
+}
+
+const fleetArtworkBlockStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  width: "100%",
+  marginBottom: 18
+} as const;
+
+const fleetArtworkFrameStyle = {
+  position: "relative",
+  width: "100%",
+  aspectRatio: "16 / 9",
+  marginBottom: 0,
+  border: "1px solid rgba(82,190,255,.2)",
+  borderRadius: 14,
+  overflow: "hidden",
+  background: "rgba(3,13,25,.55)"
+} as const;
+
+const fleetArtworkImageStyle = {
+  display: "block",
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  objectPosition: "center center"
+} as const;
+
+const fleetArtworkBadgeStyle = {
+  position: "static",
+  display: "inline-flex",
+  alignItems: "center",
+  width: "fit-content",
+  marginBottom: 10,
+  padding: "6px 10px",
+  border: "1px solid rgba(78,205,255,.34)",
+  borderRadius: 999,
+  background: "rgba(2,13,25,.72)",
+  color: "#79dcff",
+  fontSize: ".65rem",
+  fontWeight: 900,
+  letterSpacing: ".08em",
+  lineHeight: 1.2,
+  textTransform: "uppercase"
+} as const;
 function StatCard({
   label,
   value,
@@ -233,170 +326,30 @@ function StatCard({
   value: number;
   tone?: "good" | "info" | "warn" | "bad";
 }) {
-  const border =
+  const toneClass =
     tone === "good"
-      ? "rgba(57,220,138,.25)"
+      ? styles.toneGood
       : tone === "info"
-        ? "rgba(0,174,239,.25)"
+        ? styles.toneInfo
         : tone === "warn"
-          ? "rgba(255,187,72,.25)"
+          ? styles.toneWarn
           : tone === "bad"
-            ? "rgba(255,95,95,.25)"
-            : "var(--border)";
+            ? styles.toneBad
+            : "";
 
   return (
-    <article style={{...statCardStyle, borderColor: border}}>
-      <span style={statLabelStyle}>{label}</span>
-      <strong style={statValueStyle}>{value}</strong>
+    <article className={`${styles.statCard} ${toneClass}`}>
+      <span className={styles.statLabel}>{label}</span>
+      <strong className={styles.statValue}>{value}</strong>
     </article>
   );
 }
 
 function MiniStat({label, value}: {label: string; value: number}) {
   return (
-    <div style={miniStatStyle}>
-      <span style={miniLabelStyle}>{label}</span>
+    <div className={styles.miniStat}>
+      <span className={styles.miniLabel}>{label}</span>
       <strong>{value}</strong>
     </div>
   );
 }
-
-const mainStyle = {minHeight: "100vh", background: "var(--bg)"} as const;
-const heroStyle = {
-  padding: "76px 0 106px",
-  background:
-    "radial-gradient(circle at 78% 30%, rgba(0,174,239,.22), transparent 28%), linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)"
-} as const;
-const heroTitleStyle = {
-  margin: "14px 0 18px",
-  fontSize: "clamp(3.2rem,7vw,6rem)",
-  lineHeight: .95,
-  letterSpacing: "-.055em"
-} as const;
-const heroTextStyle = {
-  maxWidth: 720,
-  margin: 0,
-  color: "var(--muted)",
-  fontSize: "1.05rem",
-  lineHeight: 1.8
-} as const;
-const contentStyle = {padding: "0 0 100px"} as const;
-const statsGridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
-  gap: 14,
-  transform: "translateY(-38px)"
-} as const;
-const statCardStyle = {
-  padding: 22,
-  border: "1px solid var(--border)",
-  borderRadius: 18,
-  background: "rgba(13,44,84,.98)",
-  boxShadow: "var(--shadow)"
-} as const;
-const statLabelStyle = {
-  display: "block",
-  color: "var(--muted)",
-  fontSize: ".76rem",
-  fontWeight: 800,
-  letterSpacing: ".08em",
-  textTransform: "uppercase"
-} as const;
-const statValueStyle = {
-  display: "block",
-  marginTop: 10,
-  fontSize: "2rem"
-} as const;
-const sectionHeadingStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "end",
-  gap: 24,
-  flexWrap: "wrap",
-  margin: "4px 0 24px"
-} as const;
-const sectionTitleStyle = {
-  margin: "9px 0 0",
-  fontSize: "clamp(1.8rem,3vw,2.5rem)"
-} as const;
-const mutedStyle = {color: "var(--muted)", fontSize: ".9rem"} as const;
-const typeGridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
-  gap: 20
-} as const;
-const typeCardStyle = {
-  padding: 24,
-  border: "1px solid var(--border)",
-  borderRadius: 20,
-  background: "var(--surface)"
-} as const;
-const typeTopStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: 18,
-  alignItems: "flex-start"
-} as const;
-const typeCodeStyle = {
-  color: "var(--accent)",
-  fontWeight: 900,
-  letterSpacing: ".12em"
-} as const;
-const typeNameStyle = {margin: "7px 0 0", fontSize: "1.45rem"} as const;
-const typeCountStyle = {fontSize: "2.2rem"} as const;
-const miniStatsStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3,1fr)",
-  gap: 10,
-  margin: "22px 0"
-} as const;
-const miniStatStyle = {
-  padding: 13,
-  border: "1px solid rgba(105,183,231,.14)",
-  borderRadius: 12,
-  background: "rgba(4,16,32,.22)"
-} as const;
-const miniLabelStyle = {
-  display: "block",
-  marginBottom: 6,
-  color: "var(--muted)",
-  fontSize: ".7rem",
-  fontWeight: 800,
-  textTransform: "uppercase"
-} as const;
-const aircraftListStyle = {display: "grid", gap: 10} as const;
-const aircraftRowStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: 14,
-  padding: 14,
-  border: "1px solid rgba(105,183,231,.13)",
-  borderRadius: 12,
-  background: "rgba(4,16,32,.18)"
-} as const;
-const hoursStyle = {
-  display: "block",
-  marginTop: 4,
-  color: "var(--muted)",
-  fontSize: ".78rem"
-} as const;
-const statusPillStyle = {
-  padding: "7px 10px",
-  borderRadius: 999,
-  fontSize: ".75rem",
-  fontWeight: 800,
-  textTransform: "capitalize"
-} as const;
-const availablePillStyle = {
-  background: "rgba(57,220,138,.1)",
-  color: "#82edb5"
-} as const;
-const assignedPillStyle = {
-  background: "rgba(0,174,239,.1)",
-  color: "#74d8ff"
-} as const;
-const maintenancePillStyle = {
-  background: "rgba(255,187,72,.1)",
-  color: "#ffd584"
-} as const;
