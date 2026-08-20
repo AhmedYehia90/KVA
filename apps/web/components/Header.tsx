@@ -58,7 +58,7 @@ export async function Header() {
     >
       <aside className="kvaSidebar" aria-label="KVA OS sidebar">
         <Link
-          href={user ? "/pilot/dashboard" : "/"}
+          href="/"
           className="kvaSidebarBrand"
           aria-label={common("homeAria")}
         >
@@ -94,7 +94,7 @@ export async function Header() {
 
       <header className="kvaTopbar">
         <Link
-          href={user ? "/pilot/dashboard" : "/"}
+          href="/"
           className="kvaTopbarMobileBrand"
           aria-label={common("homeAria")}
         >

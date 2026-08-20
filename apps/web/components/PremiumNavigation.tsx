@@ -36,8 +36,7 @@ export type PremiumNavItem = {
 function matches(pathname: string, href: string) {
   // UI-only home alias: a signed-in pilot viewing "/" sees Dashboard highlighted.
   // This does not redirect and does not change any route.
-  if (pathname === "/" && href === "/pilot/dashboard") return true;
-  if (href === "/") return pathname === "/";
+    if (href === "/") return pathname === "/";
   if (pathname === href) return true;
   return pathname.startsWith(`${href}/`);
 }
@@ -149,12 +148,12 @@ export function PremiumPageContext({
     .find((item) => matches(pathname, item.href));
 
   const resolvedLabel =
-    active?.label ??
-    (authenticated && pathname === "/"
-      ? "Dashboard"
-      : authenticated
-        ? "Workspace"
-        : "Fly To Dreams");
+    pathname === "/"
+      ? "Home"
+      : active?.label ??
+        (authenticated
+          ? "Workspace"
+          : "Fly To Dreams");
 
   return (
     <div className="kvaPageContext">
