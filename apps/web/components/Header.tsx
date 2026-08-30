@@ -29,7 +29,6 @@ export async function Header() {
 
   const authenticatedNavigation: PremiumNavItem[] = [
     {href: "/pilot/dashboard", label: "Dashboard", icon: "⌂"},
-    {href: "/pilot/office", label: "Pilot Office", icon: "▣"},
     {href: "/pilot/passport", label: "Pilot Passport", icon: "◉"},
     {href: "/pilot/flights", label: "Flights", icon: "✈"},
     {href: "/pilot/bookings", label: "My Bookings", icon: "▣"},
