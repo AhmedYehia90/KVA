@@ -58,7 +58,7 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
   const ranks=(ranksR.data??[]) as unknown as RankOption[];
   const milestoneDefs=(milestoneDefsR.data??[]) as unknown as MilestoneOption[];
   return <main style={{minHeight:"100vh",background:"var(--bg)"}}>
-    <section style={{padding:"74px 20px 110px",background:"radial-gradient(circle at 80% 20%,rgba(0,174,239,.25),transparent 30%),linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)"}}><div style={{maxWidth:1180,margin:"0 auto"}}><Link href="/operations" style={{color:"var(--accent)",fontWeight:850}}>← Operations Center</Link><p className="eyebrow" style={{marginTop:32}}>KVA OS · Pillar 08 · Company Authority</p><h1 style={{fontSize:"clamp(3.2rem,7vw,5.7rem)",margin:"10px 0"}}>Operations Economy Console</h1><p style={{maxWidth:850,color:"var(--muted)",lineHeight:1.8}}>Pilot and company economies share one ledger, but authority stays separate. Aircraft purchase, lease, fleet management and route activation remain Operations-only decisions.</p></div></section>
+    <section style={{padding:"74px 20px 110px",background:"var(--kva-gradient-hero)"}}><div style={{maxWidth:1180,margin:"0 auto"}}><Link href="/operations" style={{color:"var(--accent)",fontWeight:850}}>← Operations Center</Link><p className="eyebrow" style={{marginTop:32}}>KVA OS · Pillar 08 · Company Authority</p><h1 style={{fontSize:"clamp(3.2rem,7vw,5.7rem)",margin:"10px 0"}}>Operations Economy Console</h1><p style={{maxWidth:850,color:"var(--muted)",lineHeight:1.8}}>Pilot and company economies share one ledger, but authority stays separate. Aircraft purchase, lease, fleet management and route activation remain Operations-only decisions.</p></div></section>
     <section style={{padding:"0 20px 100px"}}><div style={{maxWidth:1180,margin:"0 auto",display:"grid",gap:22,transform:"translateY(-44px)"}}>
       {first(q.message)?<div style={ok}>{first(q.message)}</div>:null}{first(q.error)?<div style={bad}>{first(q.error)}</div>:null}
       <div style={stats}><Stat label="Company KVA Credits" value={money(a.balance)}/><Stat label="Income" value={money(a.total_income)}/><Stat label="Spent" value={money(a.total_spent)}/><Stat label="Active Campaigns" value={String(campaigns.filter(x=>["active","goal_reached","under_review"].includes(x.status)).length)}/></div>
@@ -77,7 +77,7 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
     <strong style={{fontSize:"1.08rem",marginTop:8}}>{i.name}</strong>
     <p style={{color:"var(--muted)"}}>{i.category}</p>
     <b>{money(i.price)}</b>
-    <form action={setPilotItemUnlockAction} style={{display:"grid",gap:8,marginTop:14,paddingTop:14,borderTop:"1px solid rgba(105,183,231,.14)"}}>
+    <form action={setPilotItemUnlockAction} style={{display:"grid",gap:8,marginTop:14,paddingTop:14,borderTop:"1px solid var(--kva-border-soft)"}}>
       <input type="hidden" name="itemId" value={i.id}/>
       <small style={{fontWeight:800}}>UNLOCK REQUIREMENTS</small>
       <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:8}}>
@@ -106,9 +106,10 @@ function Stat({label,value}:{label:string,value:string}){return <article style={
 function Field({n,l,v}:{n:string,l:string,v:number}){return <label>{l}<input name={n} type="number" min="0" defaultValue={v} style={input}/></label>}
 function Input({n,p,type="text"}:{n:string,p:string,type?:string}){return <input name={n} required placeholder={p} type={type} style={input}/>}
 const panel={padding:22,border:"1px solid var(--border)",borderRadius:20,background:"var(--surface)"} as const;
-const inner={padding:15,border:"1px solid rgba(105,183,231,.14)",borderRadius:13,background:"rgba(4,16,32,.28)"} as const;
+const inner={padding:15,border:"1px solid var(--kva-border-soft)",borderRadius:13,background:"var(--kva-surface-inset)"} as const;
 const stats={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12} as const;
 const grid={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12,alignItems:"end"} as const;
 const marketGrid={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:14,alignItems:"stretch"} as const;
-const input={width:"100%",padding:"11px 12px",border:"1px solid var(--border)",borderRadius:10,background:"rgba(4,16,32,.42)",color:"inherit"} as const;
-const ok={padding:14,borderRadius:12,color:"#98efbf",background:"rgba(57,220,138,.1)"} as const;const bad={padding:14,borderRadius:12,color:"#ffb1b1",background:"rgba(255,95,95,.1)"} as const;
+const input={width:"100%",padding:"11px 12px",border:"1px solid var(--border)",borderRadius:10,background:"var(--kva-field-bg)",color:"inherit"} as const;
+const ok={padding:14,borderRadius:12,color:"var(--kva-success-text)",background:"var(--kva-success-soft)"} as const;
+const bad={padding:14,borderRadius:12,color:"var(--kva-danger-text)",background:"var(--kva-danger-soft)"} as const;

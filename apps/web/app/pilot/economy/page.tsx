@@ -106,8 +106,7 @@ export default async function CareerEconomyPage({
       <section
         style={{
           padding: "74px 20px 115px",
-          background:
-            "radial-gradient(circle at 80% 20%,rgba(0,174,239,.25),transparent 30%),linear-gradient(145deg,#06152d,#0b2344 58%,#124d79)",
+          background: "var(--kva-gradient-hero)",
         }}
       >
         <div style={{maxWidth: 1180, margin: "0 auto"}}>
@@ -217,7 +216,7 @@ export default async function CareerEconomyPage({
                       style={{
                         height: 9,
                         borderRadius: 999,
-                        background: "rgba(255,255,255,.08)",
+                        background: "var(--kva-track-bg)",
                         overflow: "hidden",
                       }}
                     >
@@ -292,7 +291,10 @@ export default async function CareerEconomyPage({
                   </div>
                   <strong
                     style={{
-                      color: transaction.amount > 0 ? "#98efbf" : "#ffb1b1",
+                      color:
+                        transaction.amount > 0
+                          ? "var(--kva-success-text)"
+                          : "var(--kva-danger-text)",
                     }}
                   >
                     {transaction.amount > 0 ? "+" : ""}
@@ -327,9 +329,9 @@ const panel = {
 } as const;
 const inner = {
   padding: 16,
-  border: "1px solid rgba(105,183,231,.14)",
+  border: "1px solid var(--kva-border-soft)",
   borderRadius: 14,
-  background: "rgba(4,16,32,.28)",
+  background: "var(--kva-surface-inset)",
 } as const;
 const stats = {
   display: "grid",
@@ -341,18 +343,18 @@ const input = {
   padding: "12px 13px",
   border: "1px solid var(--border)",
   borderRadius: 10,
-  background: "rgba(4,16,32,.42)",
+  background: "var(--kva-field-bg)",
   color: "inherit",
 } as const;
 const noticeOk = {
   padding: 14,
   borderRadius: 12,
-  color: "#98efbf",
-  background: "rgba(57,220,138,.1)",
+  color: "var(--kva-success-text)",
+  background: "var(--kva-success-soft)",
 } as const;
 const noticeBad = {
   padding: 14,
   borderRadius: 12,
-  color: "#ffb1b1",
-  background: "rgba(255,95,95,.1)",
+  color: "var(--kva-danger-text)",
+  background: "var(--kva-danger-soft)",
 } as const;

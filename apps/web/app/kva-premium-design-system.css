@@ -1508,3 +1508,232 @@ body {
 }
 
 /* KVA_SIDEBAR_ICONS_ACTIVE_STATE_V13_END */
+
+/* KVA_PILOT_OFFICE_MOBILE_ENTRY_V101_BEGIN */
+/* Mobile-only profile entry for Pilot Office. Desktop profile card stays unchanged. */
+.kvaTopbarMobilePilotOffice {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .kvaTopbarMobilePilotOffice {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--kva-border);
+    border-radius: 10px;
+    background: var(--kva-surface-inset);
+    color: var(--kva-white);
+    text-decoration: none;
+  }
+
+  .kvaTopbarMobilePilotOffice:hover,
+  .kvaTopbarMobilePilotOffice:focus-visible {
+    border-color: var(--kva-border-accent);
+    background: rgba(32, 189, 243, .08);
+  }
+
+  .kvaTopbarMobilePilotOffice .kvaTopbarAvatar {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 620px) {
+  .kvaTopbarMobilePilotOffice {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+
+  .kvaTopbarMobilePilotOffice .kvaTopbarAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: .7rem;
+  }
+}
+/* KVA_PILOT_OFFICE_MOBILE_ENTRY_V101_END */
+
+/* KVA_PILOT_OFFICE_V201_BACKGROUND_HOTFIX_BEGIN */
+/* Pilot Office has its own cinematic first-section artwork.
+   This intentionally overrides the global "first section = generic hero gradient"
+   rule only for the Pilot Office immersive hero. */
+.kvaPremiumShell ~ main > section.kvaPilotOfficeImmersiveHero {
+  background-color: #010713 !important;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(0, 5, 13, .10) 0%,
+      rgba(0, 5, 13, .22) 48%,
+      rgba(0, 7, 17, .92) 100%
+    ),
+    url("/kva/pilot-office/pilot-office-immersive.webp") !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+/* KVA_PILOT_OFFICE_V201_BACKGROUND_HOTFIX_END */
+
+/* KVA_PILOT_OFFICE_V70_SHELL_BEGIN */
+body:has(.kvaPilotOfficeV70) {
+  background: #01050c;
+}
+
+body:has(.kvaPilotOfficeV70) .kvaTopbar {
+  z-index: 80;
+  border-bottom-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+body:has(.kvaPilotOfficeV70) .kvaTopbarContext {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body:has(.kvaPilotOfficeV70) .kvaTopbarActions {
+  margin-left: auto;
+  pointer-events: auto;
+}
+
+body:has(.kvaPilotOfficeV70) .kvaTopbarUser,
+body:has(.kvaPilotOfficeV70) .kvaTopbar .languageSelector select,
+body:has(.kvaPilotOfficeV70) .kvaTopbar .button {
+  background: rgba(3,18,35,.76);
+  border-color: rgba(88,180,234,.27);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+body:has(.kvaPilotOfficeV70) .kvaSidebar {
+  z-index: 90;
+  background:
+    linear-gradient(180deg, rgba(2,11,23,.99), rgba(1,6,14,.995));
+  border-color: rgba(84,168,219,.12);
+  box-shadow: 12px 0 34px rgba(0,0,0,.19);
+}
+
+body:has(.kvaPilotOfficeV70) .footer {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  body:has(.kvaPilotOfficeV70) .kvaTopbar {
+    background: rgba(2,11,23,.94) !important;
+    border-bottom-color: var(--kva-border) !important;
+    pointer-events: auto;
+  }
+
+  body:has(.kvaPilotOfficeV70) .kvaTopbarContext {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+/* KVA_PILOT_OFFICE_V70_SHELL_END */
+
+/* KVA_PILOT_OFFICE_V80_EXACT_VISUAL_MASTER_BEGIN */
+body:has(.kvaPilotOfficeV80) {
+  overflow: hidden !important;
+  background: #010711 !important;
+}
+
+body:has(.kvaPilotOfficeV80) .kvaPremiumShell,
+body:has(.kvaPilotOfficeV80) .kvaSidebar,
+body:has(.kvaPilotOfficeV80) .kvaTopbar,
+body:has(.kvaPilotOfficeV80) .footer {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body:has(.kvaPilotOfficeV80) main {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+/* KVA_PILOT_OFFICE_V80_EXACT_VISUAL_MASTER_END */
+/* KVA_PILOT_OFFICE_V911_FLOATING_TOPBAR_GLOBAL_BEGIN */
+body:has(.kvaPilotOfficeR3F) .kvaTopbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: var(--kva-sidebar-width) !important;
+  right: 0 !important;
+  z-index: 120 !important;
+  min-height: 72px !important;
+  justify-content: flex-end !important;
+  padding: 14px 20px 0 !important;
+  border-bottom: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  pointer-events: none !important;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarContext {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarActions {
+  margin-left: auto !important;
+  pointer-events: auto !important;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarUser,
+body:has(.kvaPilotOfficeR3F) .kvaTopbar .languageSelector select,
+body:has(.kvaPilotOfficeR3F) .kvaTopbar .button {
+  background: rgba(3, 18, 35, .74) !important;
+  border-color: rgba(90, 190, 242, .25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+/* KVA_PILOT_OFFICE_V911_FLOATING_TOPBAR_GLOBAL_END */
+
+/* KVA_PILOT_OFFICE_V92_SHELL_BEGIN */
+body:has(.kvaPilotOfficeR3F) .kvaTopbar {
+  border-bottom: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  pointer-events: none;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarContext {
+  display: none !important;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarActions {
+  margin-left: auto;
+  pointer-events: auto;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarUser,
+body:has(.kvaPilotOfficeR3F) .kvaTopbar .languageSelector select,
+body:has(.kvaPilotOfficeR3F) .kvaTopbar .button {
+  background: rgba(3, 17, 33, .78) !important;
+  border-color: rgba(91, 189, 242, .27) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarUser {
+  border-radius: 12px;
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaTopbarAvatar {
+  background: linear-gradient(145deg, #147db9, #28c8f8) !important;
+  border-color: rgba(107, 218, 255, .50) !important;
+  box-shadow: 0 0 18px rgba(38, 192, 244, .16);
+}
+
+body:has(.kvaPilotOfficeR3F) .kvaPremiumShell ~ main > section:first-child {
+  background-image: none !important;
+  background-color: #010711 !important;
+}
+/* KVA_PILOT_OFFICE_V92_SHELL_END */

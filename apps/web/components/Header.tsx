@@ -29,6 +29,7 @@ export async function Header() {
 
   const authenticatedNavigation: PremiumNavItem[] = [
     {href: "/pilot/dashboard", label: "Dashboard", icon: "⌂"},
+    {href: "/pilot/office", label: "Pilot Office", icon: "▣"},
     {href: "/pilot/passport", label: "Pilot Passport", icon: "◉"},
     {href: "/pilot/flights", label: "Flights", icon: "✈"},
     {href: "/pilot/bookings", label: "My Bookings", icon: "▣"},
@@ -118,15 +119,34 @@ export async function Header() {
 
         <div className="kvaTopbarActions">
           {user ? (
-            <div className="kvaTopbarUser" aria-label="Signed in pilot">
+            <Link
+              href="/pilot/office"
+              className="kvaTopbarUser"
+              aria-label="Open Pilot Office"
+              title="Open Pilot Office"
+              style={{textDecoration: "none", color: "inherit"}}
+            >
               <span className="kvaTopbarAvatar" aria-hidden="true">
                 {initial}
               </span>
               <span>
                 <strong>{displayName}</strong>
-                <small>KVA Pilot</small>
+                <small>Pilot Office</small>
               </span>
-            </div>
+            </Link>
+          ) : null}
+
+          {user ? (
+            <Link
+              href="/pilot/office"
+              className="kvaTopbarMobilePilotOffice"
+              aria-label="Open Pilot Office"
+              title="Pilot Office"
+            >
+              <span className="kvaTopbarAvatar" aria-hidden="true">
+                {initial}
+              </span>
+            </Link>
           ) : null}
 
           <LanguageSelector />
