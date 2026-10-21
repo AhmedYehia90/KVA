@@ -24,6 +24,15 @@ function unlockRequirements(item: PilotMarketplaceVisualItem): PilotUnlockRequir
   return item.unlock?.requirements ?? {};
 }
 
+function visualStateClass(state: string) {
+  if (state === "AVAILABLE") return `${styles.state} ${styles.stateAvailable}`;
+  if (state === "OWNED") return `${styles.state} ${styles.stateOwned}`;
+  if (state === "LOCKED" || state.startsWith("REQUIRES_")) {
+    return `${styles.state} ${styles.stateLocked}`;
+  }
+  return `${styles.state} ${styles.stateWarning}`;
+}
+
 export function PilotStore({items, balance, money}: PilotStoreProps) {
   return (
     <section className={styles.shell} id="pilot-marketplace">
@@ -68,7 +77,7 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
           ) : null}
 
           {items.map((item) => {
-            const state = String(item.unlock?.state ?? "UNAVAILABLE");
+            const state = String(item.unlock?.state ?? "UNAVAILABLE").toUpperCase();
             const requirements = unlockRequirements(item);
             const requirementParts: string[] = [];
 
@@ -90,11 +99,7 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
 
             const available = state === "AVAILABLE";
             const owned = state === "OWNED";
-            const stateClass = owned
-              ? `${styles.state} ${styles.stateGood}`
-              : available
-                ? styles.state
-                : `${styles.state} ${styles.stateWarn}`;
+            const locked = state === "LOCKED" || state.startsWith("REQUIRES_");
 
             return (
               <article className={styles.card} key={item.id}>
@@ -109,7 +114,9 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
                 </div>
 
                 <div className={styles.body}>
-                  <div className={stateClass}>{state.replace(/_/g, " ")}</div>
+                  <div className={visualStateClass(state)}>
+                    {state.replace(/_/g, " ")}
+                  </div>
                   <h3 className={styles.itemTitle}>{item.name}</h3>
                   <p className={styles.description}>{item.description}</p>
 
@@ -139,7 +146,11 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
                         </button>
                       </form>
                     ) : (
-                      <button className={styles.buttonDisabled} type="button" disabled>
+                      <button
+                        className={locked ? styles.buttonLocked : styles.buttonDisabled}
+                        type="button"
+                        disabled
+                      >
                         {state.replace(/_/g, " ")}
                       </button>
                     )}

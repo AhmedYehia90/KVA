@@ -1,0 +1,222 @@
+.page {
+  --cyan: #08b9ff;
+  --cyan-soft: #59d7ff;
+  width: calc(100% - var(--kva-sidebar-width, 236px));
+  min-width: 0;
+  height: calc(100svh - var(--kva-topbar-height, 72px));
+  min-height: 680px;
+  overflow: hidden;
+  background: #01050a;
+  color: #eef8ff;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.office {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #02060b;
+}
+
+.window {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 48.5% 21.15%;
+  overflow: hidden;
+  background: #020914 url("/pilot-office/airport-window.webp") center 10% / cover no-repeat;
+  box-shadow: inset 0 -36px 48px #020509b8;
+}
+
+.window::before,
+.window::after,
+.windowFrameOne,
+.windowFrameTwo {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(7px, .72vw, 12px);
+  background: linear-gradient(90deg, #020305, #11171d 46%, #020305);
+  box-shadow: 0 0 12px #000;
+}
+
+.window::before { left: 7%; }
+.window::after { left: 49%; }
+.windowFrameOne { left: 27.8%; }
+.windowFrameTwo { left: 73.5%; }
+.windowShade { position: absolute; inset: 0 0 auto; height: 4.5%; background: #030508; box-shadow: 0 8px 18px #000; }
+
+.brandWall {
+  position: absolute;
+  z-index: 5;
+  inset: 0 auto 0 0;
+  width: 21.15%;
+  box-sizing: border-box;
+  background: #02060b url("/pilot-office/office-reference.png") left top / 472.813% 100% no-repeat;
+}
+
+.brandWall h1 { margin: 0; font-size: clamp(25px, 2.1vw, 39px); line-height: 1; letter-spacing: -.035em; font-weight: 750; }
+.brandWall p { margin: .85rem 0 1.1rem; color: #c7d2dc; font-size: clamp(10px, .95vw, 16px); }
+.brandWall > img { display: block; width: 66%; height: auto; margin: 2% auto -2%; filter: drop-shadow(0 0 15px #057bf07d); }
+.brandWall > strong { display: block; white-space: nowrap; text-align: center; font-family: Georgia, "Times New Roman", serif; font-size: clamp(21px, 2vw, 36px); font-weight: 500; letter-spacing: -.035em; text-shadow: 0 1px 4px #000; }
+.brandOffice { display: flex; align-items: center; gap: 9px; margin-top: 1rem; color: var(--cyan-soft); white-space: nowrap; font-size: clamp(9px, .9vw, 15px); letter-spacing: .18em; }
+.brandOffice span { width: 24%; height: 1px; background: var(--cyan-soft); box-shadow: 0 0 7px #18baff; }
+
+.displayShelf {
+  position: absolute;
+  z-index: 2;
+  left: 21.15%; top: 5.5%; width: 5.6%; height: 39.5%;
+  overflow: hidden;
+  border: clamp(5px, .55vw, 9px) solid #070a0d;
+  background: #05090d;
+  box-shadow: inset 0 0 22px #000, 0 0 12px #000;
+}
+
+.displayShelf::before, .displayShelf::after { content: ""; position: absolute; left: 0; right: 0; height: 5px; background: #181818; box-shadow: 0 -5px 12px #ffb04a4d; }
+.displayShelf::before { top: 31%; }
+.displayShelf::after { top: 65%; }
+.shelfLight { position: absolute; left: 25%; width: 44%; height: 5px; border-radius: 50%; background: #f5b45e; filter: blur(4px); }
+.shelfLight:first-child { top: 29%; }
+.shelfLight:last-child { top: 63%; }
+.books { position: absolute; left: 17%; bottom: 6%; width: 37%; height: 25%; background: repeating-linear-gradient(90deg, #1a2026 0 8px, #67717a 9px 10px); }
+.plant { position: absolute; right: 8%; bottom: 4%; width: 30%; height: 22%; border-radius: 60% 40% 15% 15%; background: radial-gradient(ellipse at top, #287342 0 15%, #0b2112 45%, #0a0b08 70%); }
+
+.referenceForeground {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  clip-path: inset(33.4% 0 13.7% 0);
+  user-select: none;
+  pointer-events: none;
+}
+
+.desk {
+  position: absolute;
+  z-index: 1;
+  left: 0; right: 0; top: 42.5%; bottom: 12.5%;
+  background:
+    linear-gradient(180deg, #02040766 0, transparent 18%, #02040740 100%),
+    url("/pilot-office/desk-texture.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 -14px 17px #0009);
+}
+
+.desk::before { content: ""; position: absolute; left: 3%; right: 0; bottom: 12%; height: 5%; background: linear-gradient(#2b2d2f, #050607); box-shadow: 0 8px 16px #000; }
+.deskBlueEdge { position: absolute; left: 0; right: 20%; bottom: 11%; height: 2px; background: linear-gradient(90deg, #006dd1, #17bcff, transparent); box-shadow: 0 0 8px #048aff; }
+
+.monitorBank {
+  position: absolute;
+  z-index: 8;
+  left: 25.7%; right: 7.6%; top: 33.4%; height: 33%;
+  display: grid;
+  grid-template-columns: .96fr 1.02fr 1fr;
+  gap: .65%;
+  align-items: start;
+}
+
+.monitor { position: relative; min-width: 0; height: 100%; filter: drop-shadow(0 10px 9px #000); }
+.screen { position: relative; height: 76%; box-sizing: border-box; overflow: hidden; padding: 4.5%; border: clamp(5px, .5vw, 8px) solid #080b0e; border-radius: 5px; background: radial-gradient(circle at 46% 35%, #0a2a4c, #031023 65%, #020812); box-shadow: inset 0 0 0 1px #223f57, inset 0 0 28px #03101f, 0 0 0 1px #1a252e; }
+.monitorNeck { position: absolute; top: 75%; left: 45%; width: 10%; height: 16%; background: linear-gradient(90deg, #090a0b, #303438 48%, #08090a); }
+.monitorFoot { position: absolute; left: 29%; top: 88%; width: 43%; height: 4.5%; border-radius: 50%; background: linear-gradient(#272a2c, #070809); box-shadow: 0 5px 7px #000; }
+
+.kicker { margin: 0; color: #f2f8fc; font-size: clamp(7px, .61vw, 11px); font-weight: 650; letter-spacing: .025em; }
+.worldMap { display: block; width: 100%; height: 66%; margin-top: 1%; }
+.continents { fill: #053a74; stroke: #0b85e8; stroke-width: 1.1; }
+.mapGrid { fill: none; stroke: #145381; stroke-width: .55; opacity: .38; }
+.flightPath { fill: none; stroke: #31c6ff; stroke-width: 2.6; filter: drop-shadow(0 0 4px #20afff); }
+.cityGlow { fill: #d8f8ff; stroke: #159cff; stroke-width: 5; filter: drop-shadow(0 0 5px #1ab4ff); }
+.mapPlane { fill: white; font-size: 22px; }
+.noRoute { fill: #89a9c2; font-size: 15px; font-weight: 650; letter-spacing: .12em; }
+.routeLabels { display: flex; align-items: center; justify-content: space-between; margin-top: -4%; }
+.routeLabels span { display: grid; }
+.routeLabels span:last-child { text-align: right; }
+.routeLabels b { font-size: clamp(10px, .95vw, 16px); }
+.routeLabels small { color: #c3cfda; font-size: clamp(6px, .48vw, 9px); }
+.routeLabels i { display: flex; align-items: center; gap: 8px; color: white; font-size: clamp(10px, 1.1vw, 18px); font-style: normal; }
+.routeLabels em { width: clamp(18px, 2.8vw, 50px); height: 1px; background: #1aaaf0; }
+
+.flightMonitor h2 { margin: 3% 0 0; font-size: clamp(15px, 1.45vw, 26px); line-height: 1.05; }
+.ready { display: block; margin-top: 1.5%; color: #b9ef62; font-size: clamp(6px, .55vw, 10px); }
+.flightFacts { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 5%; }
+.flightFacts span { display: grid; padding: 0 8%; border-right: 1px solid #38506a; }
+.flightFacts span:first-child { padding-left: 0; }
+.flightFacts span:last-child { border: 0; }
+.flightFacts small { color: #a7b7c6; font-size: clamp(5px, .42vw, 8px); }
+.flightFacts b { margin-top: 3px; white-space: nowrap; font-size: clamp(7px, .55vw, 10px); }
+.planeProfile { display: flex; align-items: center; justify-content: center; gap: 3%; height: 31%; }
+.planeProfile span { width: 28%; height: 1px; background: #7ba0c2; }
+.planeProfile svg { width: 20%; fill: #dcebf4; }
+.aircraftType { margin: -5% 0 0; text-align: center; font-size: clamp(6px, .52vw, 9px); }
+
+.weatherGrid { display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; margin-top: 7%; padding-bottom: 5%; border-bottom: 1px solid #25455e; }
+.weatherNow { display: flex; align-items: center; gap: 7%; border-right: 1px solid #284763; }
+.weatherNow > span:last-child { display: grid; }
+.weatherGlyph { position: relative; color: #6ccfff; font-size: clamp(20px, 2.3vw, 39px); line-height: 1; }
+.weatherGlyph i { position: absolute; left: 27%; top: 40%; font-size: .8em; font-style: normal; }
+.weatherNow small { color: #a8bac9; font-size: clamp(5px, .42vw, 8px); }
+.weatherNow b { max-width: 11vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(11px, 1.25vw, 21px); font-weight: 500; line-height: 1.2; }
+.weatherNow em { font-size: clamp(6px, .47vw, 9px); font-style: normal; }
+.weatherGrid dl { margin: 0; padding-left: 10%; }
+.weatherGrid dl div { display: flex; justify-content: space-between; gap: 6px; margin: 5% 0; }
+.weatherGrid dt, .weatherGrid dd { margin: 0; white-space: nowrap; font-size: clamp(5px, .43vw, 8px); }
+.weatherGrid dt { color: #9eb0c0; }
+.notams { display: grid; gap: 12%; padding-top: 5%; font-size: clamp(6px, .5vw, 9px); }
+.notams span { color: #9fd7f3; }
+
+.photoProp { position: absolute; z-index: 6; display: block; max-width: none; user-select: none; filter: drop-shadow(0 8px 8px #0008); }
+.chair { left: 0; top: 51.2%; width: 19.7%; height: 33.7%; object-fit: fill; }
+.tablet { left: 17.8%; top: 52.9%; width: 18.9%; height: 19.8%; object-fit: fill; }
+.headset { left: 34.5%; top: 54%; width: 20%; height: 16.6%; object-fit: fill; }
+.logbook { left: 45.3%; top: 65.8%; width: 24.5%; height: 18.7%; object-fit: fill; }
+.clipboard { left: 69%; top: 64.7%; width: 24.5%; height: 20.3%; object-fit: fill; }
+.phoneLamp { left: 85.2%; top: 41.2%; width: 14.8%; height: 30.5%; object-fit: fill; }
+
+.keyboard { position: absolute; z-index: 5; left: 48.4%; top: 56.5%; width: 18.8%; height: 7.5%; display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; box-sizing: border-box; padding: 4px; border: 2px solid #292c2e; background: #08090a; transform: perspective(500px) rotateX(56deg) rotateZ(1deg); box-shadow: 0 8px 12px #000; }
+.keyboard i { background: #222527; border: 1px solid #44484b; border-radius: 1px; }
+.mouse { position: absolute; z-index: 7; left: 68%; top: 58.5%; width: 4%; height: 4.5%; border-radius: 50% 50% 43% 43%; background: linear-gradient(90deg, #111214, #4a4d50, #101113); box-shadow: 0 7px 10px #000; }
+
+.stats { position: absolute; z-index: 20; left: .9%; right: 1.2%; bottom: 1.5%; height: 13.7%; display: grid; grid-template-columns: 1.05fr 1.1fr 1fr 1fr 1fr 1.08fr; gap: .95%; }
+.statCard { position: relative; min-width: 0; padding: 7.5% 6.5%; box-sizing: border-box; overflow: hidden; border: 1px solid #173b56; border-radius: 9px; background: linear-gradient(145deg, #071522f2, #03101cf2); box-shadow: inset 0 1px 0 #1c4e6c73, 0 6px 18px #0008; }
+.statIcon { position: absolute; right: 6%; top: 11%; display: grid; place-items: center; width: clamp(27px, 2.35vw, 38px); aspect-ratio: 1; border-radius: 7px; background: #06263e; color: var(--cyan); }
+.statCard > small { display: block; padding-right: 25%; overflow: hidden; color: #c7d3dd; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(8px, .73vw, 13px); }
+.statCard > strong { display: block; margin: 7% 0 3%; overflow: hidden; color: var(--cyan); white-space: nowrap; text-overflow: ellipsis; font-size: clamp(13px, 1.32vw, 22px); font-weight: 650; text-shadow: 0 0 10px #128be655; }
+.statCard p, .statCard em { display: block; margin: 0; overflow: hidden; color: #bbc8d2; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(7px, .65vw, 12px); font-style: normal; }
+.statCard em { margin-top: 4%; }
+.progress { position: relative; height: 6px; margin-top: 7%; border-radius: 8px; background: #172b3c; }
+.progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #0ca8ff, #49d6ff); box-shadow: 0 0 7px #129cff; }
+.progress span { position: absolute; right: 0; top: -21px; color: #dce6ed; font-size: clamp(7px, .6vw, 10px); }
+
+@media (max-width: 1100px) {
+  .page { min-height: 620px; }
+  .displayShelf { display: none; }
+  .brandWall { width: 23.5%; }
+  .brandWall > img { width: 72%; }
+  .window { left: 23.5%; }
+  .monitorBank { left: 25%; right: 2%; }
+  .phoneLamp { right: 0; left: auto; }
+}
+
+@media (max-width: 760px) {
+  .page { width: 100%; height: auto; min-height: 980px; overflow-y: auto; }
+  .office { min-height: 980px; }
+  .brandWall { width: 100%; bottom: auto; height: 23%; padding: 25px; }
+  .brandWall > img { position: absolute; right: 7%; top: 14%; width: 24%; }
+  .brandWall > strong, .brandOffice { display: none; }
+  .window { left: 0; top: 23%; bottom: 45%; }
+  .monitorBank { left: 3%; right: 3%; top: 38%; height: 24%; grid-template-columns: 1fr 1fr; }
+  .routeMonitor { display: none; }
+  .desk { top: 51%; bottom: 28%; }
+  .photoProp { display: none; }
+  .chair, .tablet, .logbook { display: block; }
+  .chair { width: 36%; top: 57%; height: 27%; }
+  .tablet { left: 13%; top: 62%; width: 34%; height: 13%; }
+  .logbook { left: 48%; top: 68%; width: 43%; height: 13%; }
+  .keyboard, .mouse { display: none; }
+  .stats { left: 10px; right: 10px; bottom: 10px; height: 26%; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+  .statCard { padding: 10px; }
+}

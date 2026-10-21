@@ -87,10 +87,10 @@ export function CompanyAircraftMarket({
                 : "INSUFFICIENT COMPANY BUDGET";
 
             const stateClass = oneTimeAcquired
-              ? `${styles.state} ${styles.stateGood}`
+              ? `${styles.state} ${styles.stateOwned}`
               : canAfford
-                ? styles.state
-                : `${styles.state} ${styles.stateWarn}`;
+                ? `${styles.state} ${styles.stateAvailable}`
+                : `${styles.state} ${styles.stateWarning}`;
 
             return (
               <article className={styles.card} key={item.id}>

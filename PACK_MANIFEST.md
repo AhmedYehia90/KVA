@@ -1,20 +1,22 @@
 # Pack Manifest
 
 ## Pack
-KVA Foundation Pack v1.1
-
-## Replaces
-- README.md
+KVA Flight Events Integration Pack v1.0
 
 ## Adds
-- CONTRIBUTING.md
-- CHANGELOG.md
-- PROJECT_BOARD.md
-- INSTALL.md
-- PACK_MANIFEST.md
-- docs/*
-- docs/adr/*
-- .github/PULL_REQUEST_TEMPLATE.md
+- Supabase event-store migration
+- Flight event contracts
+- Flight contract tests
+- Event integration documentation
+- Blueprint and release note
 
-## Runtime impact
-None.
+## Replaces
+- `apps/web/app/pilot/bookings/[id]/actions.ts`
+- `packages/event-core/src/index.ts`
+- `packages/event-core/package.json`
+
+## Database impact
+Additive tables and RPC replacements. Review with `supabase db push --dry-run` before deployment.
+
+## Secrets
+None included.

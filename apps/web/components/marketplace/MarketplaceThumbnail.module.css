@@ -1,0 +1,32 @@
+.frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--kva-border-soft);
+  border-radius: var(--kva-radius-sm);
+  background: linear-gradient(180deg, rgba(8,35,67,.72), rgba(6,27,54,.86));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025), var(--kva-shadow-sm);
+}
+.image { object-fit: cover; }
+.gloss {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.025), transparent 30%, rgba(2,14,30,.10));
+}
+.badge {
+  position: absolute;
+  inset-inline-start: 10px;
+  top: 10px;
+  padding: 5px 9px;
+  border: 1px solid var(--kva-owned-border);
+  border-radius: var(--kva-radius-pill);
+  background: rgba(4,24,49,.86);
+  color: var(--kva-owned-text);
+  box-shadow: var(--kva-shadow-sm);
+  backdrop-filter: blur(8px);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .065em;
+  text-transform: uppercase;
+}

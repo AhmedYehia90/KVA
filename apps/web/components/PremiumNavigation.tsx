@@ -44,6 +44,7 @@ function matches(pathname: string, href: string) {
 const iconByHref: Record<string, LucideIcon> = {
   "/": House,
   "/pilot/dashboard": House,
+  "/pilot/office": Building2,
   "/pilot/flights": Plane,
   "/pilot/bookings": ClipboardCheck,
   "/pilot/pireps": FileText,
@@ -150,10 +151,12 @@ export function PremiumPageContext({
   const resolvedLabel =
     pathname === "/"
       ? "Home"
-      : active?.label ??
-        (authenticated
-          ? "Workspace"
-          : "Fly To Dreams");
+      : pathname === "/pilot/office"
+        ? "Pilot Office"
+        : active?.label ??
+          (authenticated
+            ? "Workspace"
+            : "Fly To Dreams");
 
   return (
     <div className="kvaPageContext">

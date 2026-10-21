@@ -1,21 +1,41 @@
-# Install KVA Foundation Pack v1.1
+# Install KVA Flight Events Integration Pack v1.0
 
-1. Extract the ZIP.
-2. Copy all files and folders into the repository root.
-3. Allow `README.md` to replace the existing root README.
-4. Review changes:
+Extract this package outside the KVA repository.
+
+From PowerShell inside the extracted package:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\install-flight-events.ps1 -RepoRoot "E:\Ahmed\game\kalabsha airline\KVA"
+```
+
+Then from the repository root:
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm event:typecheck
+pnpm event:test
+pnpm event:build
+pnpm build
+```
+
+Preview the linked Supabase migration:
+
+```powershell
+npx supabase db push --dry-run
+```
+
+After reviewing the migration list:
+
+```powershell
+npx supabase db push
+```
+
+Finally:
 
 ```powershell
 git status
-git diff --stat
-```
-
-5. Commit:
-
-```powershell
-git add README.md CONTRIBUTING.md CHANGELOG.md PROJECT_BOARD.md docs .github
-git commit -m "docs: add KVA foundation pack v1.1"
+git add apps/web/app/pilot/bookings packages/event-core supabase/migrations docs
+git commit -m "feat: integrate flight workflow with Event Core"
 git push origin main
 ```
-
-This pack does not modify application runtime code, dependencies, database migrations, or environment files.
