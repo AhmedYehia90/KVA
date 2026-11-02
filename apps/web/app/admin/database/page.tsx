@@ -1,6 +1,8 @@
 import {getFleetTypes} from "@/lib/data/fleet";
+import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 
 export default async function DatabaseOverviewPage() {
+  await requireOperationsConsoleAdmin();
   const fleetTypes = await getFleetTypes();
 
   return (
