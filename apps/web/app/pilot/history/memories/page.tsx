@@ -1,12 +1,19 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Living Memories | KVA OS",
   description: "On This Day, anniversaries and living aviation memories.",
-};
+}, await getUiLocale());
+}
 
 type Memory = {
   id: string;
@@ -39,9 +46,9 @@ type LivingMemoryData = {
   upcomingAnniversaries: Memory[];
 };
 
-function date(value?: string | null) {
+function date(value?: string | null, formatLocale: string = "en") {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-GB", {dateStyle: "medium"}).format(
+  return new Intl.DateTimeFormat(formatLocale, {dateStyle: "medium"}).format(
     new Date(`${value}T12:00:00`),
   );
 }
@@ -75,6 +82,8 @@ function anniversaryText(number?: number) {
 }
 
 export default async function LivingMemoriesPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
   const {
     data: {user},
@@ -99,7 +108,7 @@ export default async function LivingMemoriesPage() {
     : [];
   const journey = memories?.journey ?? {};
 
-  return (
+  return localizeUi((
     <main
       style={{
         minHeight: "calc(100vh - 80px)",
@@ -135,12 +144,12 @@ export default async function LivingMemoriesPage() {
               {Number(journey.days ?? 0)} days
             </strong>
             <span style={{display: "block", marginTop: 8, color: "var(--muted)"}}>
-              Since {date(journey.startedOn)}
+              Since {date(journey.startedOn, uiLocale)}
             </span>
             <div style={divider} />
             <small style={label}>NEXT JOURNEY ANNIVERSARY</small>
             <strong style={{display: "block", marginTop: 7}}>
-              {date(journey.nextAnniversary)}
+              {date(journey.nextAnniversary, uiLocale)}
             </strong>
           </div>
         </section>
@@ -151,7 +160,7 @@ export default async function LivingMemoriesPage() {
           <Stat label="UPCOMING" value={String(upcoming.length)} />
           <Stat
             label="REFERENCE DATE"
-            value={date(memories?.today)}
+            value={date(memories?.today, uiLocale)}
             compact
           />
         </section>
@@ -225,7 +234,7 @@ export default async function LivingMemoriesPage() {
                   <h3 style={{margin: "13px 0 7px"}}>{item.title}</h3>
                   <p style={{...muted, minHeight: 48}}>{item.description}</p>
                   <div style={divider} />
-                  <strong>{date(item.nextDate)}</strong>
+                  <strong>{date(item.nextDate, uiLocale)}</strong>
                   <span style={subLine}>
                     {anniversaryText(item.anniversaryNumber)}
                     {typeof item.daysUntil === "number"
@@ -248,7 +257,7 @@ export default async function LivingMemoriesPage() {
               pay KVC, activate a route, register an aircraft or modify a PIREP.
             </p>
           </div>
-          <div style={{textAlign: "right"}}>
+          <div style={{textAlign: "end"}}>
             <small style={label}>AUTHORITY</small>
             <strong style={{display: "block", marginTop: 7}}>
               READ-ONLY LEGACY
@@ -257,7 +266,7 @@ export default async function LivingMemoriesPage() {
         </section>
       </div>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -269,7 +278,9 @@ function Stat({
   value: string;
   compact?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={statCard}>
       <small style={label}>{statLabel}</small>
       <strong
@@ -282,7 +293,7 @@ function Stat({
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 const navRow = {

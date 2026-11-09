@@ -1,0 +1,50 @@
+/* Logical spacing keeps the same layout in both directions, including the fixed sidebar. */
+html[dir="rtl"] body {
+  text-align: start;
+  font-family: Tahoma, Arial, sans-serif;
+}
+html[dir="rtl"] :is(h1, h2, h3, h4, p, label, button, a, span, small, strong, th, td) {
+  letter-spacing: normal;
+}
+html[dir="rtl"] :is(h1, h2, h3) { line-height: 1.5; }
+html[dir="rtl"] :is(input, textarea, select) { text-align: start; }
+html[dir="rtl"] :is(input[type="email"], input[type="url"], input[type="tel"], input[type="number"], input[type="password"], input[type="datetime-local"]) {
+  direction: ltr;
+  text-align: left;
+}
+html[dir="rtl"] :is(pre, code, [data-no-localize]) {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+html[dir="rtl"] .kvaSidebar { box-shadow: -14px 0 44px rgba(0, 0, 0, .16); }
+html[dir="rtl"] .kvaSidebarChevron { transform: scaleX(-1); }
+html[dir="rtl"] .kvaSidebarBrandText { min-width: 0; }
+html[dir="rtl"] .kvaSidebarLabel { white-space: normal; line-height: 1.5; }
+html[dir="rtl"] :is(.authError, .authCard, .authForm, .kvaPageContext) { text-align: start; }
+html[dir="rtl"] table { direction: rtl; }
+html[dir="rtl"] :is(th, td) { text-align: start; }
+html[dir="rtl"] :is(button, .button) { white-space: normal; }
+@media (max-width: 620px) {
+  html[dir="rtl"] .kvaTopbarActions { gap: .5rem; }
+  html[dir="rtl"] .languageSelector select { max-width: 110px; }
+}
+
+/* The language control and menu must not overlap the brand in either direction. */
+@media (max-width: 1024px) {
+  .kvaTopbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
+  }
+  .kvaTopbarMobileBrand { overflow: hidden; }
+  .kvaTopbarMobileBrand img { flex-shrink: 0; }
+  .kvaTopbarMobileBrand strong { overflow: hidden; text-overflow: ellipsis; }
+  .kvaTopbarActions, .kvaMobileNav { margin-inline-start: 0; }
+}
+
+/* Latin display-heading tracking must not compress joined Arabic glyphs. */
+html[dir="rtl"] .kvaPremiumHeroTitle {
+  letter-spacing: normal !important;
+  line-height: 1.5 !important;
+}

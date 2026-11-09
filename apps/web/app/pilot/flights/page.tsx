@@ -1,13 +1,19 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Available Flights | Kalabsha Airlines",
   description: "Browse and select available Kalabsha Airlines routes."
-};
+}, await getUiLocale());
+}
 
 type Airport = {
   icao_code: string;
@@ -69,6 +75,8 @@ export default async function PilotFlightsPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const filters = await searchParams;
   const query = filters.q?.trim().toUpperCase() ?? "";
   const departureFilter = filters.departure?.trim().toUpperCase() ?? "";
@@ -183,7 +191,7 @@ export default async function PilotFlightsPage({
     (route) => !bookingByRoute.has(route.id)
   ).length;
 
-  return (
+  return localizeUi((
     <main>
       <section className={styles.hero}>
         <div className="container">
@@ -310,7 +318,7 @@ export default async function PilotFlightsPage({
 
                     <span>
                       {route.distance_nm
-                        ? `${route.distance_nm.toLocaleString("en-US")} NM`
+                        ? `${route.distance_nm.toLocaleString(uiLocale)} NM`
                         : "—"}
                     </span>
 
@@ -353,5 +361,5 @@ export default async function PilotFlightsPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

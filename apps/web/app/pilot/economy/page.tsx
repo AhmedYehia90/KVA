@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
@@ -6,7 +11,9 @@ import {contributeRouteSupportAction} from "./actions";
 import {PilotStore} from "@/components/marketplace/PilotStore";
 import type {PilotMarketplaceVisualItem} from "@/components/marketplace/types";
 
-export const metadata: Metadata = {title: "Career & Economy | KVA OS"};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({title: "Career & Economy | KVA OS"}, await getUiLocale());
+}
 export const dynamic = "force-dynamic";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -62,8 +69,8 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function money(value: number) {
-  return `${new Intl.NumberFormat("en-US").format(value)} KVC`;
+function money(value: number, formatLocale: string = "en") {
+  return `${new Intl.NumberFormat(formatLocale).format(value)} KVC`;
 }
 
 export default async function CareerEconomyPage({
@@ -71,6 +78,8 @@ export default async function CareerEconomyPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const params = await searchParams;
   const supabase = await createClient();
   const {
@@ -101,7 +110,7 @@ export default async function CareerEconomyPage({
   const wallet = dashboard.wallet;
   const marketplace = (visualMarketplace ?? []) as unknown as PilotMarketplaceVisualItem[];
 
-  return (
+  return localizeUi((
     <main style={{minHeight: "100vh", background: "var(--bg)"}}>
       <section
         style={{
@@ -156,9 +165,9 @@ export default async function CareerEconomyPage({
           <div style={stats}>
             <Stat label="Career Rank" value={career.currentRankCode} />
             <Stat label="Career XP" value={String(career.careerXp)} />
-            <Stat label="KVA Credits Balance" value={money(wallet.balance)} />
-            <Stat label="Total Earned" value={money(wallet.totalEarned)} />
-            <Stat label="Total Spent" value={money(wallet.totalSpent)} />
+            <Stat label="KVA Credits Balance" value={money(wallet.balance, uiLocale)} />
+            <Stat label="Total Earned" value={money(wallet.totalEarned, uiLocale)} />
+            <Stat label="Total Spent" value={money(wallet.totalSpent, uiLocale)} />
           </div>
 
           <section style={panel}>
@@ -170,8 +179,8 @@ export default async function CareerEconomyPage({
             <p style={{color: "var(--muted)"}}>
               {career.completedFlights} flights ·{" "}
               {Math.round((career.flightMinutes / 60) * 10) / 10} hours ·
-              Lifetime salary {money(career.lifetimeSalary)} · Bonuses{" "}
-              {money(career.lifetimeBonus)}
+              Lifetime salary {money(career.lifetimeSalary, uiLocale)} · Bonuses{" "}
+              {money(career.lifetimeBonus, uiLocale)}
             </p>
             {career.nextRank ? (
               <p>
@@ -184,7 +193,7 @@ export default async function CareerEconomyPage({
           <PilotStore
             items={marketplace}
             balance={Number(wallet.balance)}
-            money={money}
+            money={(value) => money(value, uiLocale)}
           />
 
           <section style={panel}>
@@ -208,9 +217,9 @@ export default async function CareerEconomyPage({
                       {campaign.departure} → {campaign.arrival} · {campaign.title}
                     </strong>
                     <p>
-                      {pct}% · {money(campaign.fundedAmount)} /{" "}
-                      {money(campaign.targetAmount)} · Your support{" "}
-                      {money(campaign.myContribution)}
+                      {pct}% · {money(campaign.fundedAmount, uiLocale)} /{" "}
+                      {money(campaign.targetAmount, uiLocale)} · Your support{" "}
+                      {money(campaign.myContribution, uiLocale)}
                     </p>
                     <div
                       style={{
@@ -298,7 +307,7 @@ export default async function CareerEconomyPage({
                     }}
                   >
                     {transaction.amount > 0 ? "+" : ""}
-                    {money(transaction.amount)}
+                    {money(transaction.amount, uiLocale)}
                   </strong>
                 </article>
               ))}
@@ -307,18 +316,20 @@ export default async function CareerEconomyPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({label, value}: {label: string; value: string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={stat}>
       <small>{label.toUpperCase()}</small>
       <strong style={{display: "block", fontSize: "1.8rem", marginTop: 12}}>
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panel = {

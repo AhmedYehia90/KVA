@@ -134,7 +134,7 @@
 .noRoute { fill: #89a9c2; font-size: 15px; font-weight: 650; letter-spacing: .12em; }
 .routeLabels { display: flex; align-items: center; justify-content: space-between; margin-top: -4%; }
 .routeLabels span { display: grid; }
-.routeLabels span:last-child { text-align: right; }
+.routeLabels span:last-child { text-align: end; }
 .routeLabels b { font-size: clamp(10px, .95vw, 16px); }
 .routeLabels small { color: #c3cfda; font-size: clamp(6px, .48vw, 9px); }
 .routeLabels i { display: flex; align-items: center; gap: 8px; color: white; font-size: clamp(10px, 1.1vw, 18px); font-style: normal; }
@@ -143,8 +143,8 @@
 .flightMonitor h2 { margin: 3% 0 0; font-size: clamp(15px, 1.45vw, 26px); line-height: 1.05; }
 .ready { display: block; margin-top: 1.5%; color: #b9ef62; font-size: clamp(6px, .55vw, 10px); }
 .flightFacts { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 5%; }
-.flightFacts span { display: grid; padding: 0 8%; border-right: 1px solid #38506a; }
-.flightFacts span:first-child { padding-left: 0; }
+.flightFacts span { display: grid; padding: 0 8%; border-inline-end: 1px solid #38506a; }
+.flightFacts span:first-child { padding-inline-start: 0; }
 .flightFacts span:last-child { border: 0; }
 .flightFacts small { color: #a7b7c6; font-size: clamp(5px, .42vw, 8px); }
 .flightFacts b { margin-top: 3px; white-space: nowrap; font-size: clamp(7px, .55vw, 10px); }
@@ -154,14 +154,14 @@
 .aircraftType { margin: -5% 0 0; text-align: center; font-size: clamp(6px, .52vw, 9px); }
 
 .weatherGrid { display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; margin-top: 7%; padding-bottom: 5%; border-bottom: 1px solid #25455e; }
-.weatherNow { display: flex; align-items: center; gap: 7%; border-right: 1px solid #284763; }
+.weatherNow { display: flex; align-items: center; gap: 7%; border-inline-end: 1px solid #284763; }
 .weatherNow > span:last-child { display: grid; }
 .weatherGlyph { position: relative; color: #6ccfff; font-size: clamp(20px, 2.3vw, 39px); line-height: 1; }
 .weatherGlyph i { position: absolute; left: 27%; top: 40%; font-size: .8em; font-style: normal; }
 .weatherNow small { color: #a8bac9; font-size: clamp(5px, .42vw, 8px); }
 .weatherNow b { max-width: 11vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(11px, 1.25vw, 21px); font-weight: 500; line-height: 1.2; }
 .weatherNow em { font-size: clamp(6px, .47vw, 9px); font-style: normal; }
-.weatherGrid dl { margin: 0; padding-left: 10%; }
+.weatherGrid dl { margin: 0; padding-inline-start: 10%; }
 .weatherGrid dl div { display: flex; justify-content: space-between; gap: 6px; margin: 5% 0; }
 .weatherGrid dt, .weatherGrid dd { margin: 0; white-space: nowrap; font-size: clamp(5px, .43vw, 8px); }
 .weatherGrid dt { color: #9eb0c0; }
@@ -183,7 +183,7 @@
 .stats { position: absolute; z-index: 20; left: .9%; right: 1.2%; bottom: 1.5%; height: 13.7%; display: grid; grid-template-columns: 1.05fr 1.1fr 1fr 1fr 1fr 1.08fr; gap: .95%; }
 .statCard { position: relative; min-width: 0; padding: 7.5% 6.5%; box-sizing: border-box; overflow: hidden; border: 1px solid #173b56; border-radius: 9px; background: linear-gradient(145deg, #071522f2, #03101cf2); box-shadow: inset 0 1px 0 #1c4e6c73, 0 6px 18px #0008; }
 .statIcon { position: absolute; right: 6%; top: 11%; display: grid; place-items: center; width: clamp(27px, 2.35vw, 38px); aspect-ratio: 1; border-radius: 7px; background: #06263e; color: var(--cyan); }
-.statCard > small { display: block; padding-right: 25%; overflow: hidden; color: #c7d3dd; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(8px, .73vw, 13px); }
+.statCard > small { display: block; padding-inline-end: 25%; overflow: hidden; color: #c7d3dd; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(8px, .73vw, 13px); }
 .statCard > strong { display: block; margin: 7% 0 3%; overflow: hidden; color: var(--cyan); white-space: nowrap; text-overflow: ellipsis; font-size: clamp(13px, 1.32vw, 22px); font-weight: 650; text-shadow: 0 0 10px #128be655; }
 .statCard p, .statCard em { display: block; margin: 0; overflow: hidden; color: #bbc8d2; white-space: nowrap; text-overflow: ellipsis; font-size: clamp(7px, .65vw, 12px); font-style: normal; }
 .statCard em { margin-top: 4%; }

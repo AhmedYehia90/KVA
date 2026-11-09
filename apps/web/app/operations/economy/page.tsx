@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
@@ -7,7 +12,9 @@ import {CompanyAircraftMarket} from "@/components/marketplace/CompanyAircraftMar
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
 import {getMarketplaceThumbnailAlt,getPilotMarketplaceThumbnail} from "@/lib/marketplaceVisuals";
 
-export const metadata:Metadata={title:"Operations Economy Console | KVA OS"};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({title:"Operations Economy Console | KVA OS"}, await getUiLocale());
+}
 export const dynamic="force-dynamic";
 const ORG="kalabsha-airlines";
 type SearchParams=Promise<Record<string,string|string[]|undefined>>;
@@ -25,9 +32,11 @@ type RankOption={code:string;name:string;priority:number};
 type MilestoneOption={code:string;title:string;threshold:number};
 
 function first(v:string|string[]|undefined){return Array.isArray(v)?v[0]??"":v??""}
-function money(v:number){return new Intl.NumberFormat("en-US").format(v)+" KVC"}
+function money(v:number, formatLocale: string = "en"){return new Intl.NumberFormat(formatLocale).format(v)+" KVC"}
 
 export default async function EconomyOperationsPage({searchParams}:{searchParams:SearchParams}){
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();const q=await searchParams;const admin=createAdminClient();
   const [accountR,policyR,pilotItemsR,companyItemsR,assetsR,campaignR,ledgerR,auditR,fleetR,airportR,ranksR,milestoneDefsR]=await Promise.all([
     admin.from("company_economy_accounts").select("*").eq("organization_id",ORG).single(),
@@ -57,13 +66,13 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
   const airports=(airportR.data??[]) as unknown as AirportOption[];
   const ranks=(ranksR.data??[]) as unknown as RankOption[];
   const milestoneDefs=(milestoneDefsR.data??[]) as unknown as MilestoneOption[];
-  return <main style={{minHeight:"100vh",background:"var(--bg)"}}>
+  return localizeUi(<main style={{minHeight:"100vh",background:"var(--bg)"}}>
     <section style={{padding:"74px 20px 110px",background:"var(--kva-gradient-hero)"}}><div style={{maxWidth:1180,margin:"0 auto"}}><Link href="/operations" style={{color:"var(--accent)",fontWeight:850}}>← Operations Center</Link><p className="eyebrow" style={{marginTop:32}}>KVA OS · Pillar 08 · Company Authority</p><h1 style={{fontSize:"clamp(3.2rem,7vw,5.7rem)",margin:"10px 0"}}>Operations Economy Console</h1><p style={{maxWidth:850,color:"var(--muted)",lineHeight:1.8}}>Pilot and company economies share one ledger, but authority stays separate. Aircraft purchase, lease, fleet management and route activation remain Operations-only decisions.</p></div></section>
     <section style={{padding:"0 20px 100px"}}><div style={{maxWidth:1180,margin:"0 auto",display:"grid",gap:22,transform:"translateY(-44px)"}}>
       {first(q.message)?<div style={ok}>{first(q.message)}</div>:null}{first(q.error)?<div style={bad}>{first(q.error)}</div>:null}
-      <div style={stats}><Stat label="Company KVA Credits" value={money(a.balance)}/><Stat label="Income" value={money(a.total_income)}/><Stat label="Spent" value={money(a.total_spent)}/><Stat label="Active Campaigns" value={String(campaigns.filter(x=>["active","goal_reached","under_review"].includes(x.status)).length)}/></div>
+      <div style={stats}><Stat label="Company KVA Credits" value={money(a.balance, uiLocale)}/><Stat label="Income" value={money(a.total_income, uiLocale)}/><Stat label="Spent" value={money(a.total_spent, uiLocale)}/><Stat label="Active Campaigns" value={String(campaigns.filter(x=>["active","goal_reached","under_review"].includes(x.status)).length)}/></div>
       <section style={panel}><p className="eyebrow">Salary & Rewards</p><h2>Evidence-backed policy</h2><form action={updatePolicyAction} style={grid}><Field n="baseSalary" l="Base salary" v={p.base_salary}/><Field n="perBlockMinute" l="Per block minute" v={p.per_block_minute}/><Field n="performanceThreshold" l="Performance threshold" v={p.performance_threshold}/><Field n="performanceBonus" l="Performance bonus" v={p.performance_bonus}/><Field n="eventReward" l="Event reward" v={p.event_completion_reward}/><Field n="milestoneReward" l="Milestone reward" v={p.milestone_reward}/><button className="button" type="submit">Save policy</button></form></section>
-      <CompanyAircraftMarket items={ci} assets={assets} balance={Number(a.balance)} money={money}/>
+      <CompanyAircraftMarket items={ci} assets={assets} balance={Number(a.balance)} money={(value) => money(value, uiLocale)}/>
       <section style={panel}><p className="eyebrow">Marketplace Administration</p><h2>Company catalog controls</h2><h3>Create Company item</h3><form action={createCompanyItemAction} style={grid}><Input n="code" p="COMPANY-ITEM-002"/><Input n="name" p="Item name"/><Input n="description" p="Description"/><select name="itemKind" style={input}><option value="aircraft_purchase">Aircraft Purchase</option><option value="aircraft_lease">Aircraft Lease</option><option value="operational_asset">Operational Asset</option><option value="expansion">Expansion</option><option value="service">Service</option></select><select name="fleetTypeId" style={input}><option value="">No fleet type</option>{fleet.map(f=><option key={f.id} value={f.id}>{f.icao_code}</option>)}</select><Input n="price" p="500000" type="number"/><button className="button" type="submit">Create company item</button></form></section>
       <section style={panel}><p className="eyebrow">Pilot Marketplace Administration</p><h2>Personal progression items</h2><div style={marketGrid}>{pi.map(i=>{
   const unlock=i.metadata?.visualMarketplace?.unlock??{};
@@ -76,7 +85,7 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
     <small style={{color:"var(--accent)",fontWeight:850,letterSpacing:".06em",textTransform:"uppercase"}}>PILOT ONLY</small>
     <strong style={{fontSize:"1.08rem",marginTop:8}}>{i.name}</strong>
     <p style={{color:"var(--muted)"}}>{i.category}</p>
-    <b>{money(i.price)}</b>
+    <b>{money(i.price, uiLocale)}</b>
     <form action={setPilotItemUnlockAction} style={{display:"grid",gap:8,marginTop:14,paddingTop:14,borderTop:"1px solid var(--kva-border-soft)"}}>
       <input type="hidden" name="itemId" value={i.id}/>
       <small style={{fontWeight:800}}>UNLOCK REQUIREMENTS</small>
@@ -96,15 +105,21 @@ export default async function EconomyOperationsPage({searchParams}:{searchParams
     </form>
   </article>
 })}</div><form action={createPilotItemAction} style={{...grid,marginTop:16}}><Input n="code" p="PILOT-ITEM-004"/><Input n="name" p="Item name"/><Input n="description" p="Description"/><select name="category" style={input}><option value="profile_cosmetic">Profile Cosmetic</option><option value="passport_frame">Passport Frame</option><option value="career_display">Career Display</option><option value="profile_theme">Profile Theme</option><option value="collectible">Collectible</option><option value="commemorative">Commemorative</option></select><Input n="price" p="500" type="number"/><label><input type="checkbox" name="repeatable"/> Repeatable</label><button className="button" type="submit">Create pilot item</button></form></section>
-      <section style={panel}><p className="eyebrow">Route Support Campaigns</p><h2>Interest signal → Operations decision</h2><div style={{display:"grid",gap:12}}>{campaigns.map(c=><article key={c.id} style={inner}><strong>{c.departure?.icao_code} → {c.arrival?.icao_code} · {c.title}</strong><p>{money(c.funded_amount)} / {money(c.target_amount)} · {c.status}</p><form action={reviewRouteCampaignAction} style={{display:"flex",gap:8,flexWrap:"wrap"}}><input type="hidden" name="campaignId" value={c.id}/><select name="status" style={input}><option value="under_review">Under review</option><option value="approved">Approve interest</option><option value="rejected">Reject</option><option value="closed">Close</option></select><input name="note" placeholder="Operations note" style={input}/><button className="button" type="submit">Record decision</button></form></article>)}</div><h3>Create campaign</h3><form action={createRouteCampaignAction} style={grid}><Input n="code" p="ROUTE-INTEREST-002"/><Input n="title" p="Route interest title"/><Input n="description" p="Campaign description"/><select name="departureId" style={input}>{airports.map(x=><option key={x.id} value={x.id}>{x.icao_code} · {x.name}</option>)}</select><select name="arrivalId" style={input}>{airports.map(x=><option key={x.id} value={x.id}>{x.icao_code} · {x.name}</option>)}</select><Input n="targetAmount" p="3000" type="number"/><button className="button" type="submit">Create campaign</button></form></section>
-      <section style={panel}><p className="eyebrow">Unified Economy Ledger</p><h2>Recent company-linked transactions</h2>{ledger.map(x=><article key={x.id} style={{...inner,display:"flex",justifyContent:"space-between",gap:12,marginTop:8}}><div><strong>{x.transaction_type}</strong><small style={{display:"block",color:"var(--muted)"}}>{x.description}</small></div><b>{x.amount>0?"+":""}{money(x.amount)}</b></article>)}</section>
+      <section style={panel}><p className="eyebrow">Route Support Campaigns</p><h2>Interest signal → Operations decision</h2><div style={{display:"grid",gap:12}}>{campaigns.map(c=><article key={c.id} style={inner}><strong>{c.departure?.icao_code} → {c.arrival?.icao_code} · {c.title}</strong><p>{money(c.funded_amount, uiLocale)} / {money(c.target_amount, uiLocale)} · {c.status}</p><form action={reviewRouteCampaignAction} style={{display:"flex",gap:8,flexWrap:"wrap"}}><input type="hidden" name="campaignId" value={c.id}/><select name="status" style={input}><option value="under_review">Under review</option><option value="approved">Approve interest</option><option value="rejected">Reject</option><option value="closed">Close</option></select><input name="note" placeholder="Operations note" style={input}/><button className="button" type="submit">Record decision</button></form></article>)}</div><h3>Create campaign</h3><form action={createRouteCampaignAction} style={grid}><Input n="code" p="ROUTE-INTEREST-002"/><Input n="title" p="Route interest title"/><Input n="description" p="Campaign description"/><select name="departureId" style={input}>{airports.map(x=><option key={x.id} value={x.id}>{x.icao_code} · {x.name}</option>)}</select><select name="arrivalId" style={input}>{airports.map(x=><option key={x.id} value={x.id}>{x.icao_code} · {x.name}</option>)}</select><Input n="targetAmount" p="3000" type="number"/><button className="button" type="submit">Create campaign</button></form></section>
+      <section style={panel}><p className="eyebrow">Unified Economy Ledger</p><h2>Recent company-linked transactions</h2>{ledger.map(x=><article key={x.id} style={{...inner,display:"flex",justifyContent:"space-between",gap:12,marginTop:8}}><div><strong>{x.transaction_type}</strong><small style={{display:"block",color:"var(--muted)"}}>{x.description}</small></div><b>{x.amount>0?"+":""}{money(x.amount, uiLocale)}</b></article>)}</section>
       <section style={panel}><p className="eyebrow">Admin Audit</p><h2>Recent operations actions</h2>{audits.map(x=><article key={x.id} style={{...inner,marginTop:8}}><strong>{x.action}</strong><small style={{display:"block",color:"var(--muted)"}}>{x.target_type} · {x.target_id??"—"}</small></article>)}</section>
     </div></section>
-  </main>
+  </main>, uiLocale)
 }
-function Stat({label,value}:{label:string,value:string}){return <article style={{...panel,minHeight:110}}><small>{label.toUpperCase()}</small><strong style={{display:"block",fontSize:"1.8rem",marginTop:12}}>{value}</strong></article>}
-function Field({n,l,v}:{n:string,l:string,v:number}){return <label>{l}<input name={n} type="number" min="0" defaultValue={v} style={input}/></label>}
-function Input({n,p,type="text"}:{n:string,p:string,type?:string}){return <input name={n} required placeholder={p} type={type} style={input}/>}
+function Stat({label,value}:{label:string,value:string}){
+  const uiLocale = useUiLocale();
+return localizeUi(<article style={{...panel,minHeight:110}}><small>{label.toUpperCase()}</small><strong style={{display:"block",fontSize:"1.8rem",marginTop:12}}>{value}</strong></article>, uiLocale)}
+function Field({n,l,v}:{n:string,l:string,v:number}){
+  const uiLocale = useUiLocale();
+return localizeUi(<label>{l}<input name={n} type="number" min="0" defaultValue={v} style={input}/></label>, uiLocale)}
+function Input({n,p,type="text"}:{n:string,p:string,type?:string}){
+  const uiLocale = useUiLocale();
+return localizeUi(<input name={n} required placeholder={p} type={type} style={input}/>, uiLocale)}
 const panel={padding:22,border:"1px solid var(--border)",borderRadius:20,background:"var(--surface)"} as const;
 const inner={padding:15,border:"1px solid var(--kva-border-soft)",borderRadius:13,background:"var(--kva-surface-inset)"} as const;
 const stats={display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:12} as const;

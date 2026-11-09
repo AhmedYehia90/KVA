@@ -18,12 +18,12 @@
   }
 
   .header :global(.navActions) {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 
   :global([dir="rtl"]) .header :global(.navActions) {
-    margin-left: 0;
-    margin-right: auto;
+    margin-inline-start: 0;
+    margin-inline-end: auto;
   }
 
   .mobileMenu {

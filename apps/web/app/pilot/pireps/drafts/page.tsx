@@ -1,9 +1,13 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {submitAutoPirepDraftAction} from "./actions";
 
 export default async function AutoPirepDraftsPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
   const {data: {user}} = await supabase.auth.getUser();
   if (!user) redirect("/pilots/login");
@@ -16,7 +20,7 @@ export default async function AutoPirepDraftsPage() {
 
   if (error) throw new Error(`Unable to load Auto PIREP drafts: ${error.message}`);
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"75vh",padding:"80px 20px",background:"var(--bg)"}}>
       <section style={{maxWidth:900,margin:"0 auto"}}>
         <Link href="/pilot/pireps" style={{color:"var(--accent)",fontWeight:850}}>← PIREPs</Link>
@@ -50,5 +54,5 @@ export default async function AutoPirepDraftsPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

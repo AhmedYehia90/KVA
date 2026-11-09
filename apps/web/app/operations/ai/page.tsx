@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -11,10 +16,12 @@ import {
   type SmartOperationsFindingRow
 } from "@/lib/operations/getSmartOperationsData";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Smart Operations AI | KVA OS",
   description: "Explainable operational intelligence for virtual airlines."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -24,10 +31,10 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value: string | null | undefined) {
+function formatDate(value: string | null | undefined, formatLocale: string = "en") {
   if (!value) return "—";
 
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
@@ -45,13 +52,15 @@ export default async function SmartOperationsAiPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();
   const params = await searchParams;
   const message = first(params.message);
   const errorMessage = first(params.error);
   const data = await getSmartOperationsData();
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 112px",
@@ -184,7 +193,7 @@ export default async function SmartOperationsAiPage({
                 />
                 <MiniStat
                   label="Started"
-                  value={formatDate(data.latestRun.started_at)}
+                  value={formatDate(data.latestRun.started_at, uiLocale)}
                 />
                 <MiniStat
                   label="Rules Evaluated"
@@ -263,11 +272,13 @@ export default async function SmartOperationsAiPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function FindingCard({finding}: {finding: SmartOperationsFindingRow}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       padding:20,
       border:"1px solid rgba(105,183,231,.15)",
@@ -311,7 +322,7 @@ function FindingCard({finding}: {finding: SmartOperationsFindingRow}) {
         }}>
           <span>{finding.finding_type}</span>
           <span>{finding.subject_type}: {finding.subject_id ?? "platform"}</span>
-          <span>Detected: {formatDate(finding.last_detected_at)}</span>
+          <span>Detected: {formatDate(finding.last_detected_at, uiLocale)}</span>
         </div>
       </div>
 
@@ -354,7 +365,7 @@ function FindingCard({finding}: {finding: SmartOperationsFindingRow}) {
         )}
       </div>
     </article>
-  );
+  ), uiLocale);
 }
 
 function StatusForm({
@@ -368,7 +379,9 @@ function StatusForm({
   label: string;
   includeNote?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <form
       action={updateSmartFindingStatusAction}
       style={{display:"flex",gap:8,flexWrap:"wrap"}}
@@ -386,11 +399,13 @@ function StatusForm({
         {label}
       </button>
     </form>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}: {value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -402,7 +417,7 @@ function Badge({value}: {value:string}) {
     }}>
       {value}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -412,7 +427,9 @@ function Notice({
   children: ReactNode;
   success?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -423,7 +440,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -435,7 +452,9 @@ function Stat({
   value:string;
   subValue:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       minHeight:130,
       padding:21,
@@ -462,11 +481,13 @@ function Stat({
         {subValue}
       </span>
     </article>
-  );
+  ), uiLocale);
 }
 
 function MiniStat({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={miniCardStyle}>
       <small style={{color:"var(--muted)",fontWeight:850}}>
         {label.toUpperCase()}
@@ -479,7 +500,7 @@ function MiniStat({label, value}: {label:string; value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

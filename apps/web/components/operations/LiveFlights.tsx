@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import Link from "next/link";
 
 type LiveFlight = {
@@ -14,7 +16,9 @@ type LiveFlight = {
 };
 
 export function LiveFlights({flights}: {flights: LiveFlight[]}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className="kvaOperationsPanel kvaLiveOperationsPanel" style={panelStyle}>
       <div style={headingStyle}>
         <div>
@@ -57,7 +61,7 @@ export function LiveFlights({flights}: {flights: LiveFlight[]}) {
         </div>
       )}
     </section>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

@@ -1,13 +1,20 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound, redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import AirportLocalClock from "@/components/airports/AirportLocalClock";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Airport World | KVA OS",
   description: "Living Airport detail inside the KVA OS world.",
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -115,16 +122,16 @@ type DetailData = {
   }>;
 };
 
-function dateTime(value?: string | null) {
+function dateTime(value?: string | null, formatLocale: string = "en") {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
 }
 
-function number(value?: number | null) {
-  return new Intl.NumberFormat("en-US").format(Number(value ?? 0));
+function number(value?: number | null, formatLocale: string = "en") {
+  return new Intl.NumberFormat(formatLocale).format(Number(value ?? 0));
 }
 
 export default async function AirportDetailPage({
@@ -132,6 +139,8 @@ export default async function AirportDetailPage({
 }: {
   params: Promise<{icao: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const {icao} = await params;
 
   const supabase = await createClient();
@@ -165,7 +174,7 @@ export default async function AirportDetailPage({
     ? world.recentActivity
     : [];
 
-  return (
+  return localizeUi((
     <main
       style={{
         minHeight: "calc(100vh - 80px)",
@@ -213,12 +222,12 @@ export default async function AirportDetailPage({
         </section>
 
         <section style={stats}>
-          <Stat label="LIVE MOVEMENTS" value={number(pulse.liveMovements)} />
-          <Stat label="COMPLETED · 24H" value={number(pulse.completed24h)} />
-          <Stat label="AIRCRAFT ON GROUND" value={number(pulse.parkedAircraft)} />
-          <Stat label="ACTIVE ROUTES" value={number(pulse.activeRoutes)} />
-          <Stat label="GLOBAL EVENT LINKS" value={number(pulse.activeEvents)} />
-          <Stat label="WORLD NOTICES" value={number(pulse.activeNotices)} />
+          <Stat label="LIVE MOVEMENTS" value={number(pulse.liveMovements, uiLocale)} />
+          <Stat label="COMPLETED · 24H" value={number(pulse.completed24h, uiLocale)} />
+          <Stat label="AIRCRAFT ON GROUND" value={number(pulse.parkedAircraft, uiLocale)} />
+          <Stat label="ACTIVE ROUTES" value={number(pulse.activeRoutes, uiLocale)} />
+          <Stat label="GLOBAL EVENT LINKS" value={number(pulse.activeEvents, uiLocale)} />
+          <Stat label="WORLD NOTICES" value={number(pulse.activeNotices, uiLocale)} />
         </section>
 
         <section style={{marginTop: 38}}>
@@ -227,18 +236,18 @@ export default async function AirportDetailPage({
           <div style={connectionGrid}>
             <Connection
               label="COMPLETED VISITS"
-              value={number(history.completedVisits)}
+              value={number(history.completedVisits, uiLocale)}
             />
-            <Connection label="DEPARTURES" value={number(history.departures)} />
-            <Connection label="ARRIVALS" value={number(history.arrivals)} />
+            <Connection label="DEPARTURES" value={number(history.departures, uiLocale)} />
+            <Connection label="ARRIVALS" value={number(history.arrivals, uiLocale)} />
             <Connection
               label="FIRST RECORDED VISIT"
-              value={dateTime(history.firstVisitAt)}
+              value={dateTime(history.firstVisitAt, uiLocale)}
               compact
             />
             <Connection
               label="LATEST RECORDED VISIT"
-              value={dateTime(history.latestVisitAt)}
+              value={dateTime(history.latestVisitAt, uiLocale)}
               compact
             />
           </div>
@@ -276,7 +285,7 @@ export default async function AirportDetailPage({
                       {item.pilotCallsign ? ` · ${item.pilotCallsign}` : ""}
                     </p>
                   </div>
-                  <time style={timeText}>{dateTime(item.lastEventAt)}</time>
+                  <time style={timeText}>{dateTime(item.lastEventAt, uiLocale)}</time>
                 </article>
               ))
             ) : (
@@ -344,8 +353,8 @@ export default async function AirportDetailPage({
                       {item.title}
                     </strong>
                     <span style={sub}>
-                      {item.route} · {dateTime(item.startsAt)} →{" "}
-                      {dateTime(item.endsAt)}
+                      {item.route} · {dateTime(item.startsAt, uiLocale)} →{" "}
+                      {dateTime(item.endsAt, uiLocale)}
                     </span>
                   </div>
                 ))}
@@ -367,7 +376,7 @@ export default async function AirportDetailPage({
                       {item.route} · {item.title}
                     </strong>
                     <span style={sub}>
-                      {number(item.fundedAmount)} / {number(item.targetAmount)} KVC
+                      {number(item.fundedAmount, uiLocale)} / {number(item.targetAmount, uiLocale)} KVC
                     </span>
                   </div>
                 ))}
@@ -394,7 +403,7 @@ export default async function AirportDetailPage({
                         {item.category.toUpperCase()} · {item.severity.toUpperCase()} ·{" "}
                         {item.state.toUpperCase()}
                       </small>
-                      <span style={timeText}>{dateTime(item.startsAt)}</span>
+                      <span style={timeText}>{dateTime(item.startsAt, uiLocale)}</span>
                     </div>
                     <h3 style={{margin: "9px 0 6px"}}>{item.title}</h3>
                     <p style={muted}>{item.message}</p>
@@ -427,7 +436,7 @@ export default async function AirportDetailPage({
                     <strong style={{display: "block", marginTop: 6}}>
                       {item.flightNumber} · {item.route}
                     </strong>
-                    <span style={sub}>{dateTime(item.completedAt)}</span>
+                    <span style={sub}>{dateTime(item.completedAt, uiLocale)}</span>
                   </div>
                 ))}
               </div>
@@ -446,18 +455,20 @@ export default async function AirportDetailPage({
         </section>
       </div>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({label: statLabel, value}: {label: string; value: string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={statCard}>
       <small style={label}>{statLabel}</small>
       <strong style={{display: "block", marginTop: 9, fontSize: "1.55rem"}}>
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Connection({
@@ -469,7 +480,9 @@ function Connection({
   value: string;
   compact?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={connectionCard}>
       <small style={label}>{connectionLabel}</small>
       <strong
@@ -482,7 +495,7 @@ function Connection({
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Panel({
@@ -494,17 +507,21 @@ function Panel({
   eyebrow: string;
   children: React.ReactNode;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section style={panel}>
       <p className="eyebrow">{eyebrow}</p>
       <h2 style={{margin: "8px 0 18px", fontSize: "1.65rem"}}>{title}</h2>
       {children}
     </section>
-  );
+  ), uiLocale);
 }
 
 function Empty({text}: {text: string}) {
-  return <div style={empty}>{text}</div>;
+  const uiLocale = useUiLocale();
+
+  return localizeUi(<div style={empty}>{text}</div>, uiLocale);
 }
 
 const hero = {

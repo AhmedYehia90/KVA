@@ -1,3 +1,6 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {LucideIcon} from "lucide-react";
 import {Bot, BriefcaseBusiness, Gauge, PlaneTakeoff, ShieldCheck, Trophy} from "lucide-react";
 import {redirect} from "next/navigation";
@@ -93,21 +96,25 @@ function airportPoint(airport: Airport | null) {
 }
 
 function MonitorFrame({children, className = ""}: {children: React.ReactNode; className?: string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article className={`${styles.monitor} ${className}`}>
       <div className={styles.screen}>{children}</div>
       <span className={styles.monitorNeck} />
       <span className={styles.monitorFoot} />
     </article>
-  );
+  ), uiLocale);
 }
 
 function RouteMonitor({departure, arrival}: {departure: Airport | null; arrival: Airport | null}) {
+  const uiLocale = useUiLocale();
+
   const from = airportPoint(departure);
   const to = airportPoint(arrival);
   const midX = from && to ? (from.x + to.x) / 2 : 260;
   const midY = from && to ? Math.min(from.y, to.y) - 12 : 95;
-  return (
+  return localizeUi((
     <MonitorFrame className={styles.routeMonitor}>
       <p className={styles.kicker}>ROUTE MAP</p>
       <svg className={styles.worldMap} viewBox="0 0 520 190" aria-label={departure && arrival ? `Route from ${departure.icao_code} to ${arrival.icao_code}` : "No active route"}>
@@ -133,20 +140,22 @@ function RouteMonitor({departure, arrival}: {departure: Airport | null; arrival:
         <span><b>{arrival?.icao_code ?? "—"}</b><small>{arrival?.city ?? "No arrival"}</small></span>
       </div>
     </MonitorFrame>
-  );
+  ), uiLocale);
 }
 
 function FlightMonitor({booking, route, aircraft, dispatch}: {booking: ActiveBooking | null; route: Route | null; aircraft: Aircraft | null; dispatch: Dispatch | null}) {
+  const uiLocale = useUiLocale();
+
   const departure = first(route?.departure);
   const arrival = first(route?.arrival);
   const fleetType = first(aircraft?.fleet_type);
-  return (
+  return localizeUi((
     <MonitorFrame className={styles.flightMonitor}>
       <p className={styles.kicker}>FLIGHT PLAN</p>
       <h2>{route ? `${departure?.icao_code ?? "—"} → ${arrival?.icao_code ?? "—"}` : "NO ACTIVE FLIGHT"}</h2>
       <strong className={styles.ready}>{booking ? humanize(booking.status) : "AWAITING ASSIGNMENT"}</strong>
       <div className={styles.flightFacts}>
-        <span><small>DISTANCE</small><b>{route?.distance_nm ? `${route.distance_nm.toLocaleString("en-US")} NM` : "—"}</b></span>
+        <span><small>DISTANCE</small><b>{route?.distance_nm ? `${route.distance_nm.toLocaleString(uiLocale)} NM` : "—"}</b></span>
         <span><small>FLIGHT TIME</small><b>{formatDuration(route?.scheduled_minutes)}</b></span>
         <span><small>CRZ ALT</small><b>{dispatch?.cruise_altitude ? `FL${Math.round(dispatch.cruise_altitude / 100)}` : "—"}</b></span>
         <span><small>DISPATCH</small><b>{dispatch?.dispatch_number ?? "Pending"}</b></span>
@@ -154,13 +163,15 @@ function FlightMonitor({booking, route, aircraft, dispatch}: {booking: ActiveBoo
       <div className={styles.planeProfile}><span /><svg viewBox="0 0 110 42" aria-hidden="true"><path fill="#dcebf4" d="M54 2h4l4 14 39 9v4l-39-3-4 13h-4l-5-13-40 3v-4l40-9Z" /></svg><span /></div>
       <p className={styles.aircraftType}>{aircraft?.registration ?? fleetType?.icao_code ?? "AIRCRAFT PENDING"}</p>
     </MonitorFrame>
-  );
+  ), uiLocale);
 }
 
 function AirportMonitor({airport}: {airport: Airport | null}) {
+  const uiLocale = useUiLocale();
+
   const latitude = airport?.latitude == null ? "—" : `${Number(airport.latitude).toFixed(2)}°`;
   const longitude = airport?.longitude == null ? "—" : `${Number(airport.longitude).toFixed(2)}°`;
-  return (
+  return localizeUi((
     <MonitorFrame className={styles.weatherMonitor}>
       <p className={styles.kicker}>WEATHER OVERVIEW</p>
       <div className={styles.weatherGrid}>
@@ -172,10 +183,12 @@ function AirportMonitor({airport}: {airport: Airport | null}) {
       </div>
       <div className={styles.notams}><b>LIVE WEATHER</b><span>Weather feed not connected</span></div>
     </MonitorFrame>
-  );
+  ), uiLocale);
 }
 
 export default async function PilotOfficePage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
   const {data: {user}} = await supabase.auth.getUser();
   if (!user) redirect("/pilots/login");
@@ -218,7 +231,7 @@ export default async function PilotOfficePage() {
   const hourProgress = nextRank?.minimumHours ? totalHours / nextRank.minimumHours : 1;
   const flightProgress = nextRank?.minimumFlights ? completedFlights / nextRank.minimumFlights : 1;
   const careerProgress = nextRank ? Math.round(Math.min(1, hourProgress, flightProgress) * 100) : 100;
-  const currency = new Intl.NumberFormat("en-US").format(numberValue(wallet?.balance));
+  const currency = new Intl.NumberFormat(uiLocale).format(numberValue(wallet?.balance));
   const mentorTitle = mentor?.primary_focus?.title ?? (mentor?.primary_focus_code ? humanize(mentor.primary_focus_code) : "Ready to assist");
 
   const overview: OverviewCard[] = [
@@ -230,7 +243,7 @@ export default async function PilotOfficePage() {
     {label: "Mentor AI", value: mentorTitle, detail: mentor?.opening_message ?? "Ready to assist you", Icon: Bot},
   ];
 
-  return (
+  return localizeUi((
     <main className={styles.page} data-kva-pilot-office-visual-parity>
       <section className={styles.office} aria-label="Pilot Office">
         <div className={styles.window} aria-label="Night airport visible through the office windows"><span className={styles.windowShade} /><span className={styles.windowFrameOne} /><span className={styles.windowFrameTwo} /></div>
@@ -246,5 +259,5 @@ export default async function PilotOfficePage() {
         </section>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

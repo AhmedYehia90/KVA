@@ -1,12 +1,19 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 ﻿import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Airline Museum | KVA OS",
   description: "Company history and airline legacy inside KVA OS.",
-};
+}, await getUiLocale());
+}
 
 type TimelineItem = {
   id: string;
@@ -54,16 +61,18 @@ const kinds: Record<string, string> = {
   company_economy: "COMPANY ECONOMY",
 };
 
-function date(value?: string | null) {
+function date(value?: string | null, formatLocale: string = "en") {
   if (!value) return "Undated";
-  return new Intl.DateTimeFormat("en-GB", {dateStyle: "medium"}).format(new Date(value));
+  return new Intl.DateTimeFormat(formatLocale, {dateStyle: "medium"}).format(new Date(value));
 }
 
-function number(value?: number | null) {
-  return new Intl.NumberFormat("en-US").format(Number(value ?? 0));
+function number(value?: number | null, formatLocale: string = "en") {
+  return new Intl.NumberFormat(formatLocale).format(Number(value ?? 0));
 }
 
 export default async function AirlineMuseumPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
   const {
     data: {user},
@@ -82,7 +91,7 @@ export default async function AirlineMuseumPage() {
   const connection = museum?.pilotConnection ?? ({} as MuseumData["pilotConnection"]);
   const timeline = Array.isArray(museum?.timeline) ? museum.timeline : [];
 
-  return (
+  return localizeUi((
     <main
       style={{
         minHeight: "calc(100vh - 80px)",
@@ -124,12 +133,12 @@ export default async function AirlineMuseumPage() {
         </section>
 
         <section style={statsGrid}>
-          <Stat label="HISTORIC COMPANY ASSETS" value={number(summary.companyAssets)} />
-          <Stat label="ECONOMIC RECORDS" value={number(summary.companyEconomicRecords)} />
-          <Stat label="ROUTE SIGNAL REVIEWS" value={number(summary.reviewedRouteSignals)} />
-          <Stat label="CURATED HISTORY" value={number(summary.publishedCuratedHistory)} />
-          <Stat label="FIRST RECORDED ACTIVITY" value={date(summary.firstRecordedActivity)} compact />
-          <Stat label="LATEST ACTIVITY" value={date(summary.latestRecordedActivity)} compact />
+          <Stat label="HISTORIC COMPANY ASSETS" value={number(summary.companyAssets, uiLocale)} />
+          <Stat label="ECONOMIC RECORDS" value={number(summary.companyEconomicRecords, uiLocale)} />
+          <Stat label="ROUTE SIGNAL REVIEWS" value={number(summary.reviewedRouteSignals, uiLocale)} />
+          <Stat label="CURATED HISTORY" value={number(summary.publishedCuratedHistory, uiLocale)} />
+          <Stat label="FIRST RECORDED ACTIVITY" value={date(summary.firstRecordedActivity, uiLocale)} compact />
+          <Stat label="LATEST ACTIVITY" value={date(summary.latestRecordedActivity, uiLocale)} compact />
         </section>
 
         <section style={{marginTop: 40}}>
@@ -139,19 +148,19 @@ export default async function AirlineMuseumPage() {
           <div style={connectionGrid}>
             <div style={connectionCard}>
               <small style={label}>EVIDENCE-BACKED FLIGHTS</small>
-              <strong style={bigValue}>{number(connection.evidenceBackedRewardedFlights)}</strong>
+              <strong style={bigValue}>{number(connection.evidenceBackedRewardedFlights, uiLocale)}</strong>
               <p style={mutedText}>Flights tied to this organization through Career & Economy evidence.</p>
             </div>
 
             <div style={connectionCard}>
               <small style={label}>ROUTE SUPPORT ACTIONS</small>
-              <strong style={bigValue}>{number(connection.routeSupportContributions)}</strong>
+              <strong style={bigValue}>{number(connection.routeSupportContributions, uiLocale)}</strong>
               <p style={mutedText}>Your recorded community-interest contributions to this airline.</p>
             </div>
 
             <div style={connectionCard}>
               <small style={label}>KVC CONTRIBUTED</small>
-              <strong style={bigValue}>{number(connection.routeSupportAmount)} KVC</strong>
+              <strong style={bigValue}>{number(connection.routeSupportAmount, uiLocale)} KVC</strong>
               <p style={mutedText}>Historical contribution value only. It does not grant route authority.</p>
             </div>
           </div>
@@ -183,7 +192,7 @@ export default async function AirlineMuseumPage() {
                           </small>
                           <small style={sourceBadge}>{derived ? "DERIVED" : "CURATED"}</small>
                         </div>
-                        <time style={{color: "var(--muted)", fontSize: ".82rem"}}>{date(item.occurredAt)}</time>
+                        <time style={{color: "var(--muted)", fontSize: ".82rem"}}>{date(item.occurredAt, uiLocale)}</time>
                       </div>
                       <h3 style={{margin: "8px 0 5px", fontSize: "1.15rem"}}>{item.title}</h3>
                       <p style={{margin: 0, color: "var(--muted)", lineHeight: 1.6}}>{item.description}</p>
@@ -206,14 +215,14 @@ export default async function AirlineMuseumPage() {
               Airline Museum never activates routes, registers aircraft, changes fleet state, alters company balances or rewrites Economy Ledger records.
             </p>
           </div>
-          <div style={{textAlign: "right"}}>
+          <div style={{textAlign: "end"}}>
             <small style={label}>PROJECTION</small>
             <strong style={{display: "block", marginTop: 7}}>READ-ONLY LEGACY</strong>
           </div>
         </section>
       </div>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -225,14 +234,16 @@ function Stat({
   value: string;
   compact?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={statCard}>
       <small style={label}>{statLabel}</small>
       <strong style={{display: "block", marginTop: 9, fontSize: compact ? "1rem" : "1.45rem"}}>
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 const hero = {

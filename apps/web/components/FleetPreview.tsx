@@ -1,4 +1,6 @@
 "use client";
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 
 import Image from "next/image";
 import {useEffect, useRef} from "react";
@@ -7,6 +9,8 @@ import {officialFleetTypes} from "@/lib/fleet-artwork";
 import styles from "./FleetPreview.module.css";
 
 export function FleetPreview() {
+  const uiLocale = useUiLocale();
+
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,7 +22,7 @@ export function FleetPreview() {
       behavior: "auto"
     });
   }, []);
-  return (
+  return localizeUi((
     <section className={`section ${styles.section}`} aria-labelledby="official-fleet-title">
       <div className="container">
         <div className={styles.header}>
@@ -65,5 +69,5 @@ export function FleetPreview() {
         <p className={styles.hint}>Swipe or scroll horizontally to explore the full fleet.</p>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

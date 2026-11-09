@@ -1,4 +1,6 @@
 "use client";
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 
 import Link from "next/link";
 import {usePathname} from "next/navigation";
@@ -99,9 +101,11 @@ export function PremiumSidebarNav({
 }: {
   items: PremiumNavItem[];
 }) {
+  const uiLocale = useUiLocale();
+
   const pathname = usePathname();
 
-  return (
+  return localizeUi((
     <nav className="kvaSidebarNav" aria-label="KVA OS navigation">
       {items.map((item) => {
         const active = matches(pathname, item.href);
@@ -132,7 +136,7 @@ export function PremiumSidebarNav({
         );
       })}
     </nav>
-  );
+  ), uiLocale);
 }
 
 export function PremiumPageContext({
@@ -142,6 +146,8 @@ export function PremiumPageContext({
   items: PremiumNavItem[];
   authenticated: boolean;
 }) {
+  const uiLocale = useUiLocale();
+
   const pathname = usePathname();
 
   const active = [...items]
@@ -158,10 +164,10 @@ export function PremiumPageContext({
             ? "Workspace"
             : "Fly To Dreams");
 
-  return (
+  return localizeUi((
     <div className="kvaPageContext">
       <span>{authenticated ? "KVA OS" : "Kalabsha Airlines"}</span>
       <strong>{resolvedLabel}</strong>
     </div>
-  );
+  ), uiLocale);
 }

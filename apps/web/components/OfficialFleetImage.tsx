@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import {getOfficialFleetArtwork} from "@/lib/fleet-artwork";
@@ -14,13 +16,15 @@ export function OfficialFleetImage({
   name,
   flightNumber
 }: OfficialFleetImageProps) {
+  const uiLocale = useUiLocale();
+
   const artwork = getOfficialFleetArtwork(icaoCode);
 
   if (!artwork) {
     return null;
   }
 
-  return (
+  return localizeUi((
     <section className={styles.panel} aria-label={`${artwork.name} official fleet artwork`}>
       <div className={styles.header}>
         <div>
@@ -51,5 +55,5 @@ export function OfficialFleetImage({
         ) : null}
       </div>
     </section>
-  );
+  ), uiLocale);
 }

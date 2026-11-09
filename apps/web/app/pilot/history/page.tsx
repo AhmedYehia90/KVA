@@ -1,12 +1,19 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Museum & History | KVA OS",
   description: "Your long-term KVA OS aviation legacy.",
-};
+}, await getUiLocale());
+}
 
 type Evidence = Record<string, unknown>;
 
@@ -55,9 +62,9 @@ const kindLabel: Record<string, string> = {
   event_achievement: "EVENT LEGACY",
 };
 
-function date(value?: string | null) {
+function date(value?: string | null, formatLocale: string = "en") {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-GB", {dateStyle: "medium"}).format(new Date(value));
+  return new Intl.DateTimeFormat(formatLocale, {dateStyle: "medium"}).format(new Date(value));
 }
 
 function compactPassportNumber(value?: string | null) {
@@ -73,6 +80,8 @@ function text(value: unknown, fallback = "—") {
 }
 
 export default async function PilotMuseumHistoryPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
   const {
     data: {user},
@@ -105,7 +114,7 @@ export default async function PilotMuseumHistoryPage() {
   const latestPromotion = memories.latestPromotion ?? {};
   const firstEvent = memories.firstEventAchievement ?? {};
 
-  return (
+  return localizeUi((
     <main className="kvaPremiumSubpage">
       <section className="kvaPremiumHero">
         <div className="kvaPremiumHeroInner">
@@ -129,7 +138,7 @@ export default async function PilotMuseumHistoryPage() {
           <div className="kvaPremiumHeroMetaCard kvaPremiumHeroSide" style={legacySeal}>
             <small style={label}>LEGACY SINCE</small>
             <strong style={{display: "block", marginTop: 8, fontSize: "1.2rem"}}>
-              {date(summary.journeySince)}
+              {date(summary.journeySince, uiLocale)}
             </strong>
             <span
               title={summary.passportNumber ?? undefined}
@@ -168,7 +177,7 @@ export default async function PilotMuseumHistoryPage() {
                   ? `${text(firstFlight.departureIcao)} → ${text(firstFlight.arrivalIcao)} · ${text(firstFlight.fleetIcao, "Aircraft pending")}`
                   : "Your first completed KVA OS operation will become a permanent memory here."
               }
-              footer={firstFlight.occurredAt ? date(String(firstFlight.occurredAt)) : "Not recorded yet"}
+              footer={firstFlight.occurredAt ? date(String(firstFlight.occurredAt), uiLocale) : "Not recorded yet"}
             />
 
             <Memory
@@ -198,7 +207,7 @@ export default async function PilotMuseumHistoryPage() {
                   ? `${text(latestPromotion.completedFlights, "0")} flights · ${text(latestPromotion.careerXp, "0")} Career XP`
                   : "Your future promotions will be preserved as career legacy."
               }
-              footer={latestPromotion.promotedAt ? date(String(latestPromotion.promotedAt)) : "No promotion recorded yet"}
+              footer={latestPromotion.promotedAt ? date(String(latestPromotion.promotedAt), uiLocale) : "No promotion recorded yet"}
             />
 
             <Memory
@@ -209,7 +218,7 @@ export default async function PilotMuseumHistoryPage() {
                   ? `Earned during ${text(firstEvent.eventTitle)}`
                   : "Completed Global Aviation Events will leave a permanent achievement here."
               }
-              footer={firstEvent.awardedAt ? date(String(firstEvent.awardedAt)) : "Awaiting event achievement"}
+              footer={firstEvent.awardedAt ? date(String(firstEvent.awardedAt), uiLocale) : "Awaiting event achievement"}
             />
           </div>
         </section>
@@ -235,7 +244,7 @@ export default async function PilotMuseumHistoryPage() {
                       <small style={{...label, color: "#79d9ff"}}>
                         {kindLabel[item.kind] ?? item.kind.toUpperCase()}
                       </small>
-                      <time style={{color: "var(--muted)", fontSize: ".82rem"}}>{date(item.occurredAt)}</time>
+                      <time style={{color: "var(--muted)", fontSize: ".82rem"}}>{date(item.occurredAt, uiLocale)}</time>
                     </div>
                     <h3 style={{margin: "8px 0 5px", fontSize: "1.15rem"}}>{item.title}</h3>
                     <p style={{margin: 0, color: "var(--muted)", lineHeight: 1.55}}>{item.description}</p>
@@ -259,16 +268,18 @@ export default async function PilotMuseumHistoryPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({label: statLabel, value}: {label: string; value: string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={statCard}>
       <small style={label}>{statLabel}</small>
       <strong style={{display: "block", marginTop: 9, fontSize: "1.55rem"}}>{value}</strong>
     </div>
-  );
+  ), uiLocale);
 }
 
 function Memory({
@@ -282,7 +293,9 @@ function Memory({
   body: string;
   footer: string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={memoryCard}>
       <small style={{...label, color: "#79d9ff"}}>{eyebrow}</small>
       <h3 style={{margin: "12px 0 8px", fontSize: "1.22rem"}}>{title}</h3>
@@ -290,7 +303,7 @@ function Memory({
       <div style={{height: 1, background: "var(--border)", margin: "18px 0 13px"}} />
       <small style={{color: "var(--muted)"}}>{footer}</small>
     </article>
-  );
+  ), uiLocale);
 }
 
 const hero = {

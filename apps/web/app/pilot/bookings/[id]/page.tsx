@@ -1,3 +1,6 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {notFound, redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -67,10 +70,10 @@ function formatDuration(totalMinutes: number | null) {
   return `${hours}h ${minutes.toString().padStart(2, "0")}m`;
 }
 
-function formatDate(value: string | null) {
+function formatDate(value: string | null, formatLocale: string = "en") {
   if (!value) return "—";
 
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -86,6 +89,8 @@ export default async function BookingConfirmationPage({
   params: Promise<{id: string}>;
   searchParams: Promise<{error?: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const {id} = await params;
   const query = await searchParams;
   const supabase = await createClient();
@@ -159,7 +164,7 @@ export default async function BookingConfirmationPage({
   const actionLabel = actionLabels[booking.status];
   const isCompleted = booking.status === "completed";
 
-  return (
+  return localizeUi((
     <main style={mainStyle}>
       <section style={panelStyle}>
         <div style={headerStyle}>
@@ -203,7 +208,7 @@ export default async function BookingConfirmationPage({
             label="Distance"
             value={
               route?.distance_nm
-                ? `${route.distance_nm.toLocaleString("en-US")} NM`
+                ? `${route.distance_nm.toLocaleString(uiLocale)} NM`
                 : "—"
             }
           />
@@ -211,13 +216,13 @@ export default async function BookingConfirmationPage({
             label="Cruise Speed"
             value={
               fleetType?.cruise_speed_kts
-                ? `${fleetType.cruise_speed_kts.toLocaleString("en-US")} KT`
+                ? `${fleetType.cruise_speed_kts.toLocaleString(uiLocale)} KT`
                 : "—"
             }
           />
-          <InfoCard label="Booked At" value={formatDate(booking.booked_at)} />
-          <InfoCard label="Started At" value={formatDate(booking.started_at)} />
-          <InfoCard label="Completed At" value={formatDate(booking.completed_at)} />
+          <InfoCard label="Booked At" value={formatDate(booking.booked_at, uiLocale)} />
+          <InfoCard label="Started At" value={formatDate(booking.started_at, uiLocale)} />
+          <InfoCard label="Completed At" value={formatDate(booking.completed_at, uiLocale)} />
         </div>
 
         <section style={timelineStyle}>
@@ -283,7 +288,7 @@ export default async function BookingConfirmationPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function InfoCard({
@@ -295,13 +300,15 @@ function InfoCard({
   value: string;
   subValue?: string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={cardStyle}>
       <small style={labelStyle}>{label.toUpperCase()}</small>
       <strong style={valueStyle}>{value}</strong>
       {subValue ? <span style={subValueStyle}>{subValue}</span> : null}
     </div>
-  );
+  ), uiLocale);
 }
 
 const mainStyle = {

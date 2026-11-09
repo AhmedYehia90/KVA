@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import Link from "next/link";
 
 type FleetItem = {
@@ -11,7 +13,9 @@ type FleetItem = {
 };
 
 export function FleetSummary({items}: {items: FleetItem[]}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className="kvaOperationsPanel kvaFleetSummaryPanel" style={panelStyle}>
       <div style={headingStyle}>
         <div>
@@ -45,7 +49,7 @@ export function FleetSummary({items}: {items: FleetItem[]}) {
         ))}
       </div>
     </section>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

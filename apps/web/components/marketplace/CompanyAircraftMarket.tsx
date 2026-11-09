@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import {purchaseCompanyItemAction} from "@/app/operations/economy/actions";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
 import type {
@@ -29,7 +31,9 @@ export function CompanyAircraftMarket({
   balance,
   money,
 }: CompanyAircraftMarketProps) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className={styles.shell} id="company-marketplace">
       <div className={styles.content}>
         <div className={styles.headingRow}>
@@ -174,5 +178,5 @@ export function CompanyAircraftMarket({
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

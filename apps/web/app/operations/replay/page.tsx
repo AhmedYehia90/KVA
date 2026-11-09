@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -10,10 +15,12 @@ import {
   type BlackBoxIndexRow
 } from "@/lib/operations/getBlackBoxReplayData";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Black Box Replay | KVA OS",
   description: "Deterministic reconstruction of every flight from domain events."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -23,10 +30,10 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value: string | null | undefined) {
+function formatDate(value: string | null | undefined, formatLocale: string = "en") {
   if (!value) return "—";
 
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "medium"
   }).format(new Date(value));
@@ -72,6 +79,8 @@ export default async function BlackBoxReplayPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const user = await requireOperationsConsoleAdmin();
   const params = await searchParams;
   const requestedBookingId = first(params.bookingId);
@@ -86,7 +95,7 @@ export default async function BlackBoxReplayPage({
     }
   );
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 112px",
@@ -160,7 +169,7 @@ export default async function BlackBoxReplayPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function FlightIndex({
@@ -170,7 +179,9 @@ function FlightIndex({
   flights: BlackBoxIndexRow[];
   selectedBookingId: string | null;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <aside style={{
       ...panelStyle,
       position:"sticky",
@@ -218,7 +229,7 @@ function FlightIndex({
                 marginTop:7,
                 color:"var(--muted)"
               }}>
-                {flight.event_count} events · {formatDate(flight.last_event_at)}
+                {flight.event_count} events · {formatDate(flight.last_event_at, uiLocale)}
               </small>
 
               {flight.unhealthy_event_count > 0 ? (
@@ -237,14 +248,16 @@ function FlightIndex({
         )}
       </div>
     </aside>
-  );
+  ), uiLocale);
 }
 
 function ReplayPanel({replay}: {replay: BlackBoxReplayData}) {
+  const uiLocale = useUiLocale();
+
   const integrity = replay.integrity;
   const projection = replay.projection;
 
-  return (
+  return localizeUi((
     <div style={{display:"grid",gap:22}}>
       <section style={panelStyle}>
         <div style={{
@@ -414,7 +427,7 @@ function ReplayPanel({replay}: {replay: BlackBoxReplayData}) {
               }}>
                 <strong>{note.authorEmail}</strong>
                 <small style={{color:"var(--muted)"}}>
-                  {formatDate(note.createdAt)}
+                  {formatDate(note.createdAt, uiLocale)}
                 </small>
               </div>
               <p style={{margin:"10px 0 0",lineHeight:1.7}}>
@@ -427,7 +440,7 @@ function ReplayPanel({replay}: {replay: BlackBoxReplayData}) {
         </div>
       </section>
     </div>
-  );
+  ), uiLocale);
 }
 
 function ReplayEventCard({
@@ -439,9 +452,11 @@ function ReplayEventCard({
   index: number;
   previous: BlackBoxReplayEvent | undefined;
 }) {
+  const uiLocale = useUiLocale();
+
   const processing = event.processing;
 
-  return (
+  return localizeUi((
     <article style={{
       display:"grid",
       gridTemplateColumns:"56px minmax(0,1fr)",
@@ -485,8 +500,8 @@ function ReplayEventCard({
             </small>
           </div>
 
-          <div style={{textAlign:"right"}}>
-            <strong>{formatDate(event.occurredAt)}</strong>
+          <div style={{textAlign:"end"}}>
+            <strong>{formatDate(event.occurredAt, uiLocale)}</strong>
             <small style={{
               display:"block",
               marginTop:5,
@@ -563,11 +578,13 @@ function ReplayEventCard({
         </details>
       </div>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Evidence({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={miniCardStyle}>
       <small style={{color:"var(--muted)",fontWeight:850}}>
         {label.toUpperCase()}
@@ -581,7 +598,7 @@ function Evidence({label, value}: {label:string; value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function IntegrityCheck({
@@ -593,7 +610,9 @@ function IntegrityCheck({
   passed:boolean;
   detail:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={miniCardStyle}>
       <div style={{
         display:"flex",
@@ -613,7 +632,7 @@ function IntegrityCheck({
         {detail}
       </small>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -623,7 +642,9 @@ function Notice({
   children: ReactNode;
   success?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -634,11 +655,13 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={miniCardStyle}>
       <small style={{color:"var(--muted)",fontWeight:850}}>
         {label.toUpperCase()}
@@ -652,7 +675,7 @@ function Stat({label, value}: {label:string; value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

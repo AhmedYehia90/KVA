@@ -1,10 +1,14 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import Link from "next/link";
 import {useTranslations} from "next-intl";
 
 export function Hero() {
+  const uiLocale = useUiLocale();
+
   const t = useTranslations("Home.hero");
 
-  return (
+  return localizeUi((
     <section className="hero">
       <div className="container heroGrid">
         <div className="heroContent">
@@ -25,5 +29,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

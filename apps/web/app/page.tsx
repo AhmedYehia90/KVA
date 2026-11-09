@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Destinations } from "@/components/Destinations";
 import { FleetPreview } from "@/components/FleetPreview";
@@ -10,7 +12,9 @@ import { Stats } from "@/components/Stats";
 export const dynamic = "force-dynamic";
 
 export default function Home() {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <main>
       <Hero />
       <BookingWidget />
@@ -21,5 +25,5 @@ export default function Home() {
       <News />
       <Partners />
     </main>
-  );
+  ), uiLocale);
 }

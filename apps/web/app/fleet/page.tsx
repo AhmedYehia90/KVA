@@ -1,3 +1,6 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
 import {createAdminClient} from "@/lib/supabase/admin";
@@ -37,6 +40,8 @@ function statusClass(status: string, available: boolean) {
 }
 
 export default async function FleetPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = createAdminClient();
 
   const {data, error} = await supabase
@@ -135,7 +140,7 @@ export default async function FleetPage() {
     a.icaoCode.localeCompare(b.icaoCode)
   );
 
-  return (
+  return localizeUi((
     <main className={styles.main}>
       <section className={styles.hero}>
         <div className="container">
@@ -223,7 +228,7 @@ export default async function FleetPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 
@@ -249,13 +254,15 @@ const fleetArtworkByIcao: Record<string, FleetArtworkDefinition> = {
 };
 
 function FleetArtwork({icaoCode}: {icaoCode: string}) {
+  const uiLocale = useUiLocale();
+
   const artwork = fleetArtworkByIcao[icaoCode.trim().toUpperCase()];
 
   if (!artwork) {
     return null;
   }
 
-  return (
+  return localizeUi((
     <div style={fleetArtworkBlockStyle}>
       <span style={fleetArtworkBadgeStyle}>Official Kalabsha Fleet</span>
 
@@ -270,7 +277,7 @@ function FleetArtwork({icaoCode}: {icaoCode: string}) {
         />
       </div>
     </div>
-  );
+  ), uiLocale);
 }
 
 const fleetArtworkBlockStyle = {
@@ -326,6 +333,8 @@ function StatCard({
   value: number;
   tone?: "good" | "info" | "warn" | "bad";
 }) {
+  const uiLocale = useUiLocale();
+
   const toneClass =
     tone === "good"
       ? styles.toneGood
@@ -337,19 +346,21 @@ function StatCard({
             ? styles.toneBad
             : "";
 
-  return (
+  return localizeUi((
     <article className={`${styles.statCard} ${toneClass}`}>
       <span className={styles.statLabel}>{label}</span>
       <strong className={styles.statValue}>{value}</strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function MiniStat({label, value}: {label: string; value: number}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div className={styles.miniStat}>
       <span className={styles.miniLabel}>{label}</span>
       <strong>{value}</strong>
     </div>
-  );
+  ), uiLocale);
 }

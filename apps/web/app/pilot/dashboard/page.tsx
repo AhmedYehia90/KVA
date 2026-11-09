@@ -1,3 +1,7 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
@@ -6,10 +10,12 @@ import {createClient} from "@/lib/supabase/server";
 import CurrentFlightCard from "./current-flight";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Pilot Dashboard | Kalabsha Airlines",
   description: "Live pilot profile, rank progress and recent PIREPs."
-};
+}, await getUiLocale());
+}
 
 type Rank = {
   code: string;
@@ -62,6 +68,8 @@ function toNumber(value: number | string | null | undefined) {
 }
 
 export default async function PilotDashboardPage() {
+  const uiLocale = await getUiLocale();
+
   const t = await getTranslations("PilotDashboard");
   const locale = await getLocale();
   const supabase = await createClient();
@@ -194,7 +202,7 @@ export default async function PilotDashboardPage() {
     });
   }
 
-  return (
+  return localizeUi((
     <main>
       <section className={styles.hero}>
         <div className={`container ${styles.heroShell}`}>
@@ -422,5 +430,5 @@ export default async function PilotDashboardPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

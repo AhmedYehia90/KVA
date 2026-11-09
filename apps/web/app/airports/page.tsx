@@ -1,13 +1,20 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import AirportLocalClock from "@/components/airports/AirportLocalClock";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Living Airports | KVA OS",
   description: "The KVA OS aviation world-awareness layer.",
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +62,8 @@ function pulseText(score: number) {
 }
 
 export default async function LivingAirportsPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
   const {
     data: {user},
@@ -79,7 +88,7 @@ export default async function LivingAirportsPage() {
 
   const spotlight = airports[0];
 
-  return (
+  return localizeUi((
     <main className="kvaPremiumSubpage">
       <section className="kvaPremiumHero">
         <div className="kvaPremiumHeroInner">
@@ -228,27 +237,31 @@ export default async function LivingAirportsPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({label: statLabel, value}: {label: string; value: string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={statCard}>
       <small style={label}>{statLabel}</small>
       <strong style={{display: "block", marginTop: 9, fontSize: "1.6rem"}}>
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Mini({label: miniLabel, value}: {label: string; value: number}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div>
       <small style={{...label, color: "var(--muted)"}}>{miniLabel}</small>
       <strong style={{display: "block", marginTop: 4}}>{value}</strong>
     </div>
-  );
+  ), uiLocale);
 }
 
 const hero = {
@@ -358,7 +371,7 @@ const cardTop = {
 
 const miniPulse = {
   minWidth: 72,
-  textAlign: "right",
+  textAlign: "end",
 } as const;
 
 const miniGrid = {

@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import {useTranslations} from "next-intl";
 
 const destinations = [
@@ -8,9 +10,11 @@ const destinations = [
 ] as const;
 
 export function Destinations() {
+  const uiLocale = useUiLocale();
+
   const t = useTranslations("Home.destinations");
 
-  return (
+  return localizeUi((
     <section className="section sectionAlt">
       <div className="container">
         <div className="eyebrow">{t("eyebrow")}</div>
@@ -29,5 +33,5 @@ export function Destinations() {
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

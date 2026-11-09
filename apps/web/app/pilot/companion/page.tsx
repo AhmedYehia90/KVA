@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -8,10 +13,12 @@ import {
   updateCompanionPreferencesAction
 } from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Digital Flight Companion | KVA OS",
   description: "Evidence-backed pilot debriefs and supportive coaching."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -64,10 +71,10 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value: string | null | undefined) {
+function formatDate(value: string | null | undefined, formatLocale: string = "en") {
   if (!value) return "—";
 
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
@@ -91,6 +98,8 @@ export default async function DigitalFlightCompanionPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const params = await searchParams;
   const message = first(params.message);
   const errorMessage = first(params.error);
@@ -151,7 +160,7 @@ export default async function DigitalFlightCompanionPage({
       )
     : 0;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 116px",
@@ -327,7 +336,7 @@ export default async function DigitalFlightCompanionPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function DebriefCard({
@@ -337,6 +346,8 @@ function DebriefCard({
   debrief: DebriefRow;
   detailLevel: DetailLevel;
 }) {
+  const uiLocale = useUiLocale();
+
   const strengths = visibleItems(debrief.strengths ?? [], detailLevel);
   const focusItems = visibleItems(
     debrief.focus_items ?? [],
@@ -345,7 +356,7 @@ function DebriefCard({
   const integrity = debrief.replay_integrity ?? {};
   const confidence = Math.round(Number(debrief.confidence) * 100);
 
-  return (
+  return localizeUi((
     <article style={panelStyle}>
       <div style={{
         display:"flex",
@@ -484,7 +495,7 @@ function DebriefCard({
         />
         <Metric
           label="Generated"
-          value={formatDate(debrief.generated_at)}
+          value={formatDate(debrief.generated_at, uiLocale)}
         />
       </div>
 
@@ -513,12 +524,12 @@ function DebriefCard({
           </form>
         ) : (
           <span style={{color:"#98efbf",fontWeight:850}}>
-            Reviewed {formatDate(debrief.acknowledged_at)}
+            Reviewed {formatDate(debrief.acknowledged_at, uiLocale)}
           </span>
         )}
       </div>
     </article>
-  );
+  ), uiLocale);
 }
 
 function DebriefItemCard({
@@ -528,7 +539,9 @@ function DebriefItemCard({
   item: DebriefItem;
   positive?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       padding:15,
       border:"1px solid rgba(105,183,231,.13)",
@@ -563,11 +576,13 @@ function DebriefItemCard({
         </pre>
       </details>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}: {value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -579,11 +594,13 @@ function Badge({value}: {value:string}) {
     }}>
       {value}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Metric({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={metricStyle}>
       <small style={{color:"var(--muted)",fontWeight:850}}>
         {label.toUpperCase()}
@@ -596,7 +613,7 @@ function Metric({label, value}: {label:string; value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -606,7 +623,9 @@ function Notice({
   children: ReactNode;
   success?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -617,7 +636,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -629,7 +648,9 @@ function Stat({
   value:string;
   subValue:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       minHeight:130,
       padding:21,
@@ -660,7 +681,7 @@ function Stat({
         {subValue}
       </span>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

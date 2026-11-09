@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 ﻿import type {Metadata} from "next";
 import Link from "next/link";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
@@ -8,10 +13,12 @@ import {
   updateAirportNoticeAction,
 } from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Airport World Console | KVA OS",
   description: "Operations administration for Living Airports.",
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -85,8 +92,8 @@ function localInput(value?: string | null) {
   return local.toISOString().slice(0, 16);
 }
 
-function dateTime(value: string) {
-  return new Intl.DateTimeFormat("en-GB", {
+function dateTime(value: string, formatLocale: string = "en") {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -97,6 +104,8 @@ export default async function AirportWorldConsole({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();
   const query = await searchParams;
   const admin = createAdminClient();
@@ -149,7 +158,7 @@ export default async function AirportWorldConsole({
     (notice) => notice.lifecycle_status === "closed",
   ).length;
 
-  return (
+  return localizeUi((
     <main style={{minHeight: "100vh", background: "var(--bg)"}}>
       <section style={hero}>
         <div style={{maxWidth: 1180, margin: "0 auto"}}>
@@ -262,7 +271,7 @@ export default async function AirportWorldConsole({
                           </h3>
                           <small style={{color: "var(--muted)"}}>
                             {notice.category} · {notice.severity} ·{" "}
-                            {dateTime(notice.starts_at)}
+                            {dateTime(notice.starts_at, uiLocale)}
                           </small>
                         </div>
 
@@ -369,7 +378,7 @@ export default async function AirportWorldConsole({
                       {audit.action.replaceAll("_", " ")}
                     </strong>
                     <time style={{color: "var(--muted)", fontSize: ".8rem"}}>
-                      {dateTime(audit.created_at)}
+                      {dateTime(audit.created_at, uiLocale)}
                     </time>
                   </div>
                 ))
@@ -389,7 +398,7 @@ export default async function AirportWorldConsole({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Lifecycle({
@@ -401,7 +410,9 @@ function Lifecycle({
   status: string;
   label: string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <form action={setAirportNoticeLifecycleAction}>
       <input type="hidden" name="noticeId" value={notice.id} />
       <input type="hidden" name="status" value={status} />
@@ -409,18 +420,20 @@ function Lifecycle({
         {label}
       </button>
     </form>
-  );
+  ), uiLocale);
 }
 
 function Stat({label, value}: {label: string; value: string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={statCard}>
       <small style={fieldLabel}>{label}</small>
       <strong style={{display: "block", marginTop: 8, fontSize: "1.6rem"}}>
         {value}
       </strong>
     </div>
-  );
+  ), uiLocale);
 }
 
 function Field({
@@ -438,7 +451,9 @@ function Field({
   defaultValue?: string;
   required?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={field}>
       <span style={fieldLabel}>{label}</span>
       <input
@@ -450,7 +465,7 @@ function Field({
         style={input}
       />
     </label>
-  );
+  ), uiLocale);
 }
 
 function TextArea({
@@ -464,7 +479,9 @@ function TextArea({
   defaultValue?: string;
   required?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={{...field, gridColumn: "span 2"}}>
       <span style={fieldLabel}>{label}</span>
       <textarea
@@ -475,7 +492,7 @@ function TextArea({
         style={{...input, resize: "vertical", lineHeight: 1.5}}
       />
     </label>
-  );
+  ), uiLocale);
 }
 
 function Select({
@@ -489,7 +506,9 @@ function Select({
   options: readonly (readonly [string, string])[];
   defaultValue?: string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={field}>
       <span style={fieldLabel}>{label}</span>
       <select name={name} defaultValue={defaultValue} style={input}>
@@ -500,11 +519,13 @@ function Select({
         ))}
       </select>
     </label>
-  );
+  ), uiLocale);
 }
 
 function Empty({text}: {text: string}) {
-  return <div style={empty}>{text}</div>;
+  const uiLocale = useUiLocale();
+
+  return localizeUi(<div style={empty}>{text}</div>, uiLocale);
 }
 
 const hero = {

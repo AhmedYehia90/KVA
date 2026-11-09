@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import {login} from "./actions";
 
 type Props = {
@@ -5,9 +7,11 @@ type Props = {
 };
 
 export default async function PilotLoginPage({searchParams}: Props) {
+  const uiLocale = await getUiLocale();
+
   const {error} = await searchParams;
 
-  return (
+  return localizeUi((
     <main className="authPage">
       <section className="authCard">
         <div className="eyebrow">KVA Crew Portal</div>
@@ -52,5 +56,5 @@ export default async function PilotLoginPage({searchParams}: Props) {
         </form>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

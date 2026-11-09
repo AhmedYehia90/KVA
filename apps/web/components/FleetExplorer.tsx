@@ -1,4 +1,6 @@
 "use client";
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -14,11 +16,13 @@ const filters: FilterValue[] = [
   "Jumbo",
 ];
 
-function number(value: number) {
-  return new Intl.NumberFormat("en-US").format(value);
+function number(value: number, formatLocale: string = "en") {
+  return new Intl.NumberFormat(formatLocale).format(value);
 }
 
 export function FleetExplorer({ aircraft }: { aircraft: FleetAircraft[] }) {
+  const uiLocale = useUiLocale();
+
   const [filter, setFilter] = useState<FilterValue>("All");
 
   const visibleAircraft = useMemo(
@@ -29,7 +33,7 @@ export function FleetExplorer({ aircraft }: { aircraft: FleetAircraft[] }) {
     [aircraft, filter],
   );
 
-  return (
+  return localizeUi((
     <>
       <div className="fleetToolbar" aria-label="Fleet category filters">
         <div>
@@ -73,7 +77,7 @@ export function FleetExplorer({ aircraft }: { aircraft: FleetAircraft[] }) {
               <p className="muted">{item.role}</p>
 
               <dl className="aircraftSpecs">
-                <div><dt>Range</dt><dd>{number(item.rangeKm)} km</dd></div>
+                <div><dt>Range</dt><dd>{number(item.rangeKm, uiLocale)} km</dd></div>
                 <div><dt>Cruise</dt><dd>{item.cruiseKts} kt</dd></div>
                 <div><dt>Capacity</dt><dd>{item.capacity}</dd></div>
                 <div><dt>In fleet</dt><dd>{item.quantity}</dd></div>
@@ -88,5 +92,5 @@ export function FleetExplorer({ aircraft }: { aircraft: FleetAircraft[] }) {
         ))}
       </div>
     </>
-  );
+  ), uiLocale);
 }

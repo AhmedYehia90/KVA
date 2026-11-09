@@ -1,9 +1,13 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import {useTranslations} from "next-intl";
 
 export function Partners() {
+  const uiLocale = useUiLocale();
+
   const t = useTranslations("Home.partners");
 
-  return (
+  return localizeUi((
     <section className="partners">
       <div className="container partnersInner">
         <div>
@@ -17,5 +21,5 @@ export function Partners() {
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

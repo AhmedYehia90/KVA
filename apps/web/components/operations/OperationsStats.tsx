@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 type Stats = {
   totalAircraft: number;
   availableAircraft: number;
@@ -10,6 +12,8 @@ type Stats = {
 };
 
 export function OperationsStats({stats}: {stats: Stats}) {
+  const uiLocale = useUiLocale();
+
   const cards = [
     {label: "Total Aircraft", value: stats.totalAircraft},
     {label: "Available", value: stats.availableAircraft},
@@ -27,7 +31,7 @@ export function OperationsStats({stats}: {stats: Stats}) {
     }
   ];
 
-  return (
+  return localizeUi((
     <section className="kvaOperationsStatsGrid" style={gridStyle}>
       {cards.map((card) => (
         <article key={card.label} style={cardStyle}>
@@ -36,7 +40,7 @@ export function OperationsStats({stats}: {stats: Stats}) {
         </article>
       ))}
     </section>
-  );
+  ), uiLocale);
 }
 
 const gridStyle = {

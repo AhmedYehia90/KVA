@@ -1,11 +1,15 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import {useTranslations} from "next-intl";
 
 const articles = ["roadmap", "fleetStrategy", "community"] as const;
 
 export function News() {
+  const uiLocale = useUiLocale();
+
   const t = useTranslations("Home.news");
 
-  return (
+  return localizeUi((
     <section className="section sectionAlt">
       <div className="container">
         <div className="eyebrow">{t("eyebrow")}</div>
@@ -22,5 +26,5 @@ export function News() {
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

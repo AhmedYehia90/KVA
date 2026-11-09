@@ -1,5 +1,9 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 export function QuickFlightSearch() {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className="booking-section">
       <div className="container booking-layout">
         <div className="booking-panel">
@@ -54,5 +58,5 @@ export function QuickFlightSearch() {
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -5,10 +10,12 @@ import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {askLivingAirbotAction} from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Living Airbot | KVA OS",
   description: "Live evidence-backed AI Dispatcher for KVA OS pilots."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -68,9 +75,9 @@ function label(value: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function formatDate(value: string | null | undefined) {
+function formatDate(value: string | null | undefined, formatLocale: string = "en") {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
@@ -81,6 +88,8 @@ export default async function LivingAirbotPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const params = await searchParams;
   const message = first(params.message);
   const errorMessage = first(params.error);
@@ -159,7 +168,7 @@ export default async function LivingAirbotPage({
     (session) => session.readiness !== "ready"
   ).length;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 116px",
@@ -314,7 +323,7 @@ export default async function LivingAirbotPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function SessionCard({
@@ -326,10 +335,12 @@ function SessionCard({
   messages: AirbotMessage[];
   current?: boolean;
 }) {
+  const uiLocale = useUiLocale();
+
   const evidence = session.evidence ?? {};
   const checks = session.checks ?? [];
 
-  return (
+  return localizeUi((
     <article style={panelStyle}>
       <div style={{
         display:"flex",
@@ -395,7 +406,7 @@ function SessionCard({
         <Metric label="Aircraft" value={evidence.aircraftRegistration ?? "Pending"} />
         <Metric label="Type" value={evidence.aircraftType ?? "—"} />
         <Metric label="Fleet State" value={evidence.aircraftStatus ?? "Pending"} />
-        <Metric label="Updated" value={formatDate(session.updated_at)} />
+        <Metric label="Updated" value={formatDate(session.updated_at, uiLocale)} />
       </div>
 
       <section style={{...innerPanelStyle,marginTop:18}}>
@@ -472,8 +483,8 @@ function SessionCard({
           {messages.length ? messages.map((item) => (
             <article key={item.id} style={{
               ...messageStyle,
-              marginLeft:item.role === "pilot" ? "9%" : 0,
-              marginRight:item.role === "dispatcher" ? "9%" : 0
+              marginInlineStart:item.role === "pilot" ? "9%" : 0,
+              marginInlineEnd:item.role === "dispatcher" ? "9%" : 0
             }}>
               <div style={{
                 display:"flex",
@@ -485,7 +496,7 @@ function SessionCard({
                   {item.role === "dispatcher" ? "Living Airbot" : "You"}
                 </strong>
                 <small style={{color:"var(--muted)"}}>
-                  {formatDate(item.created_at)}
+                  {formatDate(item.created_at, uiLocale)}
                 </small>
               </div>
               <p style={{margin:"8px 0 0",lineHeight:1.7}}>
@@ -500,7 +511,7 @@ function SessionCard({
         </div>
       </section>
     </article>
-  );
+  ), uiLocale);
 }
 
 function QuickAsk({
@@ -512,7 +523,9 @@ function QuickAsk({
   intent:"briefing" | "readiness" | "aircraft" | "next_step";
   labelText:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <form action={askLivingAirbotAction}>
       <input type="hidden" name="sessionId" value={sessionId} />
       <input type="hidden" name="intent" value={intent} />
@@ -520,11 +533,13 @@ function QuickAsk({
         {labelText}
       </button>
     </form>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}: {value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -536,11 +551,13 @@ function Badge({value}: {value:string}) {
     }}>
       {label(value)}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Metric({label:labelText,value}: {label:string;value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={metricStyle}>
       <small style={{color:"var(--muted)",fontWeight:850}}>
         {labelText.toUpperCase()}
@@ -553,7 +570,7 @@ function Metric({label:labelText,value}: {label:string;value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -563,7 +580,9 @@ function Notice({
   children: ReactNode;
   success?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -574,7 +593,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -586,7 +605,9 @@ function Stat({
   value:string;
   subValue:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       minHeight:130,
       padding:21,
@@ -617,7 +638,7 @@ function Stat({
         {subValue}
       </span>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

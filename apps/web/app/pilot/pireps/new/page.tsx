@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import {notFound, redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {submitPirepAction} from "./actions";
@@ -26,6 +28,8 @@ export default async function NewPirepPage({
 }: {
   searchParams: Promise<{booking?: string; error?: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const query = await searchParams;
   const bookingId = query.booking;
 
@@ -66,7 +70,7 @@ export default async function NewPirepPage({
   const arrival = first(route?.arrival)?.icao_code ?? "—";
   const aircraft = first(booking.aircraft)?.registration ?? "—";
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"calc(100vh - 80px)",padding:"76px 20px",background:"var(--bg)"}}>
       <section style={{maxWidth:820,margin:"0 auto",padding:34,border:"1px solid var(--border)",borderRadius:22,background:"var(--surface)"}}>
         <p className="eyebrow">Flight Records</p>
@@ -115,7 +119,7 @@ export default async function NewPirepPage({
         </form>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 const labelStyle = {display:"grid",gap:8,color:"var(--muted)",fontWeight:800} as const;

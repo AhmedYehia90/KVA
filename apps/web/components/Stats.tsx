@@ -1,7 +1,11 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import {getTranslations} from "next-intl/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 
 export async function Stats() {
+  const uiLocale = await getUiLocale();
+
   const t = await getTranslations("Home.stats");
   const supabase = createAdminClient();
 
@@ -38,7 +42,7 @@ export async function Stats() {
     {value: "24/7", key: "operations"}
   ] as const;
 
-  return (
+  return localizeUi((
     <section className="container stats" aria-label={t("aria")}>
       {stats.map((stat) => (
         <article className="stat" key={stat.key}>
@@ -47,5 +51,5 @@ export async function Stats() {
         </article>
       ))}
     </section>
-  );
+  ), uiLocale);
 }

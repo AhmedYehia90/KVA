@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -8,9 +13,11 @@ import {
   withdrawGlobalEventAction
 } from "../actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Global Aviation Event | KVA OS"
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -94,8 +101,8 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value:string) {
-  return new Intl.DateTimeFormat("en-GB", {
+function formatDate(value:string, formatLocale: string = "en") {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle:"medium",
     timeStyle:"short"
   }).format(new Date(value));
@@ -115,6 +122,8 @@ export default async function GlobalEventDetailPage({
   params:Params;
   searchParams:SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const {slug} = await params;
   const query = await searchParams;
   const message = first(query.message);
@@ -154,7 +163,7 @@ export default async function GlobalEventDetailPage({
         )
       : 0;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 116px",
@@ -231,10 +240,10 @@ export default async function GlobalEventDetailPage({
               <div>
                 <p className="eyebrow">Event Window</p>
                 <h2 style={{margin:"8px 0 6px"}}>
-                  {formatDate(event.startsAt)} → {formatDate(event.endsAt)}
+                  {formatDate(event.startsAt, uiLocale)} → {formatDate(event.endsAt, uiLocale)}
                 </h2>
                 <p style={{margin:0,color:"var(--muted)"}}>
-                  Registration closes {formatDate(event.registrationClosesAt)}
+                  Registration closes {formatDate(event.registrationClosesAt, uiLocale)}
                 </p>
               </div>
 
@@ -325,7 +334,7 @@ export default async function GlobalEventDetailPage({
                           marginTop:4,
                           color:"var(--muted)"
                         }}>
-                          {achievement.badgeCode} · {formatDate(achievement.awardedAt)}
+                          {achievement.badgeCode} · {formatDate(achievement.awardedAt, uiLocale)}
                         </small>
                       </div>
                     </article>
@@ -383,12 +392,12 @@ export default async function GlobalEventDetailPage({
                     }}>
                       {formatDuration(route.scheduledMinutes)}
                       {route.distanceNm
-                        ? ` · ${route.distanceNm.toLocaleString("en-US")} NM`
+                        ? ` · ${route.distanceNm.toLocaleString(uiLocale)} NM`
                         : ""}
                     </small>
                   </div>
 
-                  <div style={{textAlign:"right"}}>
+                  <div style={{textAlign:"end"}}>
                     <strong>{route.points} pts</strong>
                     <Link
                       href={`/pilot/flights/${route.routeId}`}
@@ -417,7 +426,7 @@ export default async function GlobalEventDetailPage({
                     <strong>{flight.flightNumber}</strong>
                     <span>{flight.points} pts</span>
                     <span style={{color:"var(--muted)"}}>
-                      {formatDate(flight.creditedAt)}
+                      {formatDate(flight.creditedAt, uiLocale)}
                     </span>
                   </article>
                 ))}
@@ -443,11 +452,13 @@ export default async function GlobalEventDetailPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}:{value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -459,11 +470,13 @@ function Badge({value}:{value:string}) {
     }}>
       {value}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Stat({label,value}:{label:string;value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       minHeight:115,
       padding:20,
@@ -482,7 +495,7 @@ function Stat({label,value}:{label:string;value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -492,7 +505,9 @@ function Notice({
   children:ReactNode;
   success?:boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -503,7 +518,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -9,10 +14,12 @@ import {
   updateMentorGoalStatusAction
 } from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Mentor AI | KVA OS",
   description: "Adaptive evidence-backed pilot mentoring and learning goals."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -83,10 +90,10 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value: string | null | undefined) {
+function formatDate(value: string | null | undefined, formatLocale: string = "en") {
   if (!value) return "—";
 
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
@@ -103,6 +110,8 @@ export default async function MentorAiPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const params = await searchParams;
   const message = first(params.message);
   const errorMessage = first(params.error);
@@ -183,7 +192,7 @@ export default async function MentorAiPage({
       )
     : 0;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 116px",
@@ -358,16 +367,18 @@ export default async function MentorAiPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function GoalCard({goal}: {goal: MentorGoal}) {
+  const uiLocale = useUiLocale();
+
   const percent = Math.min(
     100,
     Math.round(goal.progress_count / goal.target_count * 100)
   );
 
-  return (
+  return localizeUi((
     <article style={innerPanelStyle}>
       <div style={{
         display:"flex",
@@ -453,13 +464,13 @@ function GoalCard({goal}: {goal: MentorGoal}) {
             />
           ) : (
             <span style={{color:"#98efbf",fontWeight:850}}>
-              Completed {formatDate(goal.completed_at)}
+              Completed {formatDate(goal.completed_at, uiLocale)}
             </span>
           )}
         </div>
       </div>
     </article>
-  );
+  ), uiLocale);
 }
 
 function GoalStatusForm({
@@ -471,7 +482,9 @@ function GoalStatusForm({
   status:"active" | "paused" | "completed";
   labelText:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <form action={updateMentorGoalStatusAction}>
       <input type="hidden" name="goalId" value={goalId} />
       <input type="hidden" name="status" value={status} />
@@ -479,7 +492,7 @@ function GoalStatusForm({
         {labelText}
       </button>
     </form>
-  );
+  ), uiLocale);
 }
 
 function MentorSessionCard({
@@ -491,6 +504,8 @@ function MentorSessionCard({
   reflections: MentorReflection[];
   hasOpenGoal: boolean;
 }) {
+  const uiLocale = useUiLocale();
+
   const goal = session.recommended_goal ?? {
     category:"consistency",
     title:"Repeat the operational standard",
@@ -500,7 +515,7 @@ function MentorSessionCard({
   };
   const confidence = Math.round(Number(session.confidence) * 100);
 
-  return (
+  return localizeUi((
     <article style={panelStyle}>
       <div style={{
         display:"flex",
@@ -543,7 +558,7 @@ function MentorSessionCard({
             CREATED
           </small>
           <strong style={{display:"block",marginTop:8}}>
-            {formatDate(session.created_at)}
+            {formatDate(session.created_at, uiLocale)}
           </strong>
         </div>
       </div>
@@ -696,7 +711,7 @@ function MentorSessionCard({
               }}>
                 <strong>{label(reflection.response_type)}</strong>
                 <small style={{color:"var(--muted)"}}>
-                  {formatDate(reflection.created_at)}
+                  {formatDate(reflection.created_at, uiLocale)}
                 </small>
               </div>
               {reflection.note ? (
@@ -720,7 +735,7 @@ function MentorSessionCard({
         </div>
       </section>
     </article>
-  );
+  ), uiLocale);
 }
 
 function ReflectionButton({
@@ -736,7 +751,9 @@ function ReflectionButton({
     | "ready_to_practice";
   labelText:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <form action={recordMentorReflectionAction}>
       <input type="hidden" name="sessionId" value={sessionId} />
       <input type="hidden" name="responseType" value={responseType} />
@@ -744,11 +761,13 @@ function ReflectionButton({
         {labelText}
       </button>
     </form>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}: {value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -760,7 +779,7 @@ function Badge({value}: {value:string}) {
     }}>
       {value}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -770,7 +789,9 @@ function Notice({
   children: ReactNode;
   success?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -781,7 +802,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -793,7 +814,9 @@ function Stat({
   value:string;
   subValue:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       minHeight:130,
       padding:21,
@@ -824,7 +847,7 @@ function Stat({
         {subValue}
       </span>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

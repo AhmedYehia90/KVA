@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import {notFound} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -42,10 +47,10 @@ export async function generateMetadata({
   params: Promise<{slug: string}>;
 }): Promise<Metadata> {
   const {slug} = await params;
-  return {
+  return localizeMetadata({
     title: `${slug} | Universal Pilot Passport`,
     description: "A public KVA OS Universal Pilot Passport."
-  };
+  }, await getUiLocale());
 }
 
 export const dynamic = "force-dynamic";
@@ -55,6 +60,8 @@ export default async function PublicPassportPage({
 }: {
   params: Promise<{slug: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const {slug} = await params;
   const supabase = await createClient();
   const {data, error} = await supabase.rpc("get_public_pilot_passport", {
@@ -69,7 +76,7 @@ export default async function PublicPassportPage({
 
   const passport = data as unknown as PassportData;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",padding:"72px 20px 100px",background:"var(--bg)"}}>
       <section style={{maxWidth:1060,margin:"0 auto"}}>
         <p className="eyebrow">KVA OS · Universal Pilot Passport</p>
@@ -135,11 +142,11 @@ export default async function PublicPassportPage({
         </section>
 
         <p style={{marginTop:28,color:"var(--muted)",fontSize:".85rem"}}>
-          Issued {new Intl.DateTimeFormat("en-GB", {dateStyle:"long"}).format(new Date(passport.issuedAt))}
+          Issued {new Intl.DateTimeFormat(uiLocale, {dateStyle:"long"}).format(new Date(passport.issuedAt))}
         </p>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {
@@ -168,10 +175,12 @@ const mutedStyle = {
 } as const;
 
 function Stat({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{padding:20,border:"1px solid var(--border)",borderRadius:16,background:"var(--surface)"}}>
       <small style={{color:"var(--muted)",fontWeight:850}}>{label.toUpperCase()}</small>
       <strong style={{display:"block",marginTop:12,fontSize:"1.5rem"}}>{value}</strong>
     </article>
-  );
+  ), uiLocale);
 }

@@ -1,3 +1,7 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
@@ -9,12 +13,16 @@ import {LiveFlights} from "@/components/operations/LiveFlights";
 import {FleetSummary} from "@/components/operations/FleetSummary";
 import {RecentPireps} from "@/components/operations/RecentPireps";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Operations Center | Kalabsha Airlines",
   description: "Fleet, live flights and PIREP operations overview."
-};
+}, await getUiLocale());
+}
 
 export default async function OperationsPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
 
   const {
@@ -28,7 +36,7 @@ export default async function OperationsPage() {
   const data = await getOperationsData();
   const canOpenEventConsole = isOperationsConsoleAdminEmail(user.email);
 
-  return (
+  return localizeUi((
     <main className="kvaOperationsPage" style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"76px 0 106px",
@@ -113,5 +121,5 @@ export default async function OperationsPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

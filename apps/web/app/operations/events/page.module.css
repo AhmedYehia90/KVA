@@ -1,4 +1,4 @@
-﻿.page {
+.page {
   min-height: 100vh;
   background: var(--bg);
 }
@@ -198,7 +198,7 @@
 .tableWrap td {
   padding: 16px 18px;
   border-bottom: 1px solid rgba(105, 183, 231, .1);
-  text-align: left;
+  text-align: start;
   vertical-align: top;
 }
 
@@ -342,7 +342,7 @@
 
 .projectionCard dd {
   margin: 0;
-  text-align: right;
+  text-align: end;
 }
 
 .actionsGrid {

@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,7 +11,9 @@ const statistics = [
 ];
 
 export function HeroSection() {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className="home-hero">
       <div className="hero-background" aria-hidden="true" />
 
@@ -73,5 +77,5 @@ export function HeroSection() {
         ))}
       </div>
     </section>
-  );
+  ), uiLocale);
 }

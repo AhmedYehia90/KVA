@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -8,9 +13,11 @@ import {
   setGlobalEventLifecycleAction
 } from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Global Events Operations | KVA OS"
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -57,8 +64,8 @@ function firstParam(value:string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value:string) {
-  return new Intl.DateTimeFormat("en-GB", {
+function formatDate(value:string, formatLocale: string = "en") {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle:"medium",
     timeStyle:"short"
   }).format(new Date(value));
@@ -69,6 +76,8 @@ export default async function GlobalEventsOperationsPage({
 }: {
   searchParams:SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();
   const params = await searchParams;
   const message = firstParam(params.message);
@@ -108,7 +117,7 @@ export default async function GlobalEventsOperationsPage({
   const events = (eventsResult.data ?? []) as EventRow[];
   const routes = (routesResult.data ?? []) as unknown as Route[];
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"72px 20px 110px",
@@ -307,7 +316,7 @@ export default async function GlobalEventsOperationsPage({
                       {event.title}
                     </h3>
                     <p style={{margin:0,color:"var(--muted)"}}>
-                      {formatDate(event.starts_at)} → {formatDate(event.ends_at)}
+                      {formatDate(event.starts_at, uiLocale)} → {formatDate(event.ends_at, uiLocale)}
                       {" · "}
                       {event.required_flights} required flight
                       {event.required_flights === 1 ? "" : "s"}
@@ -356,7 +365,7 @@ export default async function GlobalEventsOperationsPage({
                     Open pilot event →
                   </Link>
                   <small style={{color:"var(--muted)"}}>
-                    Created {formatDate(event.created_at)}
+                    Created {formatDate(event.created_at, uiLocale)}
                   </small>
                 </div>
               </article>
@@ -367,7 +376,7 @@ export default async function GlobalEventsOperationsPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function LifecycleButton({
@@ -379,7 +388,9 @@ function LifecycleButton({
   status:"published" | "archived" | "cancelled";
   labelText:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <form action={setGlobalEventLifecycleAction}>
       <input type="hidden" name="eventId" value={eventId} />
       <input type="hidden" name="status" value={status} />
@@ -387,7 +398,7 @@ function LifecycleButton({
         {labelText}
       </button>
     </form>
-  );
+  ), uiLocale);
 }
 
 function Field({
@@ -397,16 +408,20 @@ function Field({
   label:string;
   children:ReactNode;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={{display:"grid",gap:7}}>
       <span style={{fontWeight:850}}>{label}</span>
       {children}
     </label>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}:{value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -417,7 +432,7 @@ function Badge({value}:{value:string}) {
     }}>
       {value}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -427,7 +442,9 @@ function Notice({
   children:ReactNode;
   success?:boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -438,7 +455,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

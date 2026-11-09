@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {createClient} from "@/lib/supabase/server";
 import styles from "./current-flight.module.css";
@@ -27,6 +29,8 @@ function first<T>(value: T | T[] | null | undefined): T | null {
 }
 
 export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
 
   const {data, error} = await supabase
@@ -56,7 +60,7 @@ export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
   }
 
   if (!data) {
-    return (
+    return localizeUi((
       <section className={`${styles.card} ${styles.empty}`}>
         <div>
           <p className="eyebrow">Current Flight</p>
@@ -67,7 +71,7 @@ export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
           Browse Available Flights
         </Link>
       </section>
-    );
+    ), uiLocale);
   }
 
   const booking = data as unknown as ActiveBooking;
@@ -78,7 +82,7 @@ export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
   const departure = first(route?.departure);
   const arrival = first(route?.arrival);
 
-  return (
+  return localizeUi((
     <section className={styles.card}>
       <div className={styles.header}>
         <div>
@@ -135,5 +139,5 @@ export default async function CurrentFlightCard({pilotId}: {pilotId: string}) {
         </Link>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

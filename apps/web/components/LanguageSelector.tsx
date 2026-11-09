@@ -1,4 +1,6 @@
 "use client";
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 
 import {useLocale} from "next-intl";
 import {useTransition} from "react";
@@ -9,6 +11,8 @@ import {
 } from "@/i18n/config";
 
 export function LanguageSelector() {
+  const uiLocale = useUiLocale();
+
   const currentLocale = useLocale() as Locale;
   const [isPending, startTransition] = useTransition();
 
@@ -20,7 +24,7 @@ export function LanguageSelector() {
     });
   }
 
-  return (
+  return localizeUi((
     <label className="languageSelector">
       <span className="srOnly">Display language</span>
       <select
@@ -36,5 +40,5 @@ export function LanguageSelector() {
         ))}
       </select>
     </label>
-  );
+  ), uiLocale);
 }

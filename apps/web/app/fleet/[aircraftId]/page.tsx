@@ -1,3 +1,6 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import {createAdminClient} from "@/lib/supabase/admin";
@@ -39,6 +42,8 @@ export default async function AircraftDetailsPage({
 }: {
   params: Promise<{aircraftId: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const {aircraftId} = await params;
   const registration = decodeURIComponent(aircraftId).trim().toUpperCase();
   const supabase = createAdminClient();
@@ -81,7 +86,7 @@ export default async function AircraftDetailsPage({
   const available =
     aircraft.status === "active" && !aircraft.assigned_pilot_id;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"calc(100vh - 80px)",padding:"76px 20px 100px",background:"var(--bg)"}}>
       <section style={{maxWidth:980,margin:"0 auto"}}>
         <Link href="/fleet" style={{color:"var(--accent)",fontWeight:800}}>
@@ -129,7 +134,7 @@ export default async function AircraftDetailsPage({
           />
           <Info
             label="Range"
-            value={fleetType?.range_nm ? `${fleetType.range_nm.toLocaleString("en-US")} NM` : "—"}
+            value={fleetType?.range_nm ? `${fleetType.range_nm.toLocaleString(uiLocale)} NM` : "—"}
           />
           <Info
             label="Cruise Speed"
@@ -143,7 +148,7 @@ export default async function AircraftDetailsPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Info({
@@ -155,7 +160,9 @@ function Info({
   value: string;
   subValue?: string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{padding:20,border:"1px solid var(--border)",borderRadius:16,background:"var(--surface)"}}>
       <small style={{color:"var(--muted)",fontWeight:800,letterSpacing:".08em"}}>
         {label.toUpperCase()}
@@ -169,5 +176,5 @@ function Info({
         </span>
       ) : null}
     </article>
-  );
+  ), uiLocale);
 }

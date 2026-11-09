@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -24,6 +26,8 @@ export default async function PirepsPage({
 }: {
   searchParams: Promise<{submitted?: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const query = await searchParams;
   const supabase = await createClient();
   const {
@@ -52,7 +56,7 @@ export default async function PirepsPage({
 
   const pireps = (data ?? []) as unknown as Pirep[];
 
-  return (
+  return localizeUi((
     <main className="kvaPremiumSubpage">
       <section className="kvaPremiumHero">
         <div className="kvaPremiumHeroInner">
@@ -100,5 +104,5 @@ export default async function PirepsPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

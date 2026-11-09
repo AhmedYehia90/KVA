@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import {getTranslations} from "next-intl/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 
@@ -39,6 +41,8 @@ function statusLabel(value: string) {
 }
 
 export async function LiveFlights() {
+  const uiLocale = await getUiLocale();
+
   const t = await getTranslations("Home.liveFlights");
   const supabase = createAdminClient();
 
@@ -63,7 +67,7 @@ export async function LiveFlights() {
 
   const flights = error ? [] : ((data ?? []) as unknown as Projection[]);
 
-  return (
+  return localizeUi((
     <section className="section">
       <div className="container">
         <div className="sectionHeader">
@@ -120,5 +124,5 @@ export async function LiveFlights() {
         )}
       </div>
     </section>
-  );
+  ), uiLocale);
 }

@@ -1,3 +1,7 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
@@ -5,10 +9,12 @@ import {createClient} from "@/lib/supabase/server";
 import {advanceOperationAction} from "./actions";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Flight Operations | Kalabsha Airlines",
   description: "Operate your active Kalabsha Airlines flight."
-};
+}, await getUiLocale());
+}
 
 const phases = ["boarding","pushback","taxi","takeoff","climb","cruise","descent","landing","arrived","completed"] as const;
 const actionLabels: Record<string, string> = {
@@ -41,6 +47,8 @@ function duration(minutes: number | null) {
 }
 
 export default async function OperationsPage({searchParams}: {searchParams: Promise<{error?: string}>}) {
+  const uiLocale = await getUiLocale();
+
   const query = await searchParams;
   const supabase = await createClient();
   const {data: {user}} = await supabase.auth.getUser();
@@ -77,7 +85,7 @@ export default async function OperationsPage({searchParams}: {searchParams: Prom
   if (error) throw new Error(`Unable to load operations: ${error.message}`);
 
   if (!data) {
-    return (
+    return localizeUi((
       <main className={styles.main}>
         <section className={styles.empty}>
           <p className="eyebrow">Flight Operations</p>
@@ -86,7 +94,7 @@ export default async function OperationsPage({searchParams}: {searchParams: Prom
           <Link className="button" href="/pilot/flights">Browse Flights</Link>
         </section>
       </main>
-    );
+    ), uiLocale);
   }
 
   const booking = data as unknown as Booking;
@@ -100,7 +108,7 @@ export default async function OperationsPage({searchParams}: {searchParams: Prom
   const actionLabel = actionLabels[booking.operation_phase];
   const events = [...(booking.flight_events ?? [])].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-  return (
+  return localizeUi((
     <main className={styles.main}>
       <section className={styles.shell}>
         <header className={styles.header}>
@@ -125,7 +133,7 @@ export default async function OperationsPage({searchParams}: {searchParams: Prom
         <section className={styles.summary}>
           <article><span>Aircraft</span><strong>{aircraft?.registration ?? "Pending"}</strong><small>{fleet ? `${fleet.icao_code} · ${fleet.manufacturer} ${fleet.model}` : "Aircraft unavailable"}</small></article>
           <article><span>Dispatch</span><strong>{dispatch?.dispatch_number ?? "Pending"}</strong><small>Operational release</small></article>
-          <article><span>Distance</span><strong>{route?.distance_nm ? `${route.distance_nm.toLocaleString("en-US")} NM` : "—"}</strong><small>Published route distance</small></article>
+          <article><span>Distance</span><strong>{route?.distance_nm ? `${route.distance_nm.toLocaleString(uiLocale)} NM` : "—"}</strong><small>Published route distance</small></article>
           <article><span>Block Time</span><strong>{duration(route?.scheduled_minutes ?? null)}</strong><small>Scheduled gate-to-gate</small></article>
         </section>
 
@@ -159,12 +167,12 @@ export default async function OperationsPage({searchParams}: {searchParams: Prom
             {events.length ? events.map((event) => (
               <article key={event.id}>
                 <strong>{event.event.replaceAll("_", " ")}</strong>
-                <span>{new Intl.DateTimeFormat("en-GB", {day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"}).format(new Date(event.created_at))}</span>
+                <span>{new Intl.DateTimeFormat(uiLocale, {day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"}).format(new Date(event.created_at))}</span>
               </article>
             )) : <p>No events recorded yet.</p>}
           </div>
         </section>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

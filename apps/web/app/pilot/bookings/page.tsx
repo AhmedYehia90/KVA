@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
@@ -42,6 +44,8 @@ function first<T>(value: T | T[] | null | undefined): T | null {
 }
 
 export default async function PilotBookingsPage() {
+  const uiLocale = await getUiLocale();
+
   const supabase = await createClient();
 
   const {
@@ -92,7 +96,7 @@ export default async function PilotBookingsPage() {
 
   const bookings = (data ?? []) as unknown as Booking[];
 
-  return (
+  return localizeUi((
     <main className="kvaPremiumSubpage">
       <section className="kvaPremiumHero">
         <div className="kvaPremiumHeroInner">
@@ -223,7 +227,7 @@ export default async function PilotBookingsPage() {
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 const labelStyle = {

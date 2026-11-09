@@ -76,7 +76,7 @@
 
 .flightBadge {
   position: absolute;
-  right: 14px;
+  inset-inline-end: 14px;
   bottom: 14px;
   padding: 7px 10px;
   border: 1px solid rgba(103, 213, 255, .33);

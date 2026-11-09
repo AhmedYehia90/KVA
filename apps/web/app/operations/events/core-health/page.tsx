@@ -1,3 +1,6 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 import {getCoreHealthData} from "@/lib/operations/getCoreHealthData";
@@ -14,6 +17,8 @@ export default async function CoreHealthPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();
   const params = await searchParams;
   const message = first(params.message);
@@ -21,7 +26,7 @@ export default async function CoreHealthPage({
   const data = await getCoreHealthData();
   const health = data.health as Record<string, string | number | null>;
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",padding:"72px 20px",background:"var(--bg)"}}>
       <section style={{maxWidth:1180,margin:"0 auto"}}>
         <Link href="/operations/events" style={{color:"var(--accent)",fontWeight:850}}>
@@ -95,7 +100,7 @@ export default async function CoreHealthPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 const cardStyle = {
@@ -111,7 +116,9 @@ const cardStyle = {
 } as const;
 
 function Notice({value, success = false}: {value:string; success?:boolean}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       marginTop:18,
       padding:15,
@@ -121,23 +128,27 @@ function Notice({value, success = false}: {value:string; success?:boolean}) {
     }}>
       {value}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{padding:20,border:"1px solid var(--border)",borderRadius:16,background:"var(--surface)"}}>
       <small style={{color:"var(--muted)",fontWeight:850}}>{label.toUpperCase()}</small>
       <strong style={{display:"block",marginTop:12,fontSize:"1.8rem",textTransform:"capitalize"}}>{value}</strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Panel({title, children}: {title:string; children:React.ReactNode}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section style={{marginTop:22,padding:22,border:"1px solid var(--border)",borderRadius:18,background:"var(--surface)"}}>
       <h2 style={{marginTop:0}}>{title}</h2>
       {children}
     </section>
-  );
+  ), uiLocale);
 }

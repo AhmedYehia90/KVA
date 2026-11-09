@@ -1,4 +1,6 @@
 "use client";
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 
 import Image from "next/image";
 import {useEffect, useState} from "react";
@@ -17,13 +19,15 @@ export function MarketplaceThumbnail({
   alt,
   badge,
 }: MarketplaceThumbnailProps) {
+  const uiLocale = useUiLocale();
+
   const [resolvedSrc, setResolvedSrc] = useState(src);
 
   useEffect(() => {
     setResolvedSrc(src);
   }, [src]);
 
-  return (
+  return localizeUi((
     <div className={styles.frame}>
       <Image
         src={resolvedSrc}
@@ -41,5 +45,5 @@ export function MarketplaceThumbnail({
       <span aria-hidden="true" className={styles.gloss} />
       {badge ? <span className={styles.badge}>{badge}</span> : null}
     </div>
-  );
+  ), uiLocale);
 }

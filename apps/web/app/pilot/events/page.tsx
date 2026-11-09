@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -8,10 +13,12 @@ import {
   withdrawGlobalEventAction
 } from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Global Aviation Events | KVA OS",
   description: "Shared aviation events across the KVA OS network."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -72,8 +79,8 @@ function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en-GB", {
+function formatDate(value: string, formatLocale: string = "en") {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short"
   }).format(new Date(value));
@@ -97,6 +104,8 @@ export default async function GlobalEventsHubPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const params = await searchParams;
   const message = first(params.message);
   const errorMessage = first(params.error);
@@ -137,7 +146,7 @@ export default async function GlobalEventsHubPage({
     (event) => event.myParticipation?.status === "completed"
   );
 
-  return (
+  return localizeUi((
     <main style={{minHeight:"100vh",background:"var(--bg)"}}>
       <section style={{
         padding:"74px 20px 120px",
@@ -274,7 +283,7 @@ export default async function GlobalEventsHubPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function EventSection({
@@ -288,7 +297,9 @@ function EventSection({
   events:GlobalEvent[];
   empty:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section style={{display:"grid",gap:15}}>
       <div>
         <p className="eyebrow">{eyebrow}</p>
@@ -307,17 +318,19 @@ function EventSection({
         </div>
       )}
     </section>
-  );
+  ), uiLocale);
 }
 
 function EventCard({event}: {event:GlobalEvent}) {
+  const uiLocale = useUiLocale();
+
   const participation = event.myParticipation;
   const percent = progressPercent(participation);
   const host =
     event.organizations.find((organization) => organization.role === "host") ??
     event.organizations[0];
 
-  return (
+  return localizeUi((
     <article style={panelStyle}>
       <div style={{
         display:"flex",
@@ -364,10 +377,10 @@ function EventCard({event}: {event:GlobalEvent}) {
             EVENT WINDOW
           </small>
           <strong style={{display:"block",marginTop:9}}>
-            {formatDate(event.startsAt)}
+            {formatDate(event.startsAt, uiLocale)}
           </strong>
           <span style={{display:"block",marginTop:4,color:"var(--muted)"}}>
-            to {formatDate(event.endsAt)}
+            to {formatDate(event.endsAt, uiLocale)}
           </span>
         </div>
       </div>
@@ -481,11 +494,13 @@ function EventCard({event}: {event:GlobalEvent}) {
         )}
       </div>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Badge({value}: {value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <span style={{
       padding:"6px 9px",
       borderRadius:999,
@@ -497,11 +512,13 @@ function Badge({value}: {value:string}) {
     }}>
       {value}
     </span>
-  );
+  ), uiLocale);
 }
 
 function Metric({label,value}: {label:string;value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       padding:14,
       border:"1px solid rgba(105,183,231,.13)",
@@ -519,7 +536,7 @@ function Metric({label,value}: {label:string;value:string}) {
         {value}
       </strong>
     </article>
-  );
+  ), uiLocale);
 }
 
 function Notice({
@@ -529,7 +546,9 @@ function Notice({
   children:ReactNode;
   success?:boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       padding:15,
       borderRadius:13,
@@ -540,7 +559,7 @@ function Notice({
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -552,7 +571,9 @@ function Stat({
   value:string;
   subValue:string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{
       minHeight:130,
       padding:21,
@@ -583,7 +604,7 @@ function Stat({
         {subValue}
       </span>
     </article>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

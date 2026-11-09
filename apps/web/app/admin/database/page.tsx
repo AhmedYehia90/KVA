@@ -1,11 +1,15 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import {getFleetTypes} from "@/lib/data/fleet";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 
 export default async function DatabaseOverviewPage() {
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();
   const fleetTypes = await getFleetTypes();
 
-  return (
+  return localizeUi((
     <main className="section">
       <div className="container">
         <div className="eyebrow">KVA v3.1</div>
@@ -31,5 +35,5 @@ export default async function DatabaseOverviewPage() {
         </div>
       </div>
     </main>
-  );
+  ), uiLocale);
 }

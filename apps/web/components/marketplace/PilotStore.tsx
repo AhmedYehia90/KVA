@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import {purchasePilotItemAction} from "@/app/pilot/economy/actions";
 import {MarketplaceThumbnail} from "@/components/marketplace/MarketplaceThumbnail";
 import type {
@@ -34,7 +36,9 @@ function visualStateClass(state: string) {
 }
 
 export function PilotStore({items, balance, money}: PilotStoreProps) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className={styles.shell} id="pilot-marketplace">
       <div className={styles.content}>
         <div className={styles.headingRow}>
@@ -186,5 +190,5 @@ export function PilotStore({items, balance, money}: PilotStoreProps) {
         </div>
       </div>
     </section>
-  );
+  ), uiLocale);
 }

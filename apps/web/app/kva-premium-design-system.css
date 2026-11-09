@@ -450,17 +450,18 @@ body {
   position: relative;
   z-index: 300;
   height: var(--kva-topbar-height);
-  margin-left: var(--kva-sidebar-width);
+  margin-inline-start: var(--kva-sidebar-width);
 }
 
 .kvaSidebar {
   position: fixed;
-  inset: 0 auto 0 0;
+  inset-block: 0;
+  inset-inline-start: 0;
   z-index: 330;
   width: var(--kva-sidebar-width);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--kva-border-soft);
+  border-inline-end: 1px solid var(--kva-border-soft);
   background:
     linear-gradient(180deg, rgba(3, 14, 29, .995), rgba(1, 7, 16, .998));
   box-shadow: 14px 0 44px rgba(0, 0, 0, .16);
@@ -593,7 +594,8 @@ body {
 
 .kvaTopbar {
   position: fixed;
-  inset: 0 0 auto var(--kva-sidebar-width);
+  inset-block-start: 0;
+  inset-inline: var(--kva-sidebar-width) 0;
   z-index: 320;
   min-height: var(--kva-topbar-height);
   display: flex;
@@ -643,7 +645,7 @@ body {
 }
 
 .kvaTopbarActions {
-  margin-left: auto;
+  margin-inline-start: auto;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -708,7 +710,7 @@ body {
 /* Offset all existing pages without changing their application logic. */
 .kvaPremiumShell ~ main,
 .kvaPremiumShell ~ .footer {
-  margin-left: var(--kva-sidebar-width);
+  margin-inline-start: var(--kva-sidebar-width);
 }
 
 .kvaPremiumShellAuth ~ .footer {
@@ -830,7 +832,7 @@ body {
 
 .kvaPremiumHeroSide {
   align-self: center;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .kvaPremiumHeroMetaCard {
@@ -864,7 +866,7 @@ body {
    -------------------------------------------------------------------------- */
 
 .kvaMobileNav {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .kvaMobileNav summary {
@@ -887,7 +889,7 @@ body {
 .kvaMobilePanel {
   position: absolute;
   top: calc(100% + 8px);
-  right: 12px;
+  inset-inline-end: 12px;
   width: min(360px, calc(100vw - 24px));
   max-height: calc(100vh - 92px);
   padding: 10px;
@@ -911,7 +913,7 @@ body {
 
   .kvaPremiumShell {
     height: var(--kva-topbar-height);
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .kvaSidebar {
@@ -919,7 +921,7 @@ body {
   }
 
   .kvaTopbar {
-    left: 0;
+    inset-inline-start: 0;
     min-height: var(--kva-topbar-height);
     padding: 0 14px;
   }
@@ -953,7 +955,7 @@ body {
 
   .kvaPremiumShell ~ main,
   .kvaPremiumShell ~ .footer {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .kvaPremiumShellAuth ~ .footer {
@@ -961,7 +963,7 @@ body {
   }
 
   .kvaTopbarActions {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 
   .kvaTopbarActions .button {
@@ -1003,7 +1005,7 @@ body {
   .kvaPremiumHeroMetaCard {
     width: 100%;
     max-width: none;
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   .kvaPremiumSubpageBodyLift {
@@ -1446,7 +1448,7 @@ body {
   width: 15px;
   height: 15px;
   flex: 0 0 15px;
-  margin-left: auto;
+  margin-inline-start: auto;
   color: #9de7ff;
   stroke-width: 1.8;
   filter: drop-shadow(0 0 6px rgba(32, 189, 243, .38));
@@ -1487,7 +1489,7 @@ body {
   content: "";
   position: absolute;
   top: 7px;
-  right: -18px;
+  inset-inline-end: -18px;
   width: 42px;
   height: 30px;
   border-radius: 999px;
@@ -1595,7 +1597,7 @@ body:has(.kvaPilotOfficeV70) .kvaTopbarContext {
 }
 
 body:has(.kvaPilotOfficeV70) .kvaTopbarActions {
-  margin-left: auto;
+  margin-inline-start: auto;
   pointer-events: auto;
 }
 
@@ -1659,8 +1661,8 @@ body:has(.kvaPilotOfficeV80) main {
 body:has(.kvaPilotOfficeR3F) .kvaTopbar {
   position: fixed !important;
   top: 0 !important;
-  left: var(--kva-sidebar-width) !important;
-  right: 0 !important;
+  inset-inline-start: var(--kva-sidebar-width) !important;
+  inset-inline-end: 0 !important;
   z-index: 120 !important;
   min-height: 72px !important;
   justify-content: flex-end !important;
@@ -1680,7 +1682,7 @@ body:has(.kvaPilotOfficeR3F) .kvaTopbarContext {
 }
 
 body:has(.kvaPilotOfficeR3F) .kvaTopbarActions {
-  margin-left: auto !important;
+  margin-inline-start: auto !important;
   pointer-events: auto !important;
 }
 
@@ -1709,7 +1711,7 @@ body:has(.kvaPilotOfficeR3F) .kvaTopbarContext {
 }
 
 body:has(.kvaPilotOfficeR3F) .kvaTopbarActions {
-  margin-left: auto;
+  margin-inline-start: auto;
   pointer-events: auto;
 }
 

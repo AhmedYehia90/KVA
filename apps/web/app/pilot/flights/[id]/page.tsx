@@ -1,3 +1,7 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound, redirect} from "next/navigation";
@@ -6,10 +10,12 @@ import {OfficialFleetImage} from "@/components/OfficialFleetImage";
 import {bookFlightAction} from "./actions";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Flight Details | Kalabsha Airlines",
   description: "Review route details and book a Kalabsha Airlines flight."
-};
+}, await getUiLocale());
+}
 
 type Airport = {
   icao_code: string;
@@ -62,6 +68,8 @@ export default async function FlightDetailsPage({
   params: Promise<{id: string}>;
   searchParams: Promise<{error?: string}>;
 }) {
+  const uiLocale = await getUiLocale();
+
   const {id} = await params;
   const {error: actionError} = await searchParams;
 
@@ -131,7 +139,7 @@ export default async function FlightDetailsPage({
   const fleet = first(route.fleet_type);
   const alreadyBooked = activeBooking?.route_id === route.id;
 
-  return (
+  return localizeUi((
     <main>
       <section className={styles.hero}>
         <div className="container">
@@ -219,7 +227,7 @@ export default async function FlightDetailsPage({
                 <span>Distance</span>
                 <strong>
                   {route.distance_nm
-                    ? `${route.distance_nm.toLocaleString("en-US")} NM`
+                    ? `${route.distance_nm.toLocaleString(uiLocale)} NM`
                     : "—"}
                 </strong>
                 <small>Published route distance</small>
@@ -289,5 +297,5 @@ export default async function FlightDetailsPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }

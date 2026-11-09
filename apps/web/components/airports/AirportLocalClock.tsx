@@ -1,4 +1,6 @@
 "use client";
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 
 import {useEffect, useMemo, useState} from "react";
 
@@ -7,6 +9,8 @@ export default function AirportLocalClock({
 }: {
   timezone?: string | null;
 }) {
+  const uiLocale = useUiLocale();
+
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -16,7 +20,7 @@ export default function AirportLocalClock({
 
   const formatter = useMemo(() => {
     try {
-      return new Intl.DateTimeFormat("en-GB", {
+      return new Intl.DateTimeFormat(uiLocale, {
         timeZone: timezone || "UTC",
         weekday: "short",
         day: "2-digit",
@@ -26,7 +30,7 @@ export default function AirportLocalClock({
         hour12: false,
       });
     } catch {
-      return new Intl.DateTimeFormat("en-GB", {
+      return new Intl.DateTimeFormat(uiLocale, {
         timeZone: "UTC",
         weekday: "short",
         day: "2-digit",
@@ -36,12 +40,12 @@ export default function AirportLocalClock({
         hour12: false,
       });
     }
-  }, [timezone]);
+  }, [timezone, uiLocale]);
 
-  return (
+  return localizeUi((
     <span suppressHydrationWarning>
       {formatter.format(now)}
       {timezone ? ` · ${timezone}` : " · UTC"}
     </span>
-  );
+  ), uiLocale);
 }

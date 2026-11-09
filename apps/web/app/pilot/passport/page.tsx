@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import type {ReactNode} from "react";
 import Link from "next/link";
@@ -5,10 +10,12 @@ import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 import {updatePassportVisibilityAction} from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Universal Pilot Passport | KVA OS",
   description: "Portable pilot identity, memberships and verified experience."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +34,8 @@ export default async function PilotPassportPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const params = await searchParams;
   const message = first(params.message);
   const errorMessage = first(params.error);
@@ -103,7 +112,7 @@ if (firstError || !passportResult.data || !profileResult.data) {
     .filter((item) => item.pirep_status === "approved")
     .reduce((sum, item) => sum + Number(item.block_minutes ?? 0), 0);
 
-  return (
+  return localizeUi((
     <main className="kvaPassportPage" style={{minHeight:"100vh",padding:"72px 20px 100px",background:"var(--bg)"}}>
       <section style={{maxWidth:1180,margin:"0 auto"}}>
         <Link href="/pilot/dashboard" style={{color:"var(--accent)",fontWeight:850}}>
@@ -225,7 +234,7 @@ if (firstError || !passportResult.data || !profileResult.data) {
                       {departure?.icao_code ?? "—"} → {arrival?.icao_code ?? "—"}
                     </small>
                   </div>
-                  <div style={{textAlign:"right"}}>
+                  <div style={{textAlign:"end"}}>
                     <strong>{entry.block_minutes} min</strong>
                     <small style={mutedStyle}>{entry.pirep_status}</small>
                   </div>
@@ -236,7 +245,7 @@ if (firstError || !passportResult.data || !profileResult.data) {
         </section>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {
@@ -274,7 +283,9 @@ const mutedStyle = {
 } as const;
 
 function Notice({children, success = false}: {children:ReactNode; success?:boolean}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={{
       marginTop:18,
       padding:15,
@@ -284,14 +295,16 @@ function Notice({children, success = false}: {children:ReactNode; success?:boole
     }}>
       {children}
     </div>
-  );
+  ), uiLocale);
 }
 
 function Stat({label, value}: {label:string; value:string}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article style={{padding:20,border:"1px solid var(--border)",borderRadius:16,background:"var(--surface)"}}>
       <small style={{color:"var(--muted)",fontWeight:850}}>{label.toUpperCase()}</small>
       <strong style={{display:"block",marginTop:12,fontSize:"1.35rem"}}>{value}</strong>
     </article>
-  );
+  ), uiLocale);
 }

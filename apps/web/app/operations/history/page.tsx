@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
@@ -8,10 +13,12 @@ import {
   updateHistoryEntryAction,
 } from "./actions";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Museum Curator | KVA OS",
   description: "Operations administration for curated airline history.",
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -64,8 +71,8 @@ function evidenceText(
   return typeof value === "string" ? value : "";
 }
 
-function dateTime(value: string) {
-  return new Intl.DateTimeFormat("en-GB", {
+function dateTime(value: string, formatLocale: string = "en") {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -76,6 +83,8 @@ export default async function MuseumCuratorPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   await requireOperationsConsoleAdmin();
 
   const query = await searchParams;
@@ -113,7 +122,7 @@ export default async function MuseumCuratorPage({
   const published = entries.filter((entry) => entry.is_published).length;
   const drafts = entries.length - published;
 
-  return (
+  return localizeUi((
     <main style={{minHeight: "100vh", background: "var(--bg)"}}>
       <section
         style={{
@@ -353,7 +362,7 @@ export default async function MuseumCuratorPage({
                       </span>
                     </div>
                     <time style={{color: "var(--muted)", fontSize: ".8rem"}}>
-                      {dateTime(audit.created_at)}
+                      {dateTime(audit.created_at, uiLocale)}
                     </time>
                   </div>
                 ))
@@ -373,7 +382,7 @@ export default async function MuseumCuratorPage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -385,7 +394,9 @@ function Stat({
   value: string;
   small?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <div style={statCard}>
       <small style={fieldLabel}>{label}</small>
       <strong
@@ -398,7 +409,7 @@ function Stat({
         {value}
       </strong>
     </div>
-  );
+  ), uiLocale);
 }
 
 function Field({
@@ -416,7 +427,9 @@ function Field({
   defaultValue?: string;
   required?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={fieldWrap}>
       <span style={fieldLabel}>{label}</span>
       <input
@@ -428,7 +441,7 @@ function Field({
         style={input}
       />
     </label>
-  );
+  ), uiLocale);
 }
 
 function TextArea({
@@ -444,7 +457,9 @@ function TextArea({
   defaultValue?: string;
   required?: boolean;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={{...fieldWrap, gridColumn: "span 2"}}>
       <span style={fieldLabel}>{label}</span>
       <textarea
@@ -456,7 +471,7 @@ function TextArea({
         style={{...input, resize: "vertical", lineHeight: 1.5}}
       />
     </label>
-  );
+  ), uiLocale);
 }
 
 function SelectField({
@@ -468,7 +483,9 @@ function SelectField({
   name: string;
   defaultValue?: string;
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <label style={fieldWrap}>
       <span style={fieldLabel}>{label}</span>
       <select name={name} defaultValue={defaultValue} style={input}>
@@ -479,7 +496,7 @@ function SelectField({
         ))}
       </select>
     </label>
-  );
+  ), uiLocale);
 }
 
 const topLink = {

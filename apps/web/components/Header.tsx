@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {getLocale as getUiLocale} from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
 import {getTranslations} from "next-intl/server";
@@ -19,6 +21,8 @@ const publicNavigation = [
 ] as const;
 
 export async function Header() {
+  const uiLocale = await getUiLocale();
+
   const t = await getTranslations("Navigation");
   const common = await getTranslations("Common");
   const supabase = await createClient();
@@ -50,7 +54,7 @@ export async function Header() {
   const displayName = user?.email?.split("@")[0] ?? "Pilot";
   const initial = displayName.slice(0, 1).toUpperCase();
 
-  return (
+  return localizeUi((
     <div
       className={`kvaPremiumShell ${
         user ? "kvaPremiumShellAuth" : "kvaPremiumShellPublic"
@@ -174,5 +178,5 @@ export async function Header() {
         </details>
       </header>
     </div>
-  );
+  ), uiLocale);
 }

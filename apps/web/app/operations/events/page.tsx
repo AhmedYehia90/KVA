@@ -1,3 +1,8 @@
+import {localizeMetadata} from "@/i18n/metadata";
+
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
+import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {
@@ -9,10 +14,12 @@ import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 import {getEventConsoleData} from "@/lib/operations/getEventConsoleData";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizeMetadata({
   title: "Event Operations Console | KVA OS",
   description: "Internal KVA event stream and projector operations console."
-};
+}, await getUiLocale());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -26,10 +33,10 @@ function valueOf(
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-function formatDate(value: string | null | undefined): string {
+function formatDate(value: string | null | undefined, formatLocale: string = "en"): string {
   if (!value) return "—";
 
-  return new Intl.DateTimeFormat("en-GB", {
+  return new Intl.DateTimeFormat(formatLocale, {
     dateStyle: "medium",
     timeStyle: "medium"
   }).format(new Date(value));
@@ -65,6 +72,8 @@ export default async function EventOperationsConsolePage({
 }: {
   searchParams: SearchParams;
 }) {
+  const uiLocale = await getUiLocale();
+
   const user = await requireOperationsConsoleAdmin();
   const params = await searchParams;
   const eventType = valueOf(params.type).trim();
@@ -77,7 +86,7 @@ export default async function EventOperationsConsolePage({
     status
   });
 
-  return (
+  return localizeUi((
     <main className={styles.page}>
       <section className={styles.hero}>
         <div className="container">
@@ -176,7 +185,7 @@ export default async function EventOperationsConsolePage({
                           <strong>{event.aggregate_type}</strong>
                           <small>{shorten(event.aggregate_id)}</small>
                         </td>
-                        <td>{formatDate(event.occurred_at)}</td>
+                        <td>{formatDate(event.occurred_at, uiLocale)}</td>
                         <td>
                           <small>{shorten(event.correlation_id)}</small>
                         </td>
@@ -230,7 +239,7 @@ export default async function EventOperationsConsolePage({
                       </div>
 
                       <div className={styles.processingMeta}>
-                        <span>{formatDate(record.updated_at)}</span>
+                        <span>{formatDate(record.updated_at, uiLocale)}</span>
                         {record.last_error ? (
                           <p>{record.last_error}</p>
                         ) : null}
@@ -295,7 +304,7 @@ export default async function EventOperationsConsolePage({
                         </div>
                         <div>
                           <dt>Updated</dt>
-                          <dd>{formatDate(projection.last_event_at)}</dd>
+                          <dd>{formatDate(projection.last_event_at, uiLocale)}</dd>
                         </div>
                       </dl>
                     </article>
@@ -398,7 +407,7 @@ export default async function EventOperationsConsolePage({
                             {entry.status}
                           </span>
                         </td>
-                        <td>{formatDate(entry.created_at)}</td>
+                        <td>{formatDate(entry.created_at, uiLocale)}</td>
                         <td>
                           <details>
                             <summary>Inspect</summary>
@@ -427,7 +436,7 @@ export default async function EventOperationsConsolePage({
         </div>
       </section>
     </main>
-  );
+  ), uiLocale);
 }
 
 function Stat({
@@ -439,7 +448,9 @@ function Stat({
   value: number;
   tone?: "danger" | "warning";
 }) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <article
       className={`${styles.stat} ${
         tone === "danger"
@@ -450,7 +461,7 @@ function Stat({
       }`}
     >
       <span>{label}</span>
-      <strong>{value.toLocaleString("en-US")}</strong>
+      <strong>{value.toLocaleString(uiLocale)}</strong>
     </article>
-  );
+  ), uiLocale);
 }

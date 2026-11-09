@@ -1,3 +1,5 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import Link from "next/link";
 
 type PirepItem = {
@@ -13,7 +15,9 @@ type PirepItem = {
 };
 
 export function RecentPireps({items}: {items: PirepItem[]}) {
-  return (
+  const uiLocale = useUiLocale();
+
+  return localizeUi((
     <section className="kvaOperationsPanel kvaRecentPirepsPanel" style={panelStyle}>
       <div style={headingStyle}>
         <div>
@@ -56,7 +60,7 @@ export function RecentPireps({items}: {items: PirepItem[]}) {
         ))}
       </div>
     </section>
-  );
+  ), uiLocale);
 }
 
 const panelStyle = {

@@ -1,9 +1,13 @@
+import {localizeUi} from "@/i18n/localize-ui";
+import {useLocale as useUiLocale} from "next-intl";
 import {useTranslations} from "next-intl";
 
 export function BookingWidget() {
+  const uiLocale = useUiLocale();
+
   const t = useTranslations("Home.search");
 
-  return (
+  return localizeUi((
     <section className="bookingWrap">
       <div className="container">
         <form className="bookingCard" action="/pilot/flights" method="get">
@@ -57,5 +61,5 @@ export function BookingWidget() {
         </form>
       </div>
     </section>
-  );
+  ), uiLocale);
 }
