@@ -58,6 +58,7 @@ test('privacy policy has matching Arabic/English sections and makes no invented 
   assert.ok(privacyPolicy.ar.sections.length >= 8);
   for (const locale of ['ar', 'en']) {
     assert.ok(privacyPolicy[locale].sections.every(section => section.title && section.body));
-    assert.ok(!JSON.stringify(privacyPolicy[locale]).includes('@'));
+    assert.ok(JSON.stringify(privacyPolicy[locale]).includes('admin@kvafly.com'));
+    assert.ok(!JSON.stringify(privacyPolicy[locale]).includes('private@example.invalid'));
   }
 });

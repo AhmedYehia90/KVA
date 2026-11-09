@@ -14,6 +14,7 @@ export function Partners() {
           <div className="eyebrow">{t("eyebrow")}</div>
           <h2>{t("title")}</h2>
           <p className="muted">{t("description")}</p>
+          <p className="muted">Network references do not imply affiliation or approval.</p>
         </div>
 
         <div className="partnerMarks" aria-label={t("aria")}>

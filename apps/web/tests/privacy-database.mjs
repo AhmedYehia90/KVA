@@ -81,4 +81,28 @@ await db.exec('reset role;');
 assert.equal((await db.query('select count(*)::int as count from profiles')).rows[0].count,3);
 assert.equal((await db.query('select visibility from pilot_passports where pilot_id=$1',[other])).rows[0].visibility,'private');
 console.log('PASS no records deleted and passport visibility preserved');
+
+await db.exec(`
+create table flight_bookings(id uuid primary key,pilot_id uuid);
+create table flights(id uuid primary key,pilot_id uuid);
+create table pireps(id uuid primary key,pilot_id uuid);
+grant select,insert,update on flight_bookings,flights,pireps to authenticated;
+grant insert on flight_bookings,flights,pireps to anon;
+create function public.test_definer_booking() returns void language plpgsql security definer set search_path=public as $$ begin insert into flight_bookings values(gen_random_uuid(),auth.uid());end; $$;
+grant execute on function public.test_definer_booking() to authenticated;
+`);
+const activeMigration=readFileSync(resolve(root,'supabase/migrations/20261109130000_active_pilot_operations.sql'),'utf8');
+await db.exec(activeMigration);await db.exec(activeMigration);
+await db.exec(`select set_config('request.jwt.claim.sub','${owner}',false);set role authenticated;`);
+await db.query('select public.test_definer_booking()');
+assert.equal((await db.query('select id from flight_bookings')).rows.length,1);
+await db.exec(`reset role;update profiles set status='pending' where id='${owner}';set role authenticated;`);
+await assert.rejects(db.query('select public.test_definer_booking()'),error=>error.code==='42501');
+for(const table of ['flight_bookings','flights','pireps']) await assert.rejects(db.query(`insert into ${table} values(gen_random_uuid(),$1)`,[owner]),error=>error.code==='42501');
+await db.exec("reset role;select set_config('request.jwt.claim.sub','',false);set role anon;");
+await assert.rejects(db.query('insert into flight_bookings values(gen_random_uuid(),$1)',[owner]),error=>error.code==='42501');
+await db.exec('reset role;');
+await db.query('insert into flight_bookings values(gen_random_uuid(),$1)',[owner]);
+assert.equal((await db.query('select id from flight_bookings')).rows.length,2);
+console.log('PASS active-pilot triggers protect direct writes and SECURITY DEFINER RPCs; trusted background writes preserved');
 await db.close();

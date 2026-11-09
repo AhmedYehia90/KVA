@@ -47,6 +47,7 @@ function Footer() {
             <Link href="/about">{t("about")}</Link>
             <Link href="/regulations">Regulations</Link>
             <Link href="/privacy">Privacy Policy</Link>
+            <a href="mailto:admin@kvafly.com">Contact administration</a>
           </div>
         </div>
 

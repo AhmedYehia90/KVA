@@ -6,7 +6,7 @@
 - `/regulations`: public rendering of `docs/CONSTITUTION.md`, including all ten original principles and the bilingual Pilot Data Protection & Privacy section. The document is explicitly included in Next.js output tracing.
 - Footer: privacy and regulations links; existing styles and authenticated-footer behavior preserved.
 - Public passport: callsign replaces full name. An explicit public DTO excludes name, email, user ID and unexpected nested fields, including when an older RPC returns them. Invalid callsigns fall back to a generic pilot label.
-- No live database migration, visibility change, Git push or deployment has been performed for this change.
+- The web changes were published in commit 6aaf294. No live database migration or visibility change was performed by that deployment. See FINAL_SECURITY_READINESS.md for the subsequent application hardening and remaining database verification.
 
 ## Access review
 

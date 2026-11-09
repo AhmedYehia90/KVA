@@ -12,7 +12,7 @@ export const privacyPolicy = {
       {title: "External networks", body: "Showing a network name or logo does not connect your account. Linking an external service such as IVAO requires a separate authorized connection and an explanation of the data exchanged. Do not provide an external-service password to KVA OS."},
       {title: "Retention and security", body: "Information should be retained only as needed for the account, platform operations, security and documented audit requirements. Deletion requests are reviewed; retained records should be restricted or de-identified where appropriate. Access controls reduce risk but cannot guarantee that information will never be disclosed."},
       {title: "Your choices and requests", body: "You can change passport visibility from your pilot passport page. Making it private prevents future public access through the platform, but cannot recall copies already obtained elsewhere. Request access, correction, deletion or restriction through your airline's established administration channel; administrators verify your identity and explain the outcome. This page does not introduce an automated deletion service."},
-      {title: "Questions and changes", body: "Contact the Kalabsha Airlines administration through its established communication channel for privacy questions. Material changes to the purposes or public disclosure of data should be explained before they take effect. The date above identifies this policy revision."},
+      {title: "Questions and changes", body: "Contact the Kalabsha Airlines administration at admin@kvafly.com for privacy questions. Material changes to the purposes or public disclosure of data should be explained before they take effect. The date above identifies this policy revision."},
     ],
   },
   ar: {
@@ -28,7 +28,7 @@ export const privacyPolicy = {
       {title: "الشبكات الخارجية", body: "عرض اسم شبكة أو شعارها لا يربط حسابك بها. يتطلب ربط خدمة خارجية مثل IVAO اتصالًا منفصلًا مفوّضًا وتوضيح البيانات المتبادلة. لا تقدّم كلمة مرور الخدمة الخارجية إلى KVA OS."},
       {title: "الاحتفاظ بالبيانات وأمانها", body: "يجب الاحتفاظ بالمعلومات للمدة اللازمة للحساب وتشغيل المنصة والأمان ومتطلبات التدقيق الموثّقة فقط. تُراجع طلبات الحذف مع تقييد السجلات المحتفظ بها أو إزالة هويتها حيثما أمكن. تقلّل ضوابط الوصول المخاطر لكنها لا تضمن استحالة كشف المعلومات."},
       {title: "اختياراتك وطلباتك", body: "يمكنك تغيير ظهور الجواز من صفحة جواز الطيار. جعله خاصًا يمنع الوصول العام اللاحق عبر المنصة، لكنه لا يسترجع نسخًا حصلت عليها جهات أخرى سابقًا. اطلب الاطلاع أو التصحيح أو الحذف أو تقييد المعالجة عبر قناة إدارة شركتك المعتمدة؛ تتحقق الإدارة من هويتك وتوضّح نتيجة الطلب. لا تُنشئ هذه الصفحة خدمة حذف تلقائي."},
-      {title: "الاستفسارات والتحديثات", body: "للاستفسارات المتعلقة بالخصوصية، تواصل مع إدارة طيران كلابشة عبر قناة التواصل المعتمدة لديها. يجب توضيح التغييرات الجوهرية في أغراض المعالجة أو الكشف العام قبل سريانها. يحدد التاريخ أعلاه نسخة هذه السياسة."},
+      {title: "الاستفسارات والتحديثات", body: "للاستفسارات المتعلقة بالخصوصية، تواصل مع إدارة طيران كلابشة عبر admin@kvafly.com. يجب توضيح التغييرات الجوهرية في أغراض المعالجة أو الكشف العام قبل سريانها. يحدد التاريخ أعلاه نسخة هذه السياسة."},
     ],
   },
 } as const;

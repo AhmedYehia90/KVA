@@ -273,18 +273,7 @@ const hero = {
   padding: "26px 0",
 } as const;
 
-const heroTitle = {
-  margin: "12px 0 14px",
-  fontSize: "clamp(3.2rem,7vw,6rem)",
-  letterSpacing: "-.06em",
-} as const;
 
-const heroText = {
-  margin: 0,
-  color: "var(--muted)",
-  fontSize: "1.05rem",
-  lineHeight: 1.8,
-} as const;
 
 const worldCard = {
   minWidth: 270,

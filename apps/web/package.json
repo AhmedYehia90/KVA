@@ -9,29 +9,33 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test:i18n": "node --test i18n/localize-ui.test.mjs",
-    "test": "pnpm test:i18n && pnpm test:privacy",
-    "test:privacy": "node --test tests/privacy.test.mjs"
+    "test": "pnpm test:i18n && pnpm test:privacy && pnpm test:auth",
+    "test:privacy": "node --test tests/privacy.test.mjs",
+    "test:auth": "node --test tests/auth-security.test.mjs"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.8",
-    "@react-three/fiber": "^9.7.0",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.49.1",
+    "@supabase/supabase-js": "^2.119.0",
     "lucide-react": "^0.468.0",
-    "next": "^15.1.0",
-    "next-intl": "^4.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "^15.5.29",
+    "next-intl": "^4.14.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "three": "^0.185.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.0.0",
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@eslint/eslintrc": "^3.3.7",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@types/three": "0.185.4",
-    "eslint": "^9.0.0",
-    "eslint-config-next": "15.5.22",
-    "typescript": "^5.7.0"
+    "eslint": "^9.39.5",
+    "eslint-config-next": "15.5.29",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

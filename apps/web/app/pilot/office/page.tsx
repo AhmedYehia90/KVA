@@ -1,6 +1,7 @@
 import {localizeUi} from "@/i18n/localize-ui";
 import {useLocale as useUiLocale} from "next-intl";
 import {getLocale as getUiLocale} from "next-intl/server";
+import Image from "next/image";
 import type {LucideIcon} from "lucide-react";
 import {Bot, BriefcaseBusiness, Gauge, PlaneTakeoff, ShieldCheck, Trophy} from "lucide-react";
 import {redirect} from "next/navigation";
@@ -249,7 +250,7 @@ export default async function PilotOfficePage() {
         <div className={styles.window} aria-label="Night airport visible through the office windows"><span className={styles.windowShade} /><span className={styles.windowFrameOne} /><span className={styles.windowFrameTwo} /></div>
         <aside className={styles.brandWall} aria-label="Kalabsha Airlines Pilot Office" />
         <div className={styles.displayShelf} aria-hidden="true"><span className={styles.shelfLight} /><span className={styles.books} /><span className={styles.plant} /><span className={styles.shelfLight} /></div>
-        <img className={styles.referenceForeground} src="/pilot-office/office-reference.png" alt="" aria-hidden="true" draggable={false} />
+        <Image width={1348} height={935} priority className={styles.referenceForeground} src="/pilot-office/office-reference.png" alt="" aria-hidden="true" draggable={false} />
         <div className={styles.monitorBank}><RouteMonitor departure={departure} arrival={arrival} /><FlightMonitor booking={booking} route={route} aircraft={aircraft} dispatch={dispatch} /><AirportMonitor airport={departure} /></div>
         <section className={styles.stats} aria-label="Live pilot overview">
           {overview.map(({Icon, ...card}) => <article className={styles.statCard} key={card.label}>

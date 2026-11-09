@@ -4,10 +4,8 @@ import {localizeUi} from "@/i18n/localize-ui";
 import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import Link from "next/link";
-import {redirect} from "next/navigation";
-import {createClient} from "@/lib/supabase/server";
 import {getOperationsData} from "@/lib/operations/getOperationsData";
-import {isOperationsConsoleAdminEmail} from "@/lib/operations/console-auth";
+import {requireOperationsConsoleAdmin} from "@/lib/operations/console-auth";
 import {OperationsStats} from "@/components/operations/OperationsStats";
 import {LiveFlights} from "@/components/operations/LiveFlights";
 import {FleetSummary} from "@/components/operations/FleetSummary";
@@ -23,18 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function OperationsPage() {
   const uiLocale = await getUiLocale();
 
-  const supabase = await createClient();
-
-  const {
-    data: {user}
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/pilots/login");
-  }
-
+  await requireOperationsConsoleAdmin();
   const data = await getOperationsData();
-  const canOpenEventConsole = isOperationsConsoleAdminEmail(user.email);
+  const canOpenEventConsole = true;
 
   return localizeUi((
     <main className="kvaOperationsPage" style={{minHeight:"100vh",background:"var(--bg)"}}>

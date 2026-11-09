@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import {getTranslations} from "next-intl/server";
 import {createClient} from "@/lib/supabase/server";
+import {isOperationsConsoleAdminEmail} from "@/lib/operations/console-auth";
+import {activeOperationsStaff} from "@/lib/auth/security";
 import {LanguageSelector} from "./LanguageSelector";
 import {signOutAction} from "./actions";
 import {
@@ -31,6 +33,9 @@ export async function Header() {
     data: {user},
   } = await supabase.auth.getUser();
 
+  const identity = user ? (await supabase.from("profiles").select("callsign,role,status").eq("id", user.id).maybeSingle()).data : null;
+  const staff = Boolean(user && isOperationsConsoleAdminEmail(user.email) && activeOperationsStaff(identity));
+
   const authenticatedNavigation: PremiumNavItem[] = [
     {href: "/pilot/dashboard", label: "Dashboard", icon: "⌂"},
     {href: "/pilot/passport", label: "Pilot Passport", icon: "◉"},
@@ -50,8 +55,8 @@ export async function Header() {
     icon: item.icon,
   }));
 
-  const navigationItems = user ? authenticatedNavigation : publicItems;
-  const displayName = user?.email?.split("@")[0] ?? "Pilot";
+  const navigationItems = user ? authenticatedNavigation.filter(item => item.href !== "/operations" || staff) : publicItems;
+  const displayName = identity?.callsign && /^[A-Z0-9-]{2,32}$/i.test(identity.callsign) ? identity.callsign : "Pilot";
   const initial = displayName.slice(0, 1).toUpperCase();
 
   return localizeUi((

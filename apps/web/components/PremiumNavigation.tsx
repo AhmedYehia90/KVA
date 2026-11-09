@@ -18,7 +18,6 @@ import {
   House,
   Info,
   Landmark,
-  Layers3,
   Plane,
   PlaneTakeoff,
   RadioTower,

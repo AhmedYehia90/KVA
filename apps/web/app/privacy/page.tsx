@@ -22,6 +22,7 @@ export default async function PrivacyPage() {
           <h2>{section.title}</h2><p>{section.body}</p>
         </section>
       ))}
+      <p><a href="mailto:admin@kvafly.com">{locale === "ar" ? "التواصل بشأن الخصوصية" : "Privacy contact"}: admin@kvafly.com</a></p>
       <Link href="/regulations">{locale === "ar" ? "اللائحة وحماية بيانات الطيارين" : "Regulations and pilot data protection"}</Link>
     </article></main>
   );

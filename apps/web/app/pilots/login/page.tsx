@@ -1,15 +1,23 @@
 import {localizeUi} from "@/i18n/localize-ui";
 import {getLocale as getUiLocale} from "next-intl/server";
 import {login} from "./actions";
+import Link from "next/link";
 
 type Props = {
-  searchParams: Promise<{error?: string}>;
+  searchParams: Promise<{error?: string; message?: string}>;
 };
 
 export default async function PilotLoginPage({searchParams}: Props) {
   const uiLocale = await getUiLocale();
 
-  const {error} = await searchParams;
+  const {error, message} = await searchParams;
+  const errorMessages: Record<string, string> = {
+    missing: "Enter your email and password.",
+    invalid: "The email or password is incorrect.",
+    unavailable: "Sign-in is temporarily unavailable. Please try again later.",
+    limited: "Too many sign-in attempts. Please wait and try again.",
+    callback: "The sign-in link is invalid or expired. Please sign in again or request a new recovery link.",
+  };
 
   return localizeUi((
     <main className="authPage">
@@ -22,11 +30,11 @@ export default async function PilotLoginPage({searchParams}: Props) {
 
         {error ? (
           <div className="authError" role="alert">
-            {error === "missing"
-              ? "Enter your email and password."
-              : "The email or password is incorrect."}
+            {errorMessages[error] ?? errorMessages.invalid}
           </div>
         ) : null}
+
+        {message === "password-updated" ? <p role="status">Password updated. Sign in with your new password.</p> : null}
 
         <form action={login} className="authForm">
           <label>
@@ -54,6 +62,7 @@ export default async function PilotLoginPage({searchParams}: Props) {
             Sign In
           </button>
         </form>
+        <p><Link href="/pilots/forgot-password">Forgot your password?</Link></p>
       </section>
     </main>
   ), uiLocale);
