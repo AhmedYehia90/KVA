@@ -45,6 +45,8 @@ function Footer() {
             <Link href="/live-flights">{t("liveFlights")}</Link>
             <Link href="/pilots">{t("pilots")}</Link>
             <Link href="/about">{t("about")}</Link>
+            <Link href="/regulations">Regulations</Link>
+            <Link href="/privacy">Privacy Policy</Link>
           </div>
         </div>
 

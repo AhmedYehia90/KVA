@@ -6,40 +6,7 @@ import {getLocale as getUiLocale} from "next-intl/server";
 import type {Metadata} from "next";
 import {notFound} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
-
-type PassportData = {
-  passportNumber: string;
-  publicSlug: string;
-  issuedAt: string;
-  fullName: string;
-  callsign: string;
-  totalHours: number;
-  totalFlights: number;
-  currentRank: {code: string; name: string};
-  memberships: Array<{
-    organizationId: string;
-    organizationCode: string;
-    organizationName: string;
-    role: string;
-    status: string;
-    joinedAt: string;
-    isPrimary: boolean;
-  }>;
-  qualifications: Array<{
-    code: string;
-    name: string;
-    status: string;
-    issuedAt: string;
-    expiresAt: string | null;
-    aircraftType: string | null;
-  }>;
-  experience: {
-    flights: number;
-    hours: number;
-    verifiedFlights: number;
-    verifiedHours: number;
-  };
-};
+import {toPublicPassport} from "@/lib/privacy/public-passport";
 
 export async function generateMetadata({
   params
@@ -72,16 +39,15 @@ export default async function PublicPassportPage({
     throw new Error(`Unable to load public passport: ${error.message}`);
   }
 
-  if (!data) notFound();
-
-  const passport = data as unknown as PassportData;
+  const passport = toPublicPassport(data);
+  if (!passport) notFound();
 
   return localizeUi((
     <main style={{minHeight:"100vh",padding:"72px 20px 100px",background:"var(--bg)"}}>
       <section style={{maxWidth:1060,margin:"0 auto"}}>
         <p className="eyebrow">KVA OS · Universal Pilot Passport</p>
         <h1 style={{fontSize:"clamp(3.4rem,8vw,6rem)",margin:"12px 0"}}>
-          {passport.fullName}
+          {passport.callsign}
         </h1>
         <p style={{fontSize:"1.15rem",color:"var(--muted)"}}>
           {passport.callsign} · {passport.currentRank.name}

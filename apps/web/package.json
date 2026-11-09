@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test:i18n": "node --test i18n/localize-ui.test.mjs",
-    "test": "pnpm test:i18n"
+    "test": "pnpm test:i18n && pnpm test:privacy",
+    "test:privacy": "node --test tests/privacy.test.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",
