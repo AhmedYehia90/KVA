@@ -28,6 +28,7 @@ if '--reset-test-schema' in sys.argv:
  assert info['Config']['Labels'].get('kva.scope')=='real-supabase-integration'
  assert 'kva-real-supabase-test' in info['NetworkSettings']['Networks']
  run(['docker','exec','-i',container,'psql','-X','-q','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'],input="""
+ drop schema if exists kva_scheduling_private cascade;
  drop schema public cascade;create schema public authorization postgres;
  grant usage on schema public to anon,authenticated,service_role,authenticator,supabase_auth_admin;
  alter default privileges for role postgres in schema public grant all on tables to anon,authenticated,service_role;
@@ -39,7 +40,7 @@ if '--reset-test-schema' in sys.argv:
 
 # Refuse to overwrite the private keys of an existing test stack.
 existing=subprocess.run(['docker','inspect','supabase_db_kva-supabase-integration'],capture_output=True)
-if existing.returncode==0:raise SystemExit('Test stack exists; use --reset-test-schema for synthetic public data only')
+if existing.returncode==0:raise SystemExit('Test stack exists; use --reset-test-schema for synthetic public/private scheduling schemas only')
 secret=secrets.token_urlsafe(48);dbpassword=secrets.token_urlsafe(24);authpassword=secrets.token_urlsafe(24)
 def jwt(role):
  enc=lambda obj:base64.urlsafe_b64encode(json.dumps(obj,separators=(',',':')).encode()).decode().rstrip('=')

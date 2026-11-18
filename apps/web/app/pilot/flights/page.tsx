@@ -6,6 +6,7 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
+import {scheduledBookingEnabled} from "@/lib/scheduling/mode";
 import styles from "./page.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -91,7 +92,7 @@ export default async function PilotFlightsPage({
     redirect("/pilots/login");
   }
 
-  if (process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true") {
+  if (await scheduledBookingEnabled(supabase)) {
     redirect("/pilot/schedule");
   }
 

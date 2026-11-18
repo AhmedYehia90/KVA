@@ -46,6 +46,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
  def do_POST(self):
   try:
    data=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))) or b'{}')
+   if self.path=='/rest/v1/rpc/scheduling_mode_enabled':return self.reply(sql('select public.scheduling_mode_enabled();')=='t')
    if self.path=='/rest/v1/rpc/list_scheduled_flights':return self.reply(json.loads(sql("select coalesce(json_agg(s),'[]'::json) from list_scheduled_flights() s;")))
    if self.path=='/rest/v1/rpc/book_scheduled_flight':
     sid=str(uuid.UUID(data['p_schedule']));return self.reply(sql(f"select book_scheduled_flight('{sid}');"))

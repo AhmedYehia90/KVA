@@ -56,7 +56,7 @@ python tests/scheduling/test_supabase_integration.py
 python tests/scheduling/test_supabase_browser.py
 ```
 
-`local_supabase.py` provisions a new disposable labelled stack. If the verified synthetic stack already exists, `--reset-test-schema` resets ONLY its public test schema and reapplies the 49 repository files; it does not accept a remote database or reset production. Test Auth users in that throwaway instance may remain between schema resets; each suite creates new synthetic users.
+`local_supabase.py` provisions a new disposable labelled stack. If the verified synthetic stack already exists, `--reset-test-schema` resets ONLY its public and private scheduling test schemas and reapplies the 49 repository files; it does not accept a remote database or reset production. Test Auth users in that throwaway instance may remain between schema resets; each suite creates new synthetic users.
 
 The browser runner rebuilds using the local public URL/key. `--reuse-build` is only for rerunning browser checks when the application source AND local public configuration are unchanged. The generated `.next` directory is a local test artifact and must never be uploaded as a production build.
 

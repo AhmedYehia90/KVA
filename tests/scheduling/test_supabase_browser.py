@@ -17,7 +17,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 STATE=pathlib.Path('/workspace/kva-supabase-integration')
-state=json.loads((STATE/'integration-state.json').read_text())
+state=json.loads((STATE/('cutover-browser-state.json' if '--cutover' in sys.argv else 'integration-state.json')).read_text())
 gateway=json.loads(subprocess.check_output(['docker','inspect','kva-supabase-gateway']))[0]
 assert gateway['Config']['Labels'].get('kva.scope')=='real-supabase-integration'
 ip=gateway['NetworkSettings']['Networks']['kva-real-supabase-test']['IPAddress']
@@ -63,11 +63,20 @@ try:
     page.goto(base+'/pilots/login',wait_until='networkidle')
     page.locator('input[name="email"]').fill(state['pilot']['email']);page.locator('input[name="password"]').fill(state['pilot']['password'])
     page.locator('form button[type="submit"]').click();page.wait_for_url('**/pilot/dashboard',wait_until='networkidle')
-    page.goto(base+'/pilot/flights',wait_until='networkidle');assert page.url.endswith('/pilot/schedule')
+    response=page.goto(base+'/pilot/flights',wait_until='networkidle')
+    if '--prepared-only' in sys.argv:
+     assert response.status==200 and page.url.endswith('/pilot/flights')
+     response=page.goto(base+'/pilot/schedule',wait_until='networkidle');assert response.status==404
+     assert not errors,errors
+     context.close()
+     print('PASS real browser gate:',locale,width,'application flag ON/database OFF preserves legacy list and hides scheduled page',flush=True)
+     continue
+    assert page.url.endswith('/pilot/schedule')
     assert page.locator('h1').inner_text()==('الرحلات المجدولة' if locale=='ar' else 'Scheduled flights')
     assert page.locator('main').get_attribute('dir')==('rtl' if locale=='ar' else 'ltr')
     assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), 'Horizontal overflow'
-    card=page.locator('article').filter(has_text='KVT901').filter(has_text='SU-STG1');assert card.count()==1
+    flight=state.get('flight_number','KVT901');registration=state.get('registration','SU-STG1')
+    card=page.locator('article').filter(has_text=flight).filter(has_text=registration);assert card.count()==1
     card.get_by_role('button',name='احجز الرحلة' if locale=='ar' else 'Book flight',exact=True).click()
     page.wait_for_url('**/pilot/schedule?message=booked',wait_until='networkidle')
     rows=local_api('/rest/v1/flight_bookings?select=id,status&scheduled_flight_id=eq.'+state['schedule_id']+'&status=eq.booked')
@@ -75,12 +84,12 @@ try:
     booking_id=rows[0]['id']
     # Real existing detail view, all FK joins/RLS/dispatch reads against Supabase.
     detail=page.goto(base+'/pilot/bookings/'+booking_id,wait_until='networkidle');assert detail.status==200
-    assert 'KVT901' in page.locator('main').inner_text()
+    assert flight in page.locator('main').inner_text()
     assert page.get_by_role('button',name='Start Flight',exact=True).count()==0
     assert page.get_by_role('button',name='بدء الرحلة',exact=True).count()==0
     assert ('Scheduled flight execution is not available yet.' if locale=='en' else 'بدء تشغيل الرحلات المجدولة غير متاح حاليًا.') in page.locator('main').inner_text()
     page.goto(base+'/pilot/schedule',wait_until='networkidle')
-    card=page.locator('article').filter(has_text='KVT901').filter(has_text='SU-STG1')
+    card=page.locator('article').filter(has_text=flight).filter(has_text=registration)
     card.get_by_role('button',name='إلغاء الحجز' if locale=='ar' else 'Cancel booking',exact=True).click()
     page.wait_for_url('**/pilot/schedule?message=cancelled',wait_until='networkidle')
     rows=local_api('/rest/v1/flight_bookings?select=id,status&id=eq.'+booking_id)

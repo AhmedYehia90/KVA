@@ -2,9 +2,9 @@
 
 import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
+import {scheduledBookingEnabled} from "@/lib/scheduling/mode";
 
 export async function bookFlightAction(formData: FormData) {
-  if (process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true") redirect("/pilot/schedule");
   const routeId = formData.get("routeId");
 
   if (typeof routeId !== "string" || !routeId) {
@@ -21,6 +21,8 @@ export async function bookFlightAction(formData: FormData) {
   if (!user) {
     redirect("/pilots/login");
   }
+
+  if (await scheduledBookingEnabled(supabase)) redirect("/pilot/schedule");
 
   const {data: bookingId, error} = await supabase.rpc("book_route", {
     p_route_id: routeId

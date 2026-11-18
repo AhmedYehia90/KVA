@@ -16,4 +16,10 @@ python tests/scheduling/test_supabase_integration.py
 python tests/scheduling/test_supabase_browser.py
 ```
 
-The provisioner uses a labelled internal Docker network and official Auth/PostgREST/Kong images with PostgreSQL 17 and all repository migrations. It accepts no hosted DSN. An existing verified synthetic stack can be reset with `python tests/scheduling/local_supabase.py --reset-test-schema`; this resets its public test schema only. Keys/passwords are generated into a private directory outside Git and must never be copied into reports or production.
+The provisioner uses a labelled internal Docker network and official Auth/PostgREST/Kong images with PostgreSQL 17 and all repository migrations. It accepts no hosted DSN. An existing verified synthetic stack can be reset with `python tests/scheduling/local_supabase.py --reset-test-schema`; this resets its public and private scheduling test schemas only. Keys/passwords are generated into a private directory outside Git and must never be copied into reports or production.
+
+## Production-style prepared/OFF cutover
+
+On the same verified disposable local Supabase stack, reset its synthetic public AND private scheduling test schemas with `local_supabase.py --reset-test-schema`. Never use a hosted DSN. Then run `test_production_cutover.py`. With an already verified local build for the same public configuration, `--browser-gates` also runs the real browser matrix during prepared/OFF mode. After the API suite, `test_supabase_browser.py --cutover --reuse-build` exercises the activated local mode. See the cutover review for the correct initial build/flag ordering.
+
+The tests cover original function OID/ACL restoration, a real in-flight old booking racing activation, private/direct bypass rejection, real scheduled booking/cancellation/aircraft races, and data-preserving rollback refusal. These fixtures are never production accounts or schedules.

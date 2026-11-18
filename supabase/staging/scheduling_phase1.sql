@@ -267,4 +267,8 @@ language sql stable security definer set search_path='' as $$
 $$;
 revoke all on function public.list_scheduled_flights() from public,anon,service_role;
 grant execute on function public.list_scheduled_flights() to authenticated;
+-- The isolated stage is always enabled; production uses a private mode marker.
+create function public.scheduling_mode_enabled() returns boolean language sql as $$select true$$;
+revoke all on function public.scheduling_mode_enabled() from public;
+grant execute on function public.scheduling_mode_enabled() to anon,authenticated,service_role;
 commit;

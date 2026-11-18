@@ -17,9 +17,11 @@ const id='00000000-0000-0000-0000-000000000001';
 const redirect=path=>{throw Object.assign(new Error('redirect'),{path});};
 const notFound=()=>{throw Object.assign(new Error('notFound'),{status:404});};
 function actions(client,env={KVA_SCHEDULING_PHASE1_ENABLED:'true'}) {
+ const mode=load('../lib/scheduling/mode.ts',{'@/lib/supabase/server':{createClient:async()=>client}},env);
  return load('../app/pilot/schedule/actions.ts',{
   'next/navigation':{redirect,notFound},'next/cache':{revalidatePath:()=>{}},
-  '@/lib/supabase/server':{createClient:async()=>client},'@/lib/scheduling/format':format
+  '@/lib/supabase/server':{createClient:async()=>client},'@/lib/scheduling/format':format,
+  '@/lib/scheduling/mode':mode
  },env);
 }
 function form(key,value) {const f=new FormData();f.set(key,value);return f;}
@@ -31,16 +33,31 @@ test('scheduling is disabled by default and rejects malformed ids before accessi
 });
 test('booking requires authenticated user and calls only the scheduled RPC',async()=>{
  await assert.rejects(actions({auth:{getUser:async()=>({data:{user:null}})}}).bookScheduledFlight(form('scheduleId',id)),e=>e.path==='/pilots/login');
- const calls=[];const client={auth:{getUser:async()=>({data:{user:{id}}})},rpc:async(...args)=>{calls.push(args);return {error:null};}};
+ const calls=[];const client={auth:{getUser:async()=>({data:{user:{id}}})},rpc:async(...args)=>{if(args[0]==='scheduling_mode_enabled')return {data:true,error:null};calls.push(args);return {error:null};}};
  await assert.rejects(actions(client).bookScheduledFlight(form('scheduleId',id)),e=>e.path==='/pilot/schedule?message=booked');
  assert.equal(calls.length,1);assert.equal(calls[0][0],'book_scheduled_flight');assert.equal(calls[0][1].p_schedule,id);
 });
 test('cancellation uses own-booking RPC; provider failures expose no raw database details',async()=>{
- let call;const client={auth:{getUser:async()=>({data:{user:{id}}})},rpc:async(...args)=>{call=args;return {error:null};}};
+ let call;const client={auth:{getUser:async()=>({data:{user:{id}}})},rpc:async(...args)=>{if(args[0]==='scheduling_mode_enabled')return {data:true,error:null};call=args;return {error:null};}};
  await assert.rejects(actions(client).cancelScheduledBooking(form('bookingId',id)),e=>e.path==='/pilot/schedule?message=cancelled');
  assert.equal(call[0],'cancel_scheduled_booking');assert.equal(call[1].p_booking,id);
- client.rpc=async()=>({error:{message:'private SQL state'}});
+ client.rpc=async name=>name==='scheduling_mode_enabled'?{data:true,error:null}:{error:{message:'private SQL state'}};
  await assert.rejects(actions(client).bookScheduledFlight(form('scheduleId',id)),e=>e.path==='/pilot/schedule?error=unavailable');
+});
+test('application flag alone cannot enable scheduling; absent/error/false database mode fails closed',async()=>{
+ const env={KVA_SCHEDULING_PHASE1_ENABLED:'true'};
+ for(const result of [{data:false,error:null},{data:null,error:null},{data:true,error:{message:'RPC unavailable'}}]) {
+  let mutations=0;const client={auth:{getUser:async()=>({data:{user:{id}}})},rpc:async name=>{assert.equal(name,'scheduling_mode_enabled');mutations++;return result;}};
+  await assert.rejects(actions(client,env).bookScheduledFlight(form('scheduleId',id)),e=>e.status===404);
+  assert.equal(mutations,1);
+ }
+});
+test('mode probe requires both flags and treats transport errors as disabled without querying when application flag is off',async()=>{
+ const disabled=load('../lib/scheduling/mode.ts',{'@/lib/supabase/server':{createClient:async()=>{throw new Error('Must not connect');}}},{});
+ assert.equal(await disabled.scheduledBookingEnabled(),false);
+ const active=load('../lib/scheduling/mode.ts',{'@/lib/supabase/server':{}},{KVA_SCHEDULING_PHASE1_ENABLED:'true'});
+ assert.equal(await active.scheduledBookingEnabled({rpc:async()=>{throw new Error('offline');}}),false);
+ assert.equal(await active.scheduledBookingEnabled({rpc:async()=>({data:true,error:null})}),true);
 });
 test('schedule times honor Cairo daylight saving and midnight with Arabic and English formatting',()=>{
  const winter=format.formatScheduledTime('2026-01-15T22:30:00Z','en','Africa/Cairo');

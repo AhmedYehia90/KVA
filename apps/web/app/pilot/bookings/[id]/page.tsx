@@ -4,6 +4,7 @@ import {getLocale as getUiLocale} from "next-intl/server";
 import Link from "next/link";
 import {notFound, redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
+import {scheduledBookingEnabled} from "@/lib/scheduling/mode";
 import {advanceFlightAction} from "./actions";
 
 type Airport = {
@@ -104,12 +105,14 @@ export default async function BookingConfirmationPage({
     redirect("/pilots/login");
   }
 
+  const scheduling = await scheduledBookingEnabled(supabase);
+
   const {data, error} = await supabase
     .from("flight_bookings")
     .select(
       `
         id,
-        ${process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true" ? "scheduled_flight_id," : ""}
+        ${scheduling ? "scheduled_flight_id," : ""}
         status,
         booked_at,
         started_at,
@@ -165,7 +168,7 @@ export default async function BookingConfirmationPage({
   const currentIndex = phases.indexOf(booking.status);
   const actionLabel = actionLabels[booking.status];
   const isCompleted = booking.status === "completed";
-  const schedulingOnly = process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true" && Boolean(booking.scheduled_flight_id);
+  const schedulingOnly = scheduling && Boolean(booking.scheduled_flight_id);
 
   return localizeUi((
     <main style={mainStyle}>

@@ -2,6 +2,7 @@ import {notFound, redirect} from "next/navigation";
 import {getLocale} from "next-intl/server";
 import Link from "next/link";
 import {createClient} from "@/lib/supabase/server";
+import {scheduledBookingEnabled} from "@/lib/scheduling/mode";
 import {formatScheduledTime} from "@/lib/scheduling/format";
 import {bookScheduledFlight, cancelScheduledBooking} from "./actions";
 
@@ -19,6 +20,7 @@ export default async function ScheduledFlightsPage({searchParams}: {searchParams
   const client = await createClient();
   const {data: {user}} = await client.auth.getUser();
   if (!user) redirect("/pilots/login");
+  if (!await scheduledBookingEnabled(client)) notFound();
   const [schedule, bookings] = await Promise.all([
     client.rpc("list_scheduled_flights"),
     client.from("flight_bookings").select("id, scheduled_flight_id, status").eq("pilot_id", user.id).in("status", activeStatuses)
