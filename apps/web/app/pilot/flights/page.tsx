@@ -91,6 +91,10 @@ export default async function PilotFlightsPage({
     redirect("/pilots/login");
   }
 
+  if (process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true") {
+    redirect("/pilot/schedule");
+  }
+
   const [
     {data: routeData, error: routeError},
     {data: bookingData, error: bookingError}

@@ -4,6 +4,7 @@ import {redirect} from "next/navigation";
 import {createClient} from "@/lib/supabase/server";
 
 export async function bookFlightAction(formData: FormData) {
+  if (process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true") redirect("/pilot/schedule");
   const routeId = formData.get("routeId");
 
   if (typeof routeId !== "string" || !routeId) {

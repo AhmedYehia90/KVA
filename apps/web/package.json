@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test:i18n": "node --test i18n/localize-ui.test.mjs",
-    "test": "pnpm test:i18n && pnpm test:privacy && pnpm test:auth",
+    "test": "pnpm test:i18n && pnpm test:privacy && pnpm test:auth && pnpm test:scheduling",
+    "test:scheduling": "node --test tests/scheduling.test.mjs",
     "test:privacy": "node --test tests/privacy.test.mjs",
     "test:auth": "node --test tests/auth-security.test.mjs"
   },

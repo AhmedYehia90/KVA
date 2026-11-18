@@ -38,6 +38,7 @@ type Dispatch = {
 
 type Booking = {
   id: string;
+  scheduled_flight_id?: string | null;
   status: string;
   booked_at: string;
   started_at: string | null;
@@ -108,6 +109,7 @@ export default async function BookingConfirmationPage({
     .select(
       `
         id,
+        ${process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true" ? "scheduled_flight_id," : ""}
         status,
         booked_at,
         started_at,
@@ -163,6 +165,7 @@ export default async function BookingConfirmationPage({
   const currentIndex = phases.indexOf(booking.status);
   const actionLabel = actionLabels[booking.status];
   const isCompleted = booking.status === "completed";
+  const schedulingOnly = process.env.KVA_SCHEDULING_PHASE1_ENABLED === "true" && Boolean(booking.scheduled_flight_id);
 
   return localizeUi((
     <main style={mainStyle}>
@@ -260,7 +263,10 @@ export default async function BookingConfirmationPage({
         </section>
 
         <div style={actionsStyle}>
-          {actionLabel ? (
+          {schedulingOnly ? <p role="status">{uiLocale === "ar"
+            ? "بدء تشغيل الرحلات المجدولة غير متاح حاليًا."
+            : "Scheduled flight execution is not available yet."}</p> : null}
+          {actionLabel && !schedulingOnly ? (
             <form action={advanceFlightAction}>
               <input type="hidden" name="bookingId" value={booking.id} />
               <button className="button" type="submit">
