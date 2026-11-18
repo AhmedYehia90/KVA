@@ -1,0 +1,50 @@
+-- PREPARED/EMPTY rollback only; no booking/flight records are deleted.
+begin;
+set local lock_timeout='10s';set local statement_timeout='120s';
+set local search_path=pg_catalog,public,extensions;
+select pg_advisory_xact_lock(hashtextextended('kva.scheduling.foundation.v1',0));
+select pg_advisory_xact_lock(hashtextextended('kva.scheduling.cutover.v1',0));
+lock table public.flight_bookings,public.scheduled_flights,public.aircraft_allocations,public.fleet_scheduling_rules in access exclusive mode;
+do $$begin
+ if not exists(select 1 from kva_scheduling_private.foundation_manifest where phase='prepared' and not scheduling_enabled) then raise exception 'Only inactive prepared cutover can be rolled back';end if;
+ if exists(select 1 from public.scheduled_flights) or exists(select 1 from public.aircraft_allocations) or exists(select 1 from public.fleet_scheduling_rules) or exists(select 1 from public.flight_bookings where scheduled_flight_id is not null) then raise exception 'New scheduling data exists; rollback refused';end if;
+end $$;
+drop trigger guard_scheduled_booking on public.flight_bookings;
+drop trigger guard_aircraft_allocation on public.aircraft_allocations;
+drop trigger check_aircraft_rotation on public.aircraft_allocations;
+drop policy schedule_read on public.scheduled_flights;
+drop policy allocation_read on public.aircraft_allocations;
+revoke all on public.scheduled_flights,public.aircraft_allocations from authenticated;
+drop function public.scheduling_require_staff() restrict;
+drop function public.set_fleet_scheduling_rule(uuid,integer,integer) restrict;
+drop function public.guard_aircraft_allocation() restrict;
+drop function public.check_aircraft_rotation() restrict;
+drop function public.create_scheduled_flight(uuid,uuid,timestamptz,timestamptz,text) restrict;
+drop function public.reschedule_flight(uuid,uuid,timestamptz,timestamptz) restrict;
+drop function public.cancel_scheduled_flight(uuid) restrict;
+drop function public.guard_scheduled_booking() restrict;
+drop function public.book_scheduled_flight(uuid) restrict;
+drop function public.cancel_scheduled_booking(uuid) restrict;
+drop function public.block_aircraft(uuid,timestamptz,timestamptz,text) restrict;
+drop function public.release_aircraft_block(uuid) restrict;
+drop function public.list_scheduled_flights() restrict;
+drop function public.scheduling_mode_enabled() restrict;
+drop function public.book_route(uuid) restrict;
+drop function public.advance_flight_booking(uuid) restrict;
+drop function public.advance_flight_operation(uuid) restrict;
+do $$declare f jsonb;target regprocedure;begin
+ for f in select value from jsonb_array_elements((select legacy_proc from kva_scheduling_private.cutover_backup)) loop
+  target:=(f->>'oid')::oid::regprocedure;
+  execute format('alter function %s rename to %I',target,f->>'name');
+  execute format('alter function %s set schema public',target);
+  perform kva_scheduling_private.restore_execute_acl(target,f->>'acl');
+ end loop;
+end $$;
+drop function kva_scheduling_private.activate_scheduled_booking() restrict;
+drop function kva_scheduling_private.restore_execute_acl(regprocedure,text) restrict;
+drop table kva_scheduling_private.cutover_backup restrict;
+update kva_scheduling_private.foundation_manifest set phase='foundation',scheduling_enabled=false;
+alter table kva_scheduling_private.foundation_manifest drop constraint foundation_manifest_phase_check,drop constraint foundation_manifest_scheduling_enabled_check;
+alter table kva_scheduling_private.foundation_manifest add constraint foundation_manifest_phase_check check(phase='foundation'),add constraint foundation_manifest_scheduling_enabled_check check(not scheduling_enabled);
+select 'PASS: preparation removed; original legacy routine identities and grants restored' as result;
+notify pgrst,'reload schema';commit;
